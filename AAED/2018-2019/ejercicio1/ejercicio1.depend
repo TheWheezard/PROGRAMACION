@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1542639985 source:c:\users\javi l”pez\documents\esi_uca\aaed\ejercicio1\ejercicio-1.cpp
+	<iostream>
+	<cstdlib>
+	"pila_vec1.h"
+
+1542634055 c:\users\javi l”pez\documents\esi_uca\aaed\ejercicio1\pila_vec1.h
+	<cassert>
+

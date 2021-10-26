@@ -1,0 +1,22 @@
+# depslib dependency file v1.0
+1611437006 source:c:\users\lopes\documents\esi_uca\aaed\2019-2020\tad\pila2\pila2\ejercicio-3.cpp
+	"pila2.hpp"
+
+1611441622 c:\users\lopes\documents\esi_uca\aaed\2019-2020\tad\pila2\pila2\pila2.hpp
+	<cassert>
+
+1611441138 source:c:\users\lopes\documents\esi_uca\aaed\2019-2020\tad\pila2\pila2\main.cpp
+	<iostream>
+	"pila2.hpp"
+	"pila2.hpp"
+
+1611437006 c:\users\lopes\documents\esi_uca\aaed\2019-2020\tad\pila2\pila2\ejercicio-3.cpp
+	"pila2.hpp"
+
+1611441046 source:c:\users\lopes\documents\esi_uca\aaed\2019-2020\tad\pila2\pila2\pila2.cpp
+	<cassert>
+	"pila2.hpp"
+
+1611441021 c:\users\lopes\documents\esi_uca\aaed\2019-2020\tad\pila2\pila2\pila2.cpp
+	<cassert>
+
