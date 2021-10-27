@@ -82,7 +82,7 @@ public class cajero implements Runnable {
     /**
      * Sobrecarga del método run de la interfaz Java.lang.Runnable
      * 
-     * @see Java.lang.Runnable.run
+     * @see Java.lang.Runnable.run()
      */
     public void run() {
         seleccionarOperacion(this.operacion, this.cantidad);

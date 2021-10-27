@@ -42,7 +42,7 @@ public class hebra extends Thread {
      * el valor de la variable n según indique subeBaja, tantas veces como indique
      * 'vueltas'
      * 
-     * @see Java.lang.Thread.run
+     * @see Java.lang.Thread.run()
      */
     public void run() {
         switch (subeBaja) {

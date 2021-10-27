@@ -1,6 +1,8 @@
 /**
  * Esta clase creará un array de nuestra clase VectorPrueba y llamará a su
  * método para multiplicarlo de forma secuencial por el escalar.
+ * 
+ * @author Javier López Sierra
  */
 public class escalaVector {
 

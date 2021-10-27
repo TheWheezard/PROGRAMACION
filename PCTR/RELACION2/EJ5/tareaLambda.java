@@ -1,16 +1,23 @@
 /**
- * tareaLambda
+ * La clase tareaLambda realiza dos operaciones concurrentes usando la interfaz
+ * Runnable con funciones lambda.
+ * 
+ * @author Javier López Sierra
  */
 public class tareaLambda {
-    static int n = 0;
+    static int n = 0; // Variable estática que modificaremos
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Valor inicial de n: " + n);
+
+        // Función lambda-1
         Runnable run1 = () -> {
             for (int i = 0; i < 10000000; i++) {
                 n++;
             }
         };
+
+        // Función lambda-2
         Runnable run2 = () -> {
             for (int i = 0; i < 10000000; i++) {
                 n--;

@@ -48,7 +48,7 @@ public class VectorPrueba implements Runnable {
     /**
      * Sobrecarga del método run() de la clase Thread que llama al método calcular.
      * 
-     * @see Java.lang.Runnable.run
+     * @see Java.lang.Runnable.run()
      */
     public void run() {
         calcular();

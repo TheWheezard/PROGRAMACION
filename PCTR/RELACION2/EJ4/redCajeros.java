@@ -1,3 +1,10 @@
+/**
+ * La clase redCajeros emula una red de cajeros que sacan o introducen una
+ * cantidad de dinero en una determinada cuenta bancaria.
+ * 
+ * @author Javier López Sierra
+ * 
+ */
 public class redCajeros {
     public static void main(String[] args) throws InterruptedException {
         cuentaCorriente cuenta = new cuentaCorriente("CUENTA1", 30000);
@@ -26,7 +33,7 @@ public class redCajeros {
         for (int j = 0; j < operaciones.length; j++) {
             operaciones[j].join();
         }
-        
+
         // imprimimos el resultado
         System.out.println("La cuenta " + cuenta.verNumCuenta() + " tiene un saldo de " + cuenta.verSaldo() + " €");
     }

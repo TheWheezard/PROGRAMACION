@@ -4,6 +4,8 @@ import java.util.Scanner;
  * Esta clase pedirá al usuario que indique en cuántas partes se deberá dividir
  * el VectorPrueba, y creará los hilos necesarios para hacer las
  * multiplicaciones de diferentes rangos en paralelo
+ * 
+ * @author Javier López Sierra
  */
 public class escalaVPar {
     public static void main(String[] args) {
@@ -16,7 +18,7 @@ public class escalaVPar {
         System.out.println("Creando array runnable");
         for (int i = 0; i < partes; i++) {
             tareas[i] = new VectorPrueba(j, VectorPrueba.vector.length * (i + 1) / partes); // tamVec * (i+1)/partes nos
-            j = VectorPrueba.vector.length * (i + 1) / partes;                              // dará el final y principio de cada parte
+            j = VectorPrueba.vector.length * (i + 1) / partes; // dará el final y principio de cada parte
         }
 
         System.out.println("Creando array de threads");

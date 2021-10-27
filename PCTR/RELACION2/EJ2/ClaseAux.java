@@ -1,9 +1,11 @@
 /**
  * Clase que contiene una variable con valor inicial 0 cuyo valor puede ser
  * incrementado o decrementado.
+ * 
+ * @author Javier López Sierra
  */
 public class ClaseAux {
-    private int n = 0; // Variable que se irá modificando.
+    private static int n = 0; // Variable que se irá modificando.
 
     /**
      * Constructor de la clase ClaseAux.
@@ -31,6 +33,6 @@ public class ClaseAux {
      * @return valor de n en el momento de ser llamada.
      */
     public int getN() {
-        return(n);
+        return (n);
     }
 }

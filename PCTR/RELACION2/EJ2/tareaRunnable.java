@@ -34,7 +34,7 @@ public class tareaRunnable implements Runnable {
      * en 1 el valor de la variable n de 'clase' según indique subeBaja, tantas
      * veces como indique 'vueltas'
      * 
-     * @see Java.lang.Runnable.run
+     * @see Java.lang.Runnable.run()
      */
     public void run() {
         switch (subeBaja) {
