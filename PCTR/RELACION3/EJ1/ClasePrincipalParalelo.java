@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.text.*;
+import java.util.Date;
 
 /**
  * La clase ClasePrincipalParalelo crea dos vectores de tipo double de misma
@@ -26,6 +28,13 @@ public class ClasePrincipalParalelo {
             hilos[i] = productos[i] = new prodEscalarParalelo(i, j, vec1.length * (i + 1) / partes);
             j = vec1.length * (i + 1) / partes;
         }
+
+        /* Mediremos exclusivamente el producto escalar */
+        Date d = new Date();
+        DateFormat df = new SimpleDateFormat("HH:mm:ss:SSS");
+        long inicCronom = System.currentTimeMillis(); // se prepara el cronometro
+        d.setTime(inicCronom); // se activa el cronometro
+
         // inicio y fin de la ejecución de los hilos
         for (int i = 0; i < hilos.length; i++) {
             hilos[i].start();
@@ -37,6 +46,11 @@ public class ClasePrincipalParalelo {
                 e.printStackTrace();
             }
         }
+
+        long finCronom = System.currentTimeMillis(); // se para el cronometro
+        d.setTime(finCronom);
+        System.out.println("Cálculo finalizado a las " + df.format(d) + " tras " + (finCronom - inicCronom) + " milisegundos");
+
         // recuperando resultados de los hilos en el vector productoParcial
         double[] productoParcial = new double[(int) Math.pow(10, 6)];
         int iteradorParcial = 0;
@@ -54,5 +68,6 @@ public class ClasePrincipalParalelo {
             i++;
         }
         scan.close();
+        System.out.println("Fin.");
     }
 }
