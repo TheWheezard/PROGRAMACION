@@ -1,28 +1,31 @@
 import java.util.Random;
 import java.util.Scanner;
-
+/**
+ * La clase matVector realiza el producto de dos matrices de valores enteros.
+ * @author Javier López Sierra
+ */
 public class matVector {
-    static int[][] matriz;
-    static int[] vector;
+    static int[][] matrizCuadrada;
+    static int[] matrizB;
     public static void main(String[] args) {
         Random random = new Random();
         Scanner scan = new Scanner(System.in);
-        System.out.println("Introduzca tamaño de vector y matriz:");
+        System.out.println("Introduzca tamaño de las matrices:");
         int n = scan.nextInt();
-        matriz = new int[n][n];
-        vector = new int[n];
-        int[] res = new int[n];
+        matrizCuadrada = new int[n][n];
+        matrizB = new int[n];
+        int[] res = new int[n]; // matriz resultado
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                matriz[i][j] = random.nextInt();
+                matrizCuadrada[i][j] = random.nextInt();
             }
-            vector[i] = random.nextInt();
+            matrizB[i] = random.nextInt();
             res[i] = 0;
         }
         
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) { // se hace el producto secuencial
             for (int j = 0; j < n; j++) {
-                res[i] += matriz[i][j] * vector[j];
+                res[i] += matrizCuadrada[i][j] * matrizB[j];
             }
         }
 
