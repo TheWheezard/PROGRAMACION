@@ -27,13 +27,15 @@ public class prodEscalar {
         d.setTime(inicCronom); // se activa el cronometro
 
             /* hacemos el producto escalar */
+        double res = 0;
         for (int i = 0; i < vec1.length; i++) {
-            vec1[i] = vec1[i] * vec2[i];
+            res = res + vec1[i] * vec2[i];
         }
 
         long finCronom = System.currentTimeMillis(); // se para el cronometro
         d.setTime(finCronom);
         System.out.println("Cálculo finalizado a las " + df.format(d) + " tras " + (finCronom - inicCronom) + " milisegundos");
+        System.out.println("Resultado = " + res);
         System.out.println("Fin.");
     }
 }

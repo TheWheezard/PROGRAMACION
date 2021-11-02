@@ -52,20 +52,13 @@ public class ClasePrincipalParalelo {
         System.out.println("Cálculo finalizado a las " + df.format(d) + " tras " + (finCronom - inicCronom) + " milisegundos");
 
         // recuperando resultados de los hilos en el vector productoParcial
-        double[] productoParcial = new double[(int) Math.pow(10, 6)];
-        int iteradorParcial = 0;
-        int i = 0;
-        // primer bucle: se ejecuta mientras no lleguemos al final del array productos o de productoParcial
-        while (i < productos.length && iteradorParcial < productoParcial.length) {
-            System.out.println("Recuperando resultados del hilo " + productos[i].getIdHebra());
-            int k = 0;
-            // segundo bucle: se ejecuta mientras no lleguemos al final del array interno de productos[i] o de productoParcial
-            while (k < productos[i].getTam() && iteradorParcial < productoParcial.length) {
-                productoParcial[iteradorParcial] = productos[i].getRes(k);
-                k++;
-                iteradorParcial++;
-            }
-            i++;
+        double[] productoParcial = new double[partes];
+        for (int i = 0; i < partes; i++) {
+            System.out.println("Recuperando resultado del hilo " + productos[i].getIdHebra());
+            productoParcial[productos[i].getIdHebra()] = productos[i].getRes();
+        }
+        for (int i = 0; i < productoParcial.length; i++) {
+            System.out.println("Resultados " + productoParcial[i]);
         }
         scan.close();
         System.out.println("Fin.");

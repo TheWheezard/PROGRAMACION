@@ -7,9 +7,7 @@
  * @see Java.lang.Thread
  */
 public class prodEscalarParalelo extends Thread {
-    //static double[] vec1 = new double[(int) Math.pow(10, 6)];
-    //static double[] vec2 = new double[(int) Math.pow(10, 6)];
-    static double[] vecAux;
+    static double res;
     int idHebra, inicio, fin;
 
     /**
@@ -28,7 +26,6 @@ public class prodEscalarParalelo extends Thread {
         this.idHebra = idHebra;
         this.inicio = inicio;
         this.fin = fin;
-        vecAux = new double[fin - inicio];
     }
 
     /**
@@ -42,15 +39,6 @@ public class prodEscalarParalelo extends Thread {
     }
 
     /**
-     * Método que devuelve el tamaño del vector que contiene el resultado.
-     * 
-     * @return valor del tamaño del vector resultado.
-     */
-    public int getTam() {
-        return vecAux.length;
-    }
-
-    /**
      * Método observador que devuelve el valor de una posición del vector resultante
      * del producto escalar sobre el rango indicado anteriormente.
      * 
@@ -58,8 +46,8 @@ public class prodEscalarParalelo extends Thread {
      * @return Valor de tipo double de la posición i del vector resultante del
      *         producto escalar.
      */
-    public double getRes(int i) {
-        return vecAux[i];
+    public double getRes() {
+        return res;
     }
 
     /**
@@ -69,10 +57,9 @@ public class prodEscalarParalelo extends Thread {
      * @see ClasePrincipalParalelo
      */
     public void calcular() {
-        int j = 0;
+        res = 0;
         for (int i = inicio; i < fin; i++) {
-            vecAux[j] = ClasePrincipalParalelo.vec1[i] * ClasePrincipalParalelo.vec2[i];
-            j++;
+            res = res + ClasePrincipalParalelo.vec1[i] * ClasePrincipalParalelo.vec2[i];
         }
     }
 
