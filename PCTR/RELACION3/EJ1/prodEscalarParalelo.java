@@ -7,7 +7,7 @@
  * @see Java.lang.Thread
  */
 public class prodEscalarParalelo extends Thread {
-    static double res;
+    double res;
     int idHebra, inicio, fin;
 
     /**
