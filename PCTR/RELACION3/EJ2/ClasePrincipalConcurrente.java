@@ -7,8 +7,8 @@ import java.util.Scanner;
  * entre sí, separando las filas por grupos para resolverla en diferentes hilos
  * de forma concurrente.
  * 
- * Está probado con un tamaño máximo de n = 30000 añadiendo necesariamente los
- * flags -Xmx4G -ea
+ * Está probado con un tamaño máximo de n = 30000 añadiendo necesariamente el
+ * flag -Xmx4G
  * 
  * @author Javier López Sierra
  * @see matVectorConcurrente
