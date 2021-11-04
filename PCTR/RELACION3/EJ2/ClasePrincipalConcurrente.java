@@ -8,7 +8,7 @@ import java.util.Scanner;
  * de forma concurrente.
  * 
  * Está probado con un tamaño máximo de n = 30000 añadiendo necesariamente el
- * flag -Xmx4G
+ * flag -Xmx4G. Por sí solo recomendamos no superar n = 10000.
  * 
  * @author Javier López Sierra
  * @see matVectorConcurrente
