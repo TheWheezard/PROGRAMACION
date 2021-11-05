@@ -33,13 +33,16 @@ public class matVectorConcurrente implements Runnable {
 
     /**
      * Método modificador que realiza el producto escalar de un grupo de filas de
-     * una matriz cuadrada[n][n] con una matriz[n].
+     * una matriz cuadrada[n][n] con una matriz[n] de la clase
+     * ClasePrincipalVector.
+     * 
+     * @see ClasePrincipalVector
      */
     public void calcular() {
         for (int i = 0; i < matResParcial.length && inicio < n; i++) {
             int res = 0;
-            for (int j = 0; j < ClasePrincipalConcurrente.matrizB.length; j++) {
-                res = res + ClasePrincipalConcurrente.matrizCuadrada[inicio + i][j] * ClasePrincipalConcurrente.matrizB[j];
+            for (int j = 0; j < ClasePrincipalVector.matrizB.length; j++) {
+                res = res + ClasePrincipalVector.matrizCuadrada[inicio + i][j] * ClasePrincipalVector.matrizB[j];
             }
             matResParcial[i] = res;
         }

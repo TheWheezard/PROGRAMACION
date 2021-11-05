@@ -50,16 +50,16 @@ public class prodEscalarParalelo extends Thread {
 
     /**
      * Método que toma un rango del vector comprendido entre las posiciones inicio y
-     * fin de dos vectores de la clase ClasePrincipalParalelo en la forma
+     * fin de dos vectores de la clase ClasePrincipalEscalar en la forma
      * [inicio,fin) y los multiplica entre sí, guardando el resultado en una
      * variable auxiliar.
      * 
-     * @see ClasePrincipalParalelo
+     * @see ClasePrincipalEscalar
      */
     public void calcular() {
         res = 0;
         for (int i = inicio; i < fin; i++) {
-            res = res + ClasePrincipalParalelo.vec1[i] * ClasePrincipalParalelo.vec2[i];
+            res = res + ClasePrincipalEscalar.vec1[i] * ClasePrincipalEscalar.vec2[i];
         }
     }
 

@@ -3,14 +3,14 @@ import java.text.*;
 import java.util.Date;
 
 /**
- * La clase ClasePrincipalParalelo crea dos vectores de tipo double de misma
+ * La clase ClasePrincipalEscalar crea dos vectores de tipo double de misma
  * longitud y los divide en partes que se multiplican de forma concurrente
  * mediante el uso de la clase prodEscalarParalelo.
  * 
  * @author Javier López Sierra
  * @see prodEscalarParalelo
  */
-public class ClasePrincipalParalelo {
+public class ClasePrincipalEscalar {
     static double[] vec1 = new double[(int) Math.pow(10, 6)];
     static double[] vec2 = new double[(int) Math.pow(10, 6)];
 

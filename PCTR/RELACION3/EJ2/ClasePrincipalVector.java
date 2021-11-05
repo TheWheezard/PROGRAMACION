@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * La clase ClasePrincipalConcurrente crea una matriz cuadrada de la forma
+ * La clase ClasePrincipalVector crea una matriz cuadrada de la forma
  * [n][n] y otra de la forma [n], ambas de tipo entero, y realiza el producto
  * entre sí, separando las filas por grupos para resolverla en diferentes hilos
  * de forma concurrente.
@@ -16,7 +16,7 @@ import java.util.Scanner;
  * @author Javier López Sierra
  * @see matVectorConcurrente
  */
-public class ClasePrincipalConcurrente {
+public class ClasePrincipalVector {
     static int[][] matrizCuadrada;
     static int[] matrizB;
 
