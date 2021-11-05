@@ -1,7 +1,7 @@
 /**
- * La clase prodEscalarParalelo crea un hilo con un vector auxiliar donde efectuará el
- * producto escalar entre los elementos comprendidos entre dos posiciones dadas
- * de dos vectores principales.
+ * La clase prodEscalarParalelo crea un hilo con un vector auxiliar donde
+ * efectuará el producto escalar entre los elementos comprendidos entre dos
+ * posiciones dadas de dos vectores principales.
  * 
  * @author Javier López Sierra
  * @see Java.lang.Thread
@@ -32,19 +32,17 @@ public class prodEscalarParalelo extends Thread {
      * Método observador que devuelve el identificador de la hebra/vector
      * resultante.
      * 
-     * @return Valor de tipo Int que identifica la hebre/vector resultante.
+     * @return Valor de tipo Int que identifica la hebra/vector resultante.
      */
     public int getIdHebra() {
         return idHebra;
     }
 
     /**
-     * Método observador que devuelve el valor de una posición del vector resultante
-     * del producto escalar sobre el rango indicado anteriormente.
+     * Método observador que devuelve el valor de la variable resultante del
+     * producto escalar sobre el rango indicado anteriormente.
      * 
-     * @param i Posición del vector resultante de la que queremos su valor.
-     * @return Valor de tipo double de la posición i del vector resultante del
-     *         producto escalar.
+     * @return Valor de tipo double del resultado del producto escalar parcial.
      */
     public double getRes() {
         return res;
@@ -52,8 +50,10 @@ public class prodEscalarParalelo extends Thread {
 
     /**
      * Método que toma un rango del vector comprendido entre las posiciones inicio y
-     * fin de dos vectores de la clase ClasePrincipalParalelo en la forma [inicio,fin) y los multiplica entre sí,
-     * guardando el resultado en un vector auxiliar.
+     * fin de dos vectores de la clase ClasePrincipalParalelo en la forma
+     * [inicio,fin) y los multiplica entre sí, guardando el resultado en una
+     * variable auxiliar.
+     * 
      * @see ClasePrincipalParalelo
      */
     public void calcular() {

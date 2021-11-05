@@ -3,8 +3,8 @@ import java.text.*;
 import java.util.Date;
 
 /**
- * La clase prodEscalar multiplica dos vectores de tipo Double y guarda el
- * resultado en el primer vector.
+ * La clase prodEscalar realiza el producto escalar de dos vectores de tipo
+ * Double y guarda el resultado en una variable que muestra por pantalla.
  * 
  * @author Javier López Sierra
  */
@@ -26,7 +26,7 @@ public class prodEscalar {
         long inicCronom = System.currentTimeMillis(); // se prepara el cronometro
         d.setTime(inicCronom); // se activa el cronometro
 
-            /* hacemos el producto escalar */
+        /* hacemos el producto escalar */
         double res = 0;
         for (int i = 0; i < vec1.length; i++) {
             res = res + vec1[i] * vec2[i];

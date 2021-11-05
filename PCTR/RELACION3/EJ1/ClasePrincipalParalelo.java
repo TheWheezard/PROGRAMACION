@@ -47,20 +47,25 @@ public class ClasePrincipalParalelo {
             }
         }
 
-        long finCronom = System.currentTimeMillis(); // se para el cronometro
-        d.setTime(finCronom);
-        System.out.println("Cálculo finalizado a las " + df.format(d) + " tras " + (finCronom - inicCronom) + " milisegundos");
-
-        // recuperando resultados de los hilos en el vector productoParcial
+        // recuperando resultados parciales de los hilos en el vector productoParcial
         double[] productoParcial = new double[partes];
         for (int i = 0; i < partes; i++) {
             System.out.println("Recuperando resultado del hilo " + productos[i].getIdHebra());
             productoParcial[productos[i].getIdHebra()] = productos[i].getRes();
         }
+
+        // cálculo del resultado final
+        double res = 0;
         for (int i = 0; i < productoParcial.length; i++) {
-            System.out.println("Resultados " + productoParcial[i]);
+            res += productoParcial[i];
         }
+        System.out.println("Resultado = " + res);
+
+        long finCronom = System.currentTimeMillis(); // se para el cronometro
+        d.setTime(finCronom);
+        System.out.println("Cálculo finalizado a las " + df.format(d) + " tras " + (finCronom - inicCronom) + " milisegundos");
         scan.close();
+
         System.out.println("Fin.");
     }
 }
