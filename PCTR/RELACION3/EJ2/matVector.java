@@ -7,8 +7,8 @@ import java.util.Scanner;
  * La clase matVector realiza el producto de una matriz cuadrada [n][n] por otra
  * matriz [n], ambas de valores enteros.
  * 
- * Está probado con un tamaño máximo de n = 30000 añadiendo necesariamente los
- * flags -Xmx4G y con un tamaño máximo de n = 50000 con el flag -Xmx10G. Por sí
+ * Está probado con un tamaño máximo de n = 30000 añadiendo necesariamente el
+ * flag -Xmx4G y con un tamaño máximo de n = 50000 con el flag -Xmx10G. Por sí
  * solo recomendamos no superar n = 10000.
  * 
  * @author Javier López Sierra
@@ -56,12 +56,10 @@ public class matVector {
         // fin cronómetro 2
         long finCronom = System.currentTimeMillis(); // se para el cronometro
         d2.setTime(finCronom);
-        System.out.println(
-                "Cálculo finalizado a las " + df2.format(d2) + " tras " + (finCronom - inicCronom2) + " milisegundos");
+        System.out.println("Cálculo finalizado a las " + df2.format(d2) + " tras " + (finCronom - inicCronom2) + " milisegundos");
 
         // fin cronómetro 1
-        System.out.println(
-                "Proceso finalizado a las " + df1.format(d1) + " tras " + (finCronom - inicCronom1) + " milisegundos");
+        System.out.println("Proceso finalizado a las " + df1.format(d1) + " tras " + (finCronom - inicCronom1) + " milisegundos");
 
         System.out.println("Fin.");
         scan.close();

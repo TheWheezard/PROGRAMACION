@@ -74,12 +74,7 @@ public class ClasePrincipalConcurrente {
             }
         }
 
-        // fin cronómetro 2
-        long finCronom = System.currentTimeMillis(); // se para el cronometro
-        d2.setTime(finCronom);
-        System.out.println(
-                "Cálculo finalizado a las " + df2.format(d2) + " tras " + (finCronom - inicCronom2) + " milisegundos");
-
+        // creación del resultado
         int iterRes = 0;
         for (int i = 0; i < matrices.length; i++) {
             for (int k = 0; k < matrices[i].matResParcial.length && iterRes + k < matRes.length; k++) {
@@ -87,10 +82,14 @@ public class ClasePrincipalConcurrente {
             }
             iterRes += matrices[i].matResParcial.length;
         }
+        
+        // fin cronómetro 2
+        long finCronom = System.currentTimeMillis(); // se para el cronometro
+        d2.setTime(finCronom);
+        System.out.println("Cálculo finalizado a las " + df2.format(d2) + " tras " + (finCronom - inicCronom2) + " milisegundos");
 
         // fin cronómetro 1
-        System.out.println(
-                "Proceso finalizado a las " + df1.format(d1) + " tras " + (finCronom - inicCronom1) + " milisegundos");
+        System.out.println("Proceso finalizado a las " + df1.format(d1) + " tras " + (finCronom - inicCronom1) + " milisegundos");
 
         scan.close();
         System.out.println("Fin.");

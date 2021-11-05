@@ -17,8 +17,7 @@ public class matVectorConcurrente implements Runnable {
     /**
      * Constructor para la clase matVectorConcurrente.
      * 
-     * @param idHilo Parámetro que identifica el orden del objeto para mantener
-     *               resultados ordenados.
+     * @param idHilo Parámetro que identifica el objeto.
      * @param filas  Parámetro que indica el número de filas de la matriz cuadrada
      *               asignados para su cálculo.
      * @param inicio Parámetro que indica la fila de la matriz cuadrada desde la que
