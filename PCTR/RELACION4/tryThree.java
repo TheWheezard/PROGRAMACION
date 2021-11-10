@@ -3,7 +3,7 @@
  * produce el problema de espera infinita (livelock)
  * 
  * @author Javier López Sierra
- * @see Java.lang.Thread
+ * @see Thread
  */
 public class tryThree extends Thread {
     private int tipoHilo;
@@ -22,18 +22,19 @@ public class tryThree extends Thread {
     }
 
     /**
-     * Sobrecarga del método run() de la clase Thread que cambia el valor de una
-     * variable n, pero comprobando si puede hacerlo mediante la tercera
-     * aproximación del algoritmo de Dekker
+     * Sobrecarga del método run() de la clase Thread que emplea la tercera
+     * aproximación del algoritmo de Dekker para comprobar si el hilo tiene el turno
+     * de paso para modificar una variable n
      * 
-     * @see Java.lang.Thread.run
+     * @see Thread#run()
      */
     public void run() {
         switch (tipoHilo) {
         case 1:
             for (int i = 0; i < nVueltas; i++) {
                 C1 = true;
-                while (C2 == true);
+                while (C2 == true)
+                    ;
                 n++;
                 C1 = false;
             }
@@ -41,7 +42,8 @@ public class tryThree extends Thread {
         case 2:
             for (int i = 0; i < nVueltas; i++) {
                 C2 = true;
-                while (C1 == true);
+                while (C1 == true)
+                    ;
                 n--;
                 C2 = false;
             }
