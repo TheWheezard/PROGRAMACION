@@ -33,28 +33,32 @@ public class tryFour extends Thread {
         switch (tipoHilo) {
         case 1:
             for (int i = 0; i < nVueltas; i++) {
-                C1 = true;
+                C1 = true; // Solicita acceso a la SC
                 while (C2 == true) {
                     C1 = false; // ceder el paso
                     int k = i; // operaciones que solo ocupan tiempo
                     k = k - i;
                     C1 = true; // pedir acceso de nuevo
                 }
-                n++;
-                C1 = false;
+
+                n++; // Sección Crítica
+
+                C1 = false; // Fin de SC, libera el recurso
             }
             break;
         case 2:
             for (int i = 0; i < nVueltas; i++) {
-                C2 = true;
+                C2 = true; // Solicita acceso a la SC
                 while (C1 == true) {
                     C2 = false; // ceder el paso
                     int k = 0; // operaciones que solo ocupan tiempo
                     k = k + i;
                     C2 = true; // pedir acceso de nuevo
                 }
-                n--;
-                C2 = false;
+
+                n--; // Sección Crítica
+                
+                C2 = false; // Fin de SC, libera el recurso
             }
             break;
         }

@@ -35,32 +35,36 @@ public class algDekker extends Thread {
         switch (tipoHilo) {
         case 1:
             for (int i = 0; i < nVueltas; i++) {
-                C1 = true;
-                while (C2 == true) {
-                    if (turno == 2) {
+                C1 = true; // Solicita acceso a la SC
+                while (C2 == true) { // Si ya fue solicitado por el otro hilo
+                    if (turno == 2) { // y es turno del otro hilo
                         C1 = false; // ceder el paso
                         turno = 1;
                         C1 = true; // pedir acceso de nuevo
                     }
                 }
-                n++;
-                turno = 2;
-                C1 = false;
+
+                n++; // Sección Crítica
+
+                turno = 2; // Fin de la SC, cede el turno
+                C1 = false; // Señala que ha finalizado su uso del recurso
             }
             break;
         case 2:
             for (int i = 0; i < nVueltas; i++) {
-                C2 = true;
-                while (C1 == true) {
-                    if (turno == 1) {
+                C2 = true; // Solicita acceso a la SC
+                while (C1 == true) { // Si ya fue solicitado por el otro hilo
+                    if (turno == 1) { // y es turno del otro hilo
                         C2 = false; // ceder el paso
                         turno = 2;
                         C2 = true; // pedir acceso de nuevo
                     }
                 }
-                n--;
-                turno = 1;
-                C2 = false;
+
+                n--; // Sección Crítica
+
+                turno = 1; // Fin de la SC, cede el turno
+                C2 = false; // Señala que ha finalizado su uso del recurso
             }
             break;
         }

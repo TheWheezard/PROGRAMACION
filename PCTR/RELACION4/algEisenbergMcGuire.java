@@ -12,7 +12,7 @@ public class algEisenbergMcGuire extends Thread {
     public static int n = 0;
     private static volatile int numVueltas = 10000;
     private enum estado {IDLE, WAIT, ACTIVE};
-    private static estado[] flags;
+    private static volatile estado[] flags;
     int turno;
     int numHilo;
 
@@ -23,6 +23,9 @@ public class algEisenbergMcGuire extends Thread {
      */
     public algEisenbergMcGuire(int numHilo) {
         this.numHilo = numHilo;
+        if (flags == null) {
+            flags = new estado[4]; // Vector flags para 4 hilos
+        }
         flags[numHilo] = estado.IDLE;
     }
 
@@ -86,7 +89,6 @@ public class algEisenbergMcGuire extends Thread {
         algEisenbergMcGuire h1 = new algEisenbergMcGuire(1);
         algEisenbergMcGuire h2 = new algEisenbergMcGuire(2);
         algEisenbergMcGuire h3 = new algEisenbergMcGuire(3);
-
         h0.start();
         h1.start();
         h2.start();

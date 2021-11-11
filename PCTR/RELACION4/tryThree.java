@@ -32,20 +32,22 @@ public class tryThree extends Thread {
         switch (tipoHilo) {
         case 1:
             for (int i = 0; i < nVueltas; i++) {
-                C1 = true;
-                while (C2 == true)
-                    ;
-                n++;
-                C1 = false;
+                C1 = true; // Señala que quiere acceder a la SC
+                while (C2 == true); // Espera a que el otro hilo libere la SC
+
+                n++; // Sección Crítica
+                
+                C1 = false; // Fin de SC, libera el recurso
             }
             break;
         case 2:
             for (int i = 0; i < nVueltas; i++) {
-                C2 = true;
-                while (C1 == true)
-                    ;
-                n--;
-                C2 = false;
+                C2 = true; // Señala que quiere acceder a la SC
+                while (C1 == true); // Espera a que el otro hilo libere la SC
+
+                n--; // Sección Crítica
+
+                C2 = false; // Fin de SC, libera el recurso
             }
             break;
         }
