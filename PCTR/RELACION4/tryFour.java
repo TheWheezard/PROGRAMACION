@@ -1,7 +1,7 @@
 /**
  * Clase que emplea la cuarta aproximación al algoritmo de Dekker, en el que se
  * elimina el problema de espera infinita (livelock) pero de forma poco
- * eficiente
+ * eficiente que puede causar postergación indefinida
  * 
  * @author Javier López Sierra
  * @see Thread
@@ -16,7 +16,7 @@ public class tryFour extends Thread {
     /**
      * Constructor para la clase tryFour
      * 
-     * @param tipoHilo
+     * @param tipoHilo Entero que identifica al hilo en el algoritmo
      */
     public tryFour(int tipoHilo) {
         this.tipoHilo = tipoHilo;

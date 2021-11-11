@@ -15,7 +15,7 @@ public class tryThree extends Thread {
     /**
      * Constructor para la clase tryThree
      * 
-     * @param tipoHilo
+     * @param tipoHilo Entero que identifica al hilo en el algoritmo
      */
     public tryThree(int tipoHilo) {
         this.tipoHilo = tipoHilo;
