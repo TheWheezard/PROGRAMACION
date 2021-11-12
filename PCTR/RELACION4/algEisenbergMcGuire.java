@@ -1,5 +1,3 @@
-import java.util.Random;
-
 /**
  * Clase que emplea el algoritmo Eisenberg-McGuire para controlar el acceso y
  * modificación de una variable común en más de dos hilos (realizamos una prueba
