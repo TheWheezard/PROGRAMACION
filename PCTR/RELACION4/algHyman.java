@@ -9,7 +9,7 @@ public class algHyman implements Runnable {
     private static volatile int nVueltas = 10000;
     private static volatile boolean C1 = false;// T=quiereentrar F=restoproceso
     private static volatile boolean C2 = false;// T=quiereentrar F=restoproceso
-    private static int turno = 0;
+    private static volatile int turno = 0;
     private static int n = 0;
     private int tipoHilo;
 
@@ -70,8 +70,8 @@ public class algHyman implements Runnable {
      *                              terminar los hilos
      */
     public static void main(String[] args) throws InterruptedException {
-        Runnable alg1 = new algHyman(0);
-        Runnable alg2 = new algHyman(1);
+        Runnable alg1 = new algHyman(1);
+        Runnable alg2 = new algHyman(2);
         Thread h1 = new Thread(alg1);
         Thread h2 = new Thread(alg2);
         h1.start();

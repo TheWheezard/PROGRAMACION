@@ -44,6 +44,7 @@ public class algEisenbergMcGuire extends Thread {
             do {
                 flags[numHilo] = estado.WAIT; // se pone en espera
                 iter = turno;
+                System.out.println(iter);
                 while (iter != numHilo) { // hasta que no llegue su turno, el hilo queda en espera activa
                     if (flags[iter] != estado.IDLE) {
                         iter = turno;
