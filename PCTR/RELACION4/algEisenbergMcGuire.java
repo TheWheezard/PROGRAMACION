@@ -13,7 +13,7 @@ public class algEisenbergMcGuire extends Thread {
     private static volatile int numVueltas = 10000;
     private enum estado {IDLE, WAIT, ACTIVE};
     private static volatile estado[] flags;
-    int turno;
+    private static volatile int turno;
     int numHilo;
 
     /**
@@ -37,28 +37,25 @@ public class algEisenbergMcGuire extends Thread {
      * @see Thread#run()
      */
     public void run() {
-        turno = new Random().nextInt() % flags.length; // se escoge una posición aleatoria dentro del vector para
-                                                       // empezar
-        int iter;
+        int index;
         for (int i = 0; i < numVueltas; i++) {
             do {
                 flags[numHilo] = estado.WAIT; // se pone en espera
-                iter = turno;
-                System.out.println(iter);
-                while (iter != numHilo) { // hasta que no llegue su turno, el hilo queda en espera activa
-                    if (flags[iter] != estado.IDLE) {
-                        iter = turno;
+                index = turno;
+                while (index != numHilo) { // hasta que no llegue su turno
+                    if (flags[index] != estado.IDLE) {
+                        index = turno;
                     } else {
-                        iter = (iter + 1) % flags.length;
+                        index = (index + 1) % flags.length;
                     }
                 }
 
                 flags[numHilo] = estado.ACTIVE; // hilo pasa a ACTIVO
-                iter = 0;
-                while (iter < flags.length && turno == numHilo || flags[iter] != estado.ACTIVE) { // comprueba que es el único hilo activo
-                    iter += 1;
+                index = 0;
+                while ((index < flags.length) && ((index == numHilo) || (flags[index] != estado.ACTIVE))) { // comprueba que es el único hilo activo
+                    index = index + 1;
                 }
-            } while (iter >= flags.length && turno == numHilo || flags[turno] == estado.IDLE); // si hilo es el único activo y con turno,
+            } while ( !((index >= flags.length) && ((turno == numHilo) || (flags[turno] == estado.IDLE))) ); // si hilo es el único activo y con turno,
                                                                                  // o los demás están en IDLE, pasa a la Sección Crítica
             turno = numHilo; // toma el turno
             /* Sección Crítica */
@@ -69,11 +66,11 @@ public class algEisenbergMcGuire extends Thread {
             }
             /* Fin Sección Crítica */
 
-            iter = (iter + 1) % flags.length;
-            while (flags[iter] == estado.IDLE) { // buscamos procesos que no estén en IDLE
-                iter = (iter + 1) % flags.length;
+            index = (turno + 1) % flags.length;
+            while (flags[index] == estado.IDLE) { // buscamos procesos que no estén en IDLE
+                index = (index + 1) % flags.length;
             }
-            turno = iter; // les pasamos el turno
+            turno = index; // les pasamos el turno
             flags[numHilo] = estado.IDLE; // el hilo pasa a IDLE
         }
     }
@@ -86,6 +83,7 @@ public class algEisenbergMcGuire extends Thread {
      *                              terminar los hilos de prueba
      */
     public static void main(String[] args) throws InterruptedException {
+        turno = 1;
         algEisenbergMcGuire h0 = new algEisenbergMcGuire(0);
         algEisenbergMcGuire h1 = new algEisenbergMcGuire(1);
         algEisenbergMcGuire h2 = new algEisenbergMcGuire(2);
