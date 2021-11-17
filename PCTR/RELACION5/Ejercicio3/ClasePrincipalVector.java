@@ -4,14 +4,10 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * La clase ClasePrincipalVector crea una matriz cuadrada de la forma
- * [n][n] y otra de la forma [n], ambas de tipo entero, y realiza el producto
- * entre sí, separando las filas por grupos para resolverla en diferentes hilos
- * de forma concurrente.
- * 
- * Está probado con un tamaño máximo de n = 30000 añadiendo necesariamente el
- * flag -Xmx4G y con un tamaño máximo de n = 50000 con el flag -Xmx10G. Por sí
- * solo recomendamos no superar n = 10000.
+ * La clase ClasePrincipalVector crea una matriz cuadrada de la forma [n][n] y
+ * otra de la forma [n], ambas de tipo entero, y realiza el producto entre sí,
+ * separando las filas por grupos para resolverla en diferentes hilos de forma
+ * concurrente.
  * 
  * @author Javier López Sierra
  * @see matVectorConcurrente
@@ -42,7 +38,7 @@ public class ClasePrincipalVector {
         // inicializada a 0
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-               matrizCuadradaB[i][j] = matrizCuadradaA[i][j] = random.nextInt();
+                matrizCuadradaB[i][j] = matrizCuadradaA[i][j] = random.nextInt();
             }
             matRes[i] = 0;
         }
@@ -82,14 +78,16 @@ public class ClasePrincipalVector {
             }
             iterRes += matrices[i].matResParcial.length;
         }
-        
+
         // fin cronómetro 2
         long finCronom = System.currentTimeMillis(); // se para el cronometro
         d2.setTime(finCronom);
-        System.out.println("Cálculo finalizado a las " + df2.format(d2) + " tras " + (finCronom - inicCronom2) + " milisegundos");
+        System.out.println(
+                "Cálculo finalizado a las " + df2.format(d2) + " tras " + (finCronom - inicCronom2) + " milisegundos");
 
         // fin cronómetro 1
-        System.out.println("Proceso finalizado a las " + df1.format(d1) + " tras " + (finCronom - inicCronom1) + " milisegundos");
+        System.out.println(
+                "Proceso finalizado a las " + df1.format(d1) + " tras " + (finCronom - inicCronom1) + " milisegundos");
 
         scan.close();
         System.out.println("Fin.");

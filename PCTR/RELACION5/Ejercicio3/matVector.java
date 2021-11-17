@@ -7,15 +7,11 @@ import java.util.Scanner;
  * La clase matVector realiza el producto de una matriz cuadrada [n][n] por otra
  * matriz [n], ambas de valores enteros.
  * 
- * Está probado con un tamaño máximo de n = 30000 añadiendo necesariamente el
- * flag -Xmx4G y con un tamaño máximo de n = 50000 con el flag -Xmx10G. Por sí
- * solo recomendamos no superar n = 10000.
- * 
  * @author Javier López Sierra
  */
 public class matVector {
-    static int[][] matrizCuadrada;
-    static int[] matrizB;
+    static int[][] matrizCuadradaA;
+    static int[][] matrizCuadradaB;
 
     public static void main(String[] args) {
 
@@ -30,15 +26,14 @@ public class matVector {
         long inicCronom1 = System.currentTimeMillis(); // se prepara el cronometro
         d1.setTime(inicCronom1); // se activa el cronometro
 
-        matrizCuadrada = new int[n][n];
-        matrizB = new int[n];
-        int[] matRes = new int[n]; // matriz resultado
+        matrizCuadradaA = new int[n][n];
+        matrizCuadradaB = new int[n][n];
+        int[][] matRes = new int[n][n]; // matriz resultado
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                matrizCuadrada[i][j] = random.nextInt();
+                matrizCuadradaA[i][j] = matrizCuadradaB[i][j] = random.nextInt();
+                matRes[i][j] = 0;
             }
-            matrizB[i] = random.nextInt();
-            matRes[i] = 0;
         }
 
         // cronómetro 2 (cálculo)
@@ -47,9 +42,11 @@ public class matVector {
         long inicCronom2 = System.currentTimeMillis(); // se prepara el cronometro
         d2.setTime(inicCronom2); // se activa el cronometro
 
-        for (int i = 0; i < n; i++) { // se hace el producto secuencial
-            for (int j = 0; j < n; j++) {
-                matRes[i] += matrizCuadrada[i][j] * matrizB[j];
+        for (int i = 0; i < matrizCuadradaA.length; i++) { // se hace el producto secuencial
+            for (int j = 0; j < matRes[0].length; j++) {
+                for (int k = 0; k < matrizCuadradaB.length; k++) {
+                    matRes[i][j] += matrizCuadradaA[i][k] * matrizCuadradaB[k][j];
+                }
             }
         }
 

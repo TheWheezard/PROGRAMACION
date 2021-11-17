@@ -5,7 +5,7 @@
  * están rellenas de valores enteros aleatorios.
  * 
  * @author Javier López Sierra
- * @see Java.lang.Runnable
+ * @see Runnable
  */
 public class matVectorConcurrente implements Runnable {
     int idHilo;
@@ -33,15 +33,14 @@ public class matVectorConcurrente implements Runnable {
 
     /**
      * Método modificador que realiza el producto escalar de un grupo de filas de
-     * una matriz cuadrada[n][n] con una matriz[n] de la clase
-     * ClasePrincipalVector.
+     * una matriz cuadrada[n][n] con una matriz[n] de la clase ClasePrincipalVector.
      * 
      * @see ClasePrincipalVector
      */
     public void calcular() {
         for (int i = 0; i < matResParcial.length && inicio < n; i++) {
             int res = 0;
-            for (int j = 0; j < ClasePrincipalVector.matrizCuadradaB.length; j++) {//MODIFICAR
+            for (int j = 0; j < ClasePrincipalVector.matrizCuadradaB.length; j++) {
                 res = res + ClasePrincipalVector.matrizCuadradaA[inicio + i][j] * ClasePrincipalVector.matrizCuadradaB[i][j];
             }
             matResParcial[i] = res;
@@ -51,7 +50,7 @@ public class matVectorConcurrente implements Runnable {
     /**
      * Sobrecarga del método run() de la interfaz Runnable.
      * 
-     * @see Java.lang.Runnable.run
+     * @see Runnable#run()
      */
     public void run() {
         this.calcular();
