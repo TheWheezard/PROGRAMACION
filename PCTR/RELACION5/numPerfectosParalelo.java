@@ -16,8 +16,8 @@ public class numPerfectosParalelo {
      * @param args Valor numérico que determina el máximo del rango a comprobar.
      */
     public static void main(String[] args) {
-        long nPuntos = 100000;//Long.parseLong(args[0]); // rango de la muestra
-        int nTareas = 20;//Runtime.getRuntime().availableProcessors();
+        long nPuntos = Long.parseLong(args[0]); // rango de la muestra
+        int nTareas = Runtime.getRuntime().availableProcessors();
         long tVentana = nPuntos / nTareas;
         int contTotal = 0;
         long linf = 0;
