@@ -22,7 +22,7 @@ public class resImagenPar {
         }
 
         int nPuntos = n;
-        int nTareas = 20;//Runtime.getRuntime().availableProcessors();
+        int nTareas = Runtime.getRuntime().availableProcessors();
         int tVentana = nPuntos / nTareas;
         int linf = 0;
         int lsup = tVentana;
