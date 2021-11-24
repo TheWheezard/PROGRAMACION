@@ -4,14 +4,14 @@
 */
 
 import java.net.*;
+import java.util.concurrent.*;
 import java.io.*;
 
-public class ServidorHiloconPool extends Thread {
+public class ServidorHiloconPool implements Runnable{
     Socket enchufe;
-
+    
     public ServidorHiloconPool(Socket s) {
-        enchufe = s;
-        this.start();
+        this.enchufe = s;
     }
 
     public void run() {
@@ -21,19 +21,22 @@ public class ServidorHiloconPool extends Thread {
             int j;
             int i = Integer.valueOf(datos).intValue();
             for (j = 1; j <= 20; j++) {
-                System.out.println("El hilo " + this.getName() + " escribiendo el dato " + i);
-                sleep(1000);
+                System.out.println("El hilo " + Thread.currentThread().getName() + " escribiendo el dato " + i);
+                Thread.sleep(1000);
             }
             enchufe.close();
-            System.out.println("El hilo " + this.getName() + "cierra su conexion...");
+            System.out.println("El hilo " + Thread.currentThread().getName() + "cierra su conexion...");
         } catch (Exception e) {
             System.out.println("Error...");
         }
     }// run
 
     public static void main(String[] args) {
-        int i;
+        int i = 1000;
         int puerto = 2001;
+        int nTareas = Runtime.getRuntime().availableProcessors();
+        ThreadPoolExecutor ept = new ThreadPoolExecutor(nTareas, 30, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+        ept.prestartAllCoreThreads();
         try {
             ServerSocket chuff = new ServerSocket(puerto, 3000);
 
@@ -41,8 +44,11 @@ public class ServidorHiloconPool extends Thread {
                 System.out.println("Esperando solicitud de conexion...");
                 Socket cable = chuff.accept();
                 System.out.println("Recibida solicitud de conexion...");
-                new ServidorHiloconPool(cable);
+                ept.execute(new ServidorHiloconPool(cable));
+                //--i;
+                //ept.shutdown();
             } // while
+            //ept.shutdown();
         } catch (Exception e) {
             System.out.println("Error en sockets...");
         }
