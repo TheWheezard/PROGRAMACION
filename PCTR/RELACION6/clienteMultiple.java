@@ -6,7 +6,7 @@
 import java.net.*;
 import java.io.*;
 
-public class Cliente_Hilos {
+public class clienteMultiple {
     public static void main(String[] args) {
         int i = (int) (Math.random() * 10);
         int puerto = 2001;

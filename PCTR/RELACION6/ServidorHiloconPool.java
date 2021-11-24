@@ -6,10 +6,10 @@
 import java.net.*;
 import java.io.*;
 
-public class Servidor_Hilos extends Thread {
+public class ServidorHiloconPool extends Thread {
     Socket enchufe;
 
-    public Servidor_Hilos(Socket s) {
+    public ServidorHiloconPool(Socket s) {
         enchufe = s;
         this.start();
     }
@@ -41,7 +41,7 @@ public class Servidor_Hilos extends Thread {
                 System.out.println("Esperando solicitud de conexion...");
                 Socket cable = chuff.accept();
                 System.out.println("Recibida solicitud de conexion...");
-                new Servidor_Hilos(cable);
+                new ServidorHiloconPool(cable);
             } // while
         } catch (Exception e) {
             System.out.println("Error en sockets...");
