@@ -1,12 +1,8 @@
-/*Ejemplo de servidor de sockets multihilo
- *@Antonio Tomeu
- *@version 1.0
-*/
-
 import java.net.*;
 import java.util.concurrent.*;
 import java.io.*;
 
+/** */
 public class ServidorHiloconPool implements Runnable{
     Socket enchufe;
     
@@ -20,22 +16,21 @@ public class ServidorHiloconPool implements Runnable{
             String datos = entrada.readLine();
             int j;
             int i = Integer.valueOf(datos).intValue();
-            for (j = 1; j <= 20; j++) {
+            for (j = 1; j <= 4; j++) {
                 System.out.println("El hilo " + Thread.currentThread().getName() + " escribiendo el dato " + i);
                 Thread.sleep(1000);
             }
             enchufe.close();
-            System.out.println("El hilo " + Thread.currentThread().getName() + "cierra su conexion...");
+            System.out.println("El hilo " + Thread.currentThread().getName() + " cierra su conexion...");
         } catch (Exception e) {
             System.out.println("Error...");
         }
     }// run
 
     public static void main(String[] args) {
-        int i = 1000;
         int puerto = 2001;
         int nTareas = Runtime.getRuntime().availableProcessors();
-        ThreadPoolExecutor ept = new ThreadPoolExecutor(nTareas, 30, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+        ThreadPoolExecutor ept = new ThreadPoolExecutor(nTareas, nTareas, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
         ept.prestartAllCoreThreads();
         try {
             ServerSocket chuff = new ServerSocket(puerto, 3000);
@@ -45,8 +40,6 @@ public class ServidorHiloconPool implements Runnable{
                 Socket cable = chuff.accept();
                 System.out.println("Recibida solicitud de conexion...");
                 ept.execute(new ServidorHiloconPool(cable));
-                //--i;
-                //ept.shutdown();
             } // while
             //ept.shutdown();
         } catch (Exception e) {
