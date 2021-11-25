@@ -1,4 +1,7 @@
-/** */
+/**
+ * La clase deadlock crea tres hebras de tipo Object y las ejecuta de forma que se genere un interbloqueo.
+ * @author Javier López Sierra
+ */
 public class deadlock {
     public static void main(String[] args) {
         final Object region_A = new Object();

@@ -2,14 +2,33 @@ import java.net.*;
 import java.util.concurrent.*;
 import java.io.*;
 
-/** */
-public class ServidorHiloconPool implements Runnable{
+/**
+ * La clase ServidorHiloconPool recibe valores enteros por el puerto 2001,
+ * tratando cada conexión en un hilo independiente y gestionando dichos hilos
+ * mediante un ejecutor.
+ * 
+ * @author Javier López Sierra
+ * @see Runnable
+ */
+public class ServidorHiloconPool implements Runnable {
     Socket enchufe;
-    
+
+    /**
+     * Constructor de la clase ServidorHiloconPool.
+     * 
+     * @param s Objeto de tipo Socket
+     */
     public ServidorHiloconPool(Socket s) {
         this.enchufe = s;
     }
 
+    /**
+     * Sobrecarga del método run de la clase Runnable. Recibe un valor entero desde
+     * un Socket y lo muestra por pantalla indicando qué hilo se ha ocupado de
+     * realizar la tarea.
+     * 
+     * @see Runnable#run()
+     */
     public void run() {
         try {
             BufferedReader entrada = new BufferedReader(new InputStreamReader(enchufe.getInputStream()));
@@ -30,7 +49,8 @@ public class ServidorHiloconPool implements Runnable{
     public static void main(String[] args) {
         int puerto = 2001;
         int nTareas = Runtime.getRuntime().availableProcessors();
-        ThreadPoolExecutor ept = new ThreadPoolExecutor(nTareas, nTareas, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+        ThreadPoolExecutor ept = new ThreadPoolExecutor(nTareas, nTareas, 0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>());
         ept.prestartAllCoreThreads();
         try {
             ServerSocket chuff = new ServerSocket(puerto, 3000);
@@ -41,7 +61,7 @@ public class ServidorHiloconPool implements Runnable{
                 System.out.println("Recibida solicitud de conexion...");
                 ept.execute(new ServidorHiloconPool(cable));
             } // while
-            //ept.shutdown();
+              // ept.shutdown();
         } catch (Exception e) {
             System.out.println("Error en sockets...");
         }
