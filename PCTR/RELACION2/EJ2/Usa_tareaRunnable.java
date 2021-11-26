@@ -6,6 +6,7 @@ import java.util.Scanner;
  * generarán.
  * 
  * @author Javier López Sierra
+ * @see tareaRunnable
  */
 public class Usa_tareaRunnable {
     public static void main(String[] args) throws InterruptedException {

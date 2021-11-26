@@ -4,7 +4,7 @@
  * @see Thread
  */
 public class usaheterogenea extends Thread{
-    int numVueltas = 10000;
+    int numVueltas = 1000000;
     heterogenea het;
 
     /**

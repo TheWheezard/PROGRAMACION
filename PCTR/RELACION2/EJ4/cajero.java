@@ -5,7 +5,7 @@ import java.util.Scanner;
  * depositar dinero en una cuenta bancaria.
  * 
  * @author Javier López Sierra.
- * @see Java.lang.Runnable
+ * @see Runnable
  */
 public class cajero implements Runnable {
     private cuentaCorriente cuenta;
@@ -80,9 +80,9 @@ public class cajero implements Runnable {
     }
 
     /**
-     * Sobrecarga del método run de la interfaz Java.lang.Runnable
+     * Sobrecarga del método run() de la interfaz Runnable
      * 
-     * @see Java.lang.Runnable.run()
+     * @see Runnable#run()
      */
     public void run() {
         seleccionarOperacion(this.operacion, this.cantidad);

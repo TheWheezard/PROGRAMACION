@@ -40,9 +40,9 @@ public class hebra extends Thread {
     /**
      * Sobrecarga del método run() de la clase Thread. Aumentará o disminuirá en 1
      * el valor de la variable n según indique subeBaja, tantas veces como indique
-     * 'vueltas'
+     * 'vueltas'.
      * 
-     * @see Java.lang.Thread.run()
+     * @see Thread#run()
      */
     public void run() {
         switch (subeBaja) {
