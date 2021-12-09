@@ -13,7 +13,7 @@ public class CrawlerDownloader {
         URLConnection conectar = web.openConnection();
         BufferedReader br = new BufferedReader(new InputStreamReader(conectar.getInputStream()));
         String cadURL = new String();
-        Pattern pat = Pattern.compile(".*href=\"/wiki/(.*[^:]+.*)\"");
+        Pattern pat = Pattern.compile(".*(href=\"/wiki/\\w*(?![:])\\w*\").*");
         Pattern pat2 = Pattern.compile(".*https://en.wikipedia.org/wiki/(.*[^:]+.*)");//
         Matcher mat;
         Matcher mat2;
@@ -21,7 +21,7 @@ public class CrawlerDownloader {
             //System.out.println(cadURL);
             mat = pat.matcher(cadURL);
             if (mat.matches()) {
-                System.out.println(cadURL);
+                System.out.println(mat.group(1));
             }
         }
     }
