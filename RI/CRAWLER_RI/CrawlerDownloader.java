@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  */
 public class CrawlerDownloader {
     public static void main(String[] args) {
-        String web = new String("https://en.wikipedia.org/wiki/Natural_language");
+        String web = new String("/wiki/Natural_language");
         try {
             getURLs(web);
         } catch (IOException e) {
@@ -18,29 +18,28 @@ public class CrawlerDownloader {
     }
 
     public static void getURLs(String dirWeb) throws IOException {
-        URL web = new URL(dirWeb);
+        URL web = new URL("https://en.wikipedia.org" + dirWeb);
         URLConnection conectar = web.openConnection();
         BufferedReader br = new BufferedReader(new InputStreamReader(conectar.getInputStream()));
         String cadURL = new String();
-        Pattern pat = Pattern.compile(".*href=\"(/wiki/\\w*(?![:])\\w*)\".*");
-        //Pattern pat2 = Pattern.compile(".*https://en.wikipedia.org/wiki/(.*[^:]+.*)");//
-        Matcher mat;
-        //Matcher mat2;
+        Pattern patLinksValidos = Pattern.compile(".*href=\"(/wiki/\\w*(?![:])\\w*)\".*");
+        Pattern patWebActual = Pattern.compile(dirWeb);
+        Pattern patPagPpal = Pattern.compile("/wiki/Main_Page");
+        Matcher mat, matWebAct, matWebPpal;
         File fich = new File("direcciones.txt");
         FileWriter writer = new FileWriter(fich);
-        BufferedWriter bfwriter = new BufferedWriter(writer);
         System.out.println("Extrayendo direcciones...");
         while ((cadURL = br.readLine()) != null) {
-            //System.out.println(cadURL);
-            mat = pat.matcher(cadURL);
-            String cad = "";
+            mat = patLinksValidos.matcher(cadURL);
             if (mat.matches()) {
-                cad = cad + mat.group(1);
-                System.out.println(cad);
-                //bfwriter.append(cad);
-                //bfwriter.newLine();
+                String cad = mat.group(1);
+                matWebAct = patWebActual.matcher(cad);
+                matWebPpal = patPagPpal.matcher(cad);
+                if (!(matWebAct.matches() || matWebPpal.matches())) {
+                    writer.write(mat.group(1) + "\n");
+                }
             }
-            bfwriter.write(cad);
         }
+        writer.close();
     }
 }
