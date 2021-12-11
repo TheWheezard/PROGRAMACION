@@ -21,10 +21,12 @@ public class CrawlerDownloader {
         URLConnection conectar = web.openConnection();
         BufferedReader br = new BufferedReader(new InputStreamReader(conectar.getInputStream()));
         String cadURL = new String();
-        Pattern patLinksValidos = Pattern.compile(".*href=\"(/wiki/\\w*(?![:])\\w*)\".*");
-        Pattern patWebActual = Pattern.compile(dirWeb);
-        Pattern patPagPpal = Pattern.compile("/wiki/Main_Page");
-        Matcher mat, matWebAct, matWebPpal;
+
+        Pattern patLinksValidos = Pattern.compile(".*href=\"(/wiki/\\w*(?![:])\\w*)\".*"); //comprueba si es un link de interés
+        Pattern patWebActual = Pattern.compile(dirWeb); //guarda patrón de web actual
+        Pattern patPagPpal = Pattern.compile("/wiki/Main_Page"); //guarda patrón de página principal
+        Matcher mat, matWebAct, matWebPpal; // matchers
+
         File fich = new File("direcciones.txt");
         FileWriter writer = new FileWriter(fich);
         System.out.println("Extrayendo direcciones...");
