@@ -1,5 +1,7 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,16 +9,50 @@ import java.util.regex.Pattern;
  * CrawlerDownloader
  */
 public class CrawlerDownloader {
+    static int tamTotal = 100;
+    static int cont = 0;
+    static ArrayList<String> colaWeb;
+    static LinkedHashSet<String> listaVisitadas;
     public static void main(String[] args) {
-        String web = new String("/wiki/Natural_language");
+        colaWeb = new ArrayList<String>();
+        listaVisitadas = new LinkedHashSet<String>();
+        ArrayList<String> colaAux = new ArrayList<String>();
+        String aux = new String("/wiki/Natural_language");
+        //colaWeb.add(aux);
+        //String web = new String("/wiki/Natural_language");
+        listaVisitadas.add(aux);
+        //haremos una primera pasada
         try {
-            getURLs(web);
+            colaAux = getURLs(aux);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        int i = 0;
+        while (listaVisitadas.size() <= tamTotal || i < colaWeb.size()) {
+            //comprobamos si ya tenemos los links recogidos
+            for (int k = 0; k < colaAux.size(); k++) {
+                //en caso de ser nuevos, los añadimos a la cola
+                if (!listaVisitadas.contains(colaAux.get(k))) {
+                    colaWeb.add(colaAux.get(k));
+                    listaVisitadas.add(colaAux.get(k));
+                }
+            }
+            colaAux.clear();
+            //recogemos nuevos links
+            try {
+                colaAux = getURLs(colaWeb.get(i));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            ++i;
+        }
+        for (String string : colaWeb) {
+            System.out.println(string);
+        }
     }
 
-    public static void getURLs(String dirWeb) throws IOException {
+    public static ArrayList<String> getURLs(String dirWeb) throws IOException {
+        ArrayList<String> colaCandidatos = new ArrayList<String>();
         URL web = new URL("https://en.wikipedia.org" + dirWeb);
         URLConnection conectar = web.openConnection();
         BufferedReader br = new BufferedReader(new InputStreamReader(conectar.getInputStream()));
@@ -29,7 +65,7 @@ public class CrawlerDownloader {
 
         File fich = new File("direcciones.txt");
         FileWriter writer = new FileWriter(fich);
-        System.out.println("Extrayendo direcciones...");
+        //System.out.println("Extrayendo direcciones...");
         while ((cadURL = br.readLine()) != null) {
             mat = patLinksValidos.matcher(cadURL);
             if (mat.matches()) {
@@ -37,10 +73,19 @@ public class CrawlerDownloader {
                 matWebAct = patWebActual.matcher(cad);
                 matWebPpal = patPagPpal.matcher(cad);
                 if (!(matWebAct.matches() || matWebPpal.matches())) {
-                    writer.write(mat.group(1) + "\n");
+                    colaCandidatos.add(mat.group(1));
+                    //writer.write(mat.group(1) + "\n");
                 }
             }
         }
         writer.close();
+        return colaCandidatos;
     }
 }
+
+/**
+ * NOTAS:
+ * Debo crear una cola que mantenga los links en lugar de volcarlos en ficheros
+ * Debo crear un fichero por web para volcar contenido
+ * Probar a sacar solo txt
+ */
