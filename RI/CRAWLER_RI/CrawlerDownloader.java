@@ -28,6 +28,7 @@ public class CrawlerDownloader {
             e.printStackTrace();
         }
         int i = 0;
+        // hacer doble bucle (comprobar num visitadas(comprobar cola))
         while (listaVisitadas.size() <= tamTotal || i < colaWeb.size()) {
             //comprobamos si ya tenemos los links recogidos
             for (int k = 0; k < colaAux.size(); k++) {
