@@ -9,43 +9,48 @@ import java.util.regex.Pattern;
  * CrawlerDownloader
  */
 public class CrawlerDownloader {
-    static int tamTotal = 100;
+    static int tamTotal = 15000;
     static int cont = 0;
     static ArrayList<String> colaWeb;
     static LinkedHashSet<String> listaVisitadas;
+
     public static void main(String[] args) {
         colaWeb = new ArrayList<String>();
         listaVisitadas = new LinkedHashSet<String>();
         ArrayList<String> colaAux = new ArrayList<String>();
         String aux = new String("/wiki/Natural_language");
-        //colaWeb.add(aux);
-        //String web = new String("/wiki/Natural_language");
+        // colaWeb.add(aux);
+        // String web = new String("/wiki/Natural_language");
         listaVisitadas.add(aux);
-        //haremos una primera pasada
+        // haremos una primera pasada
         try {
             colaAux = getURLs(aux);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int i = 0;
         // hacer doble bucle (comprobar num visitadas(comprobar cola))
-        while (listaVisitadas.size() <= tamTotal || i < colaWeb.size()) {
-            //comprobamos si ya tenemos los links recogidos
+        while (listaVisitadas.size() <= tamTotal) {
+            // comprobamos si ya tenemos los links recogidos
             for (int k = 0; k < colaAux.size(); k++) {
-                //en caso de ser nuevos, los añadimos a la cola
+                // en caso de ser nuevos, los añadimos a la cola
                 if (!listaVisitadas.contains(colaAux.get(k))) {
                     colaWeb.add(colaAux.get(k));
                     listaVisitadas.add(colaAux.get(k));
                 }
             }
             colaAux.clear();
-            //recogemos nuevos links
-            try {
-                colaAux = getURLs(colaWeb.get(i));
-            } catch (IOException e) {
-                e.printStackTrace();
+            while (!colaWeb.isEmpty()) {    
+                // recogemos nuevos links
+                ArrayList<String> colaRes = new ArrayList<String>();
+                try {
+                    colaRes = getURLs(colaWeb.remove(0)); // colaweb.popFrente
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                for (int k = 0; k < colaRes.size(); k++) {
+                    colaAux.add(colaRes.get(k));
+                }
             }
-            ++i;
         }
         for (String string : colaWeb) {
             System.out.println(string);
@@ -59,14 +64,15 @@ public class CrawlerDownloader {
         BufferedReader br = new BufferedReader(new InputStreamReader(conectar.getInputStream()));
         String cadURL = new String();
 
-        Pattern patLinksValidos = Pattern.compile(".*href=\"(/wiki/\\w*(?![:])\\w*)\".*"); //comprueba si es un link de interés
-        Pattern patWebActual = Pattern.compile(dirWeb); //guarda patrón de web actual
-        Pattern patPagPpal = Pattern.compile("/wiki/Main_Page"); //guarda patrón de página principal
+        Pattern patLinksValidos = Pattern.compile(".*href=\"(/wiki/\\w*(?![:])\\w*)\".*"); // comprueba si es un link de
+                                                                                           // interés
+        Pattern patWebActual = Pattern.compile(dirWeb); // guarda patrón de web actual
+        Pattern patPagPpal = Pattern.compile("/wiki/Main_Page"); // guarda patrón de página principal
         Matcher mat, matWebAct, matWebPpal; // matchers
 
-        File fich = new File("direcciones.txt");
+        File fich = new File("direcciones.txt"); // cambiar para crear fichero unico html
         FileWriter writer = new FileWriter(fich);
-        //System.out.println("Extrayendo direcciones...");
+        // System.out.println("Extrayendo direcciones...");
         while ((cadURL = br.readLine()) != null) {
             mat = patLinksValidos.matcher(cadURL);
             if (mat.matches()) {
