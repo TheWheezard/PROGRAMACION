@@ -41,6 +41,7 @@ public class CrawlerDownloader {
                         colaWeb.add(colaAux.get(k));
                         listaVisitadas.add(colaAux.get(k));
                         contPag++;
+                        System.out.println(listaVisitadas.size() + " " + contPag);
                     }
                 } else {
                     k = colaAux.size();
