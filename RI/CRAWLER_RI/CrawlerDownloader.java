@@ -1,9 +1,7 @@
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.*;
+import java.util.regex.*;
 
 /**
  * CrawlerDownloader
@@ -14,13 +12,16 @@ public class CrawlerDownloader {
     static ArrayList<String> colaWeb;
     static LinkedHashSet<String> listaVisitadas;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        System.out.println("Inicio Crawler");
+        long inicTiempo = System.nanoTime(); // empezamos cronómetro
         colaWeb = new ArrayList<String>();
         listaVisitadas = new LinkedHashSet<String>();
         ArrayList<String> colaAux = new ArrayList<String>();
-        String aux = new String("/wiki/Natural_language");
-        // colaWeb.add(aux);
-        // String web = new String("/wiki/Natural_language");
+        //String aux = new String("/wiki/Natural_language");
+        String aux = new String("/wiki/Rock_music");
+        File fich = new File("direcciones.txt"); // observador de direcciones extraídas
+        FileWriter writer = new FileWriter(fich);
         listaVisitadas.add(aux);
         // haremos una primera pasada
         try {
@@ -29,14 +30,22 @@ public class CrawlerDownloader {
             e.printStackTrace();
         }
         // hacer doble bucle (comprobar num visitadas(comprobar cola))
-        while (listaVisitadas.size() <= tamTotal) {
+        int contPag = 1;
+        while (listaVisitadas.size() < tamTotal) {
             // comprobamos si ya tenemos los links recogidos
             for (int k = 0; k < colaAux.size(); k++) {
-                // en caso de ser nuevos, los añadimos a la cola
-                if (!listaVisitadas.contains(colaAux.get(k))) {
-                    colaWeb.add(colaAux.get(k));
-                    listaVisitadas.add(colaAux.get(k));
+                // Si la lista de pags visitadas no ha alcanzado el límite
+                if (contPag < tamTotal) {
+                    // en caso de ser nuevos, los añadimos a la cola
+                    if (!listaVisitadas.contains(colaAux.get(k))) {
+                        colaWeb.add(colaAux.get(k));
+                        listaVisitadas.add(colaAux.get(k));
+                        contPag++;
+                    }
+                } else {
+                    k = colaAux.size();
                 }
+                //System.out.println(listaVisitadas.size());
             }
             colaAux.clear();
             while (!colaWeb.isEmpty()) {    
@@ -52,9 +61,13 @@ public class CrawlerDownloader {
                 }
             }
         }
-        for (String string : colaWeb) {
-            System.out.println(string);
+
+        for (String string : listaVisitadas) {
+            writer.write(string + "\n"); // escribimos la línea en fichero
         }
+        writer.close();
+        double tiempoTotal = (double) (System.nanoTime() - inicTiempo) / (long) 1.0e9; // fin cronómetro
+        System.out.println(listaVisitadas.size() + " " + colaWeb.size() + "\nTiempo: " + tiempoTotal + " segundos");
     }
 
     public static ArrayList<String> getURLs(String dirWeb) throws IOException {
@@ -70,29 +83,23 @@ public class CrawlerDownloader {
         Pattern patPagPpal = Pattern.compile("/wiki/Main_Page"); // guarda patrón de página principal
         Matcher mat, matWebAct, matWebPpal; // matchers
 
-        File fich = new File("direcciones.txt"); // cambiar para crear fichero unico html
-        FileWriter writer = new FileWriter(fich);
-        // System.out.println("Extrayendo direcciones...");
+        //String[] nombreDoc = dirWeb.split("/");
+        //File fich = new File(nombreDoc[2] + ".html"); // fichero único nombre_pag.html
+        //FileWriter writer = new FileWriter(fich);
         while ((cadURL = br.readLine()) != null) {
-            mat = patLinksValidos.matcher(cadURL);
-            if (mat.matches()) {
+            mat = patLinksValidos.matcher(cadURL); //toma la cadena
+            if (mat.matches()) {//si es link
                 String cad = mat.group(1);
                 matWebAct = patWebActual.matcher(cad);
                 matWebPpal = patPagPpal.matcher(cad);
                 if (!(matWebAct.matches() || matWebPpal.matches())) {
-                    colaCandidatos.add(mat.group(1));
+                    colaCandidatos.add(mat.group(1)); // añadimos a cola de págs
                     //writer.write(mat.group(1) + "\n");
                 }
             }
+            //writer.write(cadURL + "\n"); // escribimos la línea en fichero
         }
-        writer.close();
+        //writer.close(); // cerrar fichero
         return colaCandidatos;
     }
 }
-
-/**
- * NOTAS:
- * Debo crear una cola que mantenga los links en lugar de volcarlos en ficheros
- * Debo crear un fichero por web para volcar contenido
- * Probar a sacar solo txt
- */
