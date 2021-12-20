@@ -46,7 +46,6 @@ public class CrawlerDownloader {
                 } else {
                     k = colaAux.size();
                 }
-                //System.out.println(listaVisitadas.size());
             }
             colaAux.clear();
             while (!colaWeb.isEmpty()) {    
