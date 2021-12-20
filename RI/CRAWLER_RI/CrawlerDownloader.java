@@ -29,7 +29,7 @@ public class CrawlerDownloader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // hacer doble bucle (comprobar num visitadas(comprobar cola))
+        // doble bucle (comprobar num visitadas(comprobar cola))
         int contPag = 1;
         while (listaVisitadas.size() < tamTotal) {
             // comprobamos si ya tenemos los links recogidos
@@ -41,21 +41,25 @@ public class CrawlerDownloader {
                         colaWeb.add(colaAux.get(k));
                         listaVisitadas.add(colaAux.get(k));
                         contPag++;
-                        System.out.println(listaVisitadas.size() + " " + contPag);
                     }
                 } else {
                     k = colaAux.size();
                 }
             }
+
             colaAux.clear();
+
             while (!colaWeb.isEmpty()) {    
                 // recogemos nuevos links
                 ArrayList<String> colaRes = new ArrayList<String>();
+
                 try {
-                    colaRes = getURLs(colaWeb.remove(0)); // colaweb.popFrente
+                    colaRes = getURLs(colaWeb.get(0)); 
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                colaWeb.remove(0);// colaweb.popFrente
+
                 for (int k = 0; k < colaRes.size(); k++) {
                     colaAux.add(colaRes.get(k));
                 }
@@ -66,6 +70,7 @@ public class CrawlerDownloader {
             writer.write(string + "\n"); // escribimos la línea en fichero
         }
         writer.close();
+
         double tiempoTotal = (double) (System.nanoTime() - inicTiempo) / (long) 1.0e9; // fin cronómetro
         System.out.println(listaVisitadas.size() + " " + colaWeb.size() + "\nTiempo: " + tiempoTotal + " segundos");
     }
