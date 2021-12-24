@@ -65,12 +65,12 @@ public class CrawlerDownloader {
                 }
             }
         }
-
+/*
         for (String string : listaVisitadas) {
             writer.write(string + "\n"); // escribimos la línea en fichero
         }
         writer.close();
-
+//*/
         double tiempoTotal = (double) (System.nanoTime() - inicTiempo) / (long) 1.0e9; // fin cronómetro
         System.out.println(listaVisitadas.size() + " " + colaWeb.size() + "\nTiempo: " + tiempoTotal + " segundos");
     }
@@ -88,9 +88,9 @@ public class CrawlerDownloader {
         Pattern patPagPpal = Pattern.compile("/wiki/Main_Page"); // guarda patrón de página principal
         Matcher mat, matWebAct, matWebPpal; // matchers
 
-        //String[] nombreDoc = dirWeb.split("/");
-        //File fich = new File(nombreDoc[2] + ".html"); // fichero único nombre_pag.html
-        //FileWriter writer = new FileWriter(fich);
+        String[] nombreDoc = dirWeb.split("/");
+        File fich = new File(nombreDoc[2] + ".html"); // fichero único nombre_pag.html
+        FileWriter writer = new FileWriter(fich);
         while ((cadURL = br.readLine()) != null) {
             mat = patLinksValidos.matcher(cadURL); //toma la cadena
             if (mat.matches()) {//si es link
@@ -99,12 +99,11 @@ public class CrawlerDownloader {
                 matWebPpal = patPagPpal.matcher(cad);
                 if (!(matWebAct.matches() || matWebPpal.matches())) {
                     colaCandidatos.add(mat.group(1)); // añadimos a cola de págs
-                    //writer.write(mat.group(1) + "\n");
                 }
             }
-            //writer.write(cadURL + "\n"); // escribimos la línea en fichero
+            writer.write(cadURL + "\n"); // escribimos la línea en fichero
         }
-        //writer.close(); // cerrar fichero
+        writer.close(); // cerrar fichero
         return colaCandidatos;
     }
 }
