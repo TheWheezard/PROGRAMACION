@@ -18,7 +18,7 @@ public class CrawlerDownloader {
         colaWeb = new ArrayList<String>();
         listaVisitadas = new LinkedHashSet<String>();
         ArrayList<String> colaAux = new ArrayList<String>();
-        //String aux = new String("/wiki/Natural_language");
+        //String aux = new String("/wiki/George_Lucas");
         String aux = new String("/wiki/Rock_music");
         File fich = new File("direcciones.txt"); // observador de direcciones extraídas
         FileWriter writer = new FileWriter(fich);
@@ -65,7 +65,7 @@ public class CrawlerDownloader {
                 }
             }
         }
-/*
+//*
         for (String string : listaVisitadas) {
             writer.write(string + "\n"); // escribimos la línea en fichero
         }
@@ -94,7 +94,12 @@ public class CrawlerDownloader {
         while ((cadURL = br.readLine()) != null) {
             mat = patLinksValidos.matcher(cadURL); //toma la cadena
             if (mat.matches()) {//si es link
-                String cad = mat.group(1);
+                String cad = new String();
+                if (mat.group(1) != null || mat.group(1) != "") {
+                    cad = mat.group(1);
+                } else if (mat.group(2) != null || mat.group(2) != "") {
+                    cad = mat.group(2);
+                }
                 matWebAct = patWebActual.matcher(cad);
                 matWebPpal = patPagPpal.matcher(cad);
                 if (!(matWebAct.matches() || matWebPpal.matches())) {
