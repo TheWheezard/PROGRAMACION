@@ -7,7 +7,7 @@ import java.util.regex.*;
  * CrawlerDownloader
  */
 public class CrawlerDownloader {
-    static int tamTotal = 15000;
+    static int tamTotal = 7000;
     static int cont = 0;
     static ArrayList<String> colaWeb;
     static LinkedHashSet<String> listaVisitadas;
@@ -18,8 +18,8 @@ public class CrawlerDownloader {
         colaWeb = new ArrayList<String>();
         listaVisitadas = new LinkedHashSet<String>();
         ArrayList<String> colaAux = new ArrayList<String>();
-        //String aux = new String("/wiki/George_Lucas");
-        String aux = new String("/wiki/Rock_music");
+        String aux = new String("/wiki/George_Lucas");
+        //String aux = new String("/wiki/Rock_music");
         File fich = new File("direcciones.txt"); // observador de direcciones extraídas
         FileWriter writer = new FileWriter(fich);
         listaVisitadas.add(aux);
@@ -82,28 +82,34 @@ public class CrawlerDownloader {
         BufferedReader br = new BufferedReader(new InputStreamReader(conectar.getInputStream()));
         String cadURL = new String();
 
-        Pattern patLinksValidos = Pattern.compile(".*href=\"(/wiki/\\w*(?![:])\\w*)\".*"); // comprueba si es un link de
-                                                                                           // interés
+        //Patrones y matchers
+        Pattern patLinksValidos1 = Pattern.compile(".*href=\"(/wiki/[\\w\\d#%]*(?![:])[\\w\\d#%]*)\".*"); // comprueba si es un link 
+        Pattern patLinksValidos2 = Pattern.compile(".*href=\"(/wiki/(?:[\\w\\d#%]*(?::(?=[_]))[\\w\\d#%]*))\".*"); // de interés
         Pattern patWebActual = Pattern.compile(dirWeb); // guarda patrón de web actual
         Pattern patPagPpal = Pattern.compile("/wiki/Main_Page"); // guarda patrón de página principal
-        Matcher mat, matWebAct, matWebPpal; // matchers
+        Matcher mat1, mat2, matWebAct, matWebPpal; // matchers
 
         String[] nombreDoc = dirWeb.split("/");
-        File fich = new File(nombreDoc[2] + ".html"); // fichero único nombre_pag.html
+        File fich = new File(nombreDoc[2].replace(":", "-") + ".html"); // fichero único nombre_pag.html
         FileWriter writer = new FileWriter(fich);
         while ((cadURL = br.readLine()) != null) {
-            mat = patLinksValidos.matcher(cadURL); //toma la cadena
-            if (mat.matches()) {//si es link
-                String cad = new String();
-                if (mat.group(1) != null || mat.group(1) != "") {
-                    cad = mat.group(1);
-                } else if (mat.group(2) != null || mat.group(2) != "") {
-                    cad = mat.group(2);
-                }
+            mat1 = patLinksValidos1.matcher(cadURL); //toma la cadena
+            String cad = new String();
+            if (mat1.matches()) {//si es link
+                cad = mat1.group(1);
                 matWebAct = patWebActual.matcher(cad);
                 matWebPpal = patPagPpal.matcher(cad);
                 if (!(matWebAct.matches() || matWebPpal.matches())) {
-                    colaCandidatos.add(mat.group(1)); // añadimos a cola de págs
+                    colaCandidatos.add(mat1.group(1)); // añadimos a cola de págs
+                }
+            }
+            mat2 = patLinksValidos2.matcher(cadURL); //toma la cadena
+            if (mat2.matches()) {//si es link
+                cad = mat2.group(1);
+                matWebAct = patWebActual.matcher(cad);
+                matWebPpal = patPagPpal.matcher(cad);
+                if (!(matWebAct.matches() || matWebPpal.matches())) {
+                    colaCandidatos.add(mat2.group(1)); // añadimos a cola de págs
                 }
             }
             writer.write(cadURL + "\n"); // escribimos la línea en fichero
