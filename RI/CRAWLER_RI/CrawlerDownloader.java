@@ -65,14 +65,14 @@ public class CrawlerDownloader {
                 }
             }
         }
-//*
+
         for (String string : listaVisitadas) {
             writer.write(string + "\n"); // escribimos la línea en fichero
         }
         writer.close();
-//*/
+
         double tiempoTotal = (double) (System.nanoTime() - inicTiempo) / (long) 1.0e9; // fin cronómetro
-        System.out.println(listaVisitadas.size() + " " + colaWeb.size() + "\nTiempo: " + tiempoTotal + " segundos");
+        System.out.println(listaVisitadas.size() + "\nTiempo: " + tiempoTotal + " segundos");
     }
 
     public static ArrayList<String> getURLs(String dirWeb) throws IOException {
