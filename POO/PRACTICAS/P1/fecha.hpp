@@ -1,65 +1,76 @@
 #ifndef FECHA_HPP
 #define FECHA_HPP
 
-#include<iostream> //operator <<
+#include <exception>
 #include <iomanip>
 #include <cstdio>
+#include <iostream>
 #include <ctime>
-
+#include <locale>
 
 class Fecha{
 private:
-	int dia_, mes_, anno_;
-	bool comprueba() const;
-	int  dia_max() const;
+    int dia_, mes_, anio_;
+    bool dia_correcto();
+    int dia_max();
+
 public:
-	/*CLASE INVALIDA*/
-	class Invalida{
-	private:
-		const char *info_;
-	public:
-		Invalida(const char *in);
-		const char* por_que() const;
-	};
+    /*CONSTANTES*/
+    static const int AnnoMinimo = 1902;
+    static const int AnnoMaximo = 2037;
 
-	/*CONSTANTES*/
-	static const int AnnoMinimo = 1902;
-	static const int AnnoMaximo = 2037;
-	
-	/*CONSTRUCTORES*/
-	explicit Fecha(int dd=0, int mm=0, int aaaa=0);
-	Fecha(const char* c);
-	
-	const char* cadena() const; //conversion a const char*
-	
-	/*GETERS*/
-	const int dia()  const noexcept{return dia_;}
-	const int mes()  const noexcept{return mes_;}
-	const int anno() const noexcept{return anno_;}
-			
-	/*OPERADORES*/
-	Fecha&  operator++();  //pre-incremento (++f)
-	Fecha operator++(int); //post-incremento (f++)
-	Fecha&  operator--();  //pre-decremento (--f)
-	Fecha operator--(int); //post-decremento (f--)
-	/*ARITMETICOS*/
-	Fecha& operator+=(int i); //fecha+=i;
-	Fecha& operator-=(int i); //fecha-=i;
-	Fecha operator+( int d)const;
-	Fecha operator-( int d)const;
-		
-	/*ENTRADA - SALIDA*/
-	friend std::ostream& operator<<(std::ostream& os, const Fecha& f)noexcept; //salida
-	friend std::istream& operator>>(std::istream& is, Fecha& f); //entrada
+    /*CLASE DE ERROR*/
+    class Invalida{
+    private:
+        const char *info;
+
+    public:
+        Invalida(const char *);
+        const char *por_que() const;
+    };
+
+    /*CONSTRUCTORES*/
+    explicit Fecha(int dia = 0, int mes = 0, int anio = 0);
+    Fecha(const char*); // conversion
+
+    /*OBSERVADORES*/
+    const int dia() const noexcept;
+    const int mes() const noexcept;
+    const int anno() const noexcept;
+
+    const char* cadena() const;
+
+    /*OPERADORES INCREMENTO*/
+    Fecha& operator++();   // operador ++f
+    Fecha operator++(int); // operador f++
+    Fecha& operator--();   // operador --f
+    Fecha operator--(int); // operador f--
+
+    /*OPERADORES ARITMETICOS*/
+    Fecha& operator+=(int);
+    Fecha& operator-=(int);
+    
+
+    /*ENTRADA-SALIDA*/
+    friend std::ostream& operator<<(std::ostream&, const Fecha&) noexcept;
+    friend std::istream& operator>>(std::istream&, Fecha&);
 };
-	
-/*OPERADORES LOGICOS*/
-bool operator==(const Fecha& f1, const Fecha& f2)noexcept;
-bool operator!=(const Fecha& f1, const Fecha& f2)noexcept;
-bool operator> (const Fecha& f1, const Fecha& f2)noexcept;
-bool operator< (const Fecha& f1, const Fecha& f2)noexcept;
-bool operator>=(const Fecha& f1, const Fecha& f2)noexcept;
-bool operator<=(const Fecha& f1, const Fecha& f2)noexcept;
 
+/*OBSERVADORES*/
+const inline int Fecha::dia() const noexcept{ return dia_; }
+const inline int Fecha::mes() const noexcept{ return mes_; }
+const inline int Fecha::anno() const noexcept{ return anio_; }
 
-#endif
+/*OPERADORES ARITMÉTICOS EXTERNOS*/
+Fecha& operator+(const Fecha&, int);
+Fecha& operator-(const Fecha&, int);
+
+/*OPERADORES LÓGICOS*/
+bool operator==(const Fecha&, const Fecha&) noexcept;
+bool operator!=(const Fecha&, const Fecha&) noexcept;
+bool operator>(const Fecha&, const Fecha&) noexcept;
+bool operator<(const Fecha&, const Fecha&) noexcept;
+bool operator>=(const Fecha&, const Fecha&) noexcept;
+bool operator<=(const Fecha&, const Fecha&) noexcept;
+
+#endif // !FECHA_HPP
