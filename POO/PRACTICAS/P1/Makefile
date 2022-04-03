@@ -25,9 +25,9 @@ test-caso0-fecha-auto.o test-caso0-cadena-auto.o test-auto.o: \
 	test-caso0-fecha-auto.cpp test-caso0-cadena-auto.cpp \
 	test-auto.cpp test-auto.hpp fecha.hpp cadena.hpp
 
-pack: 
+dist: 
 	ls -1 $(DIR)fecha.hpp $(DIR)fecha.cpp $(DIR)cadena.hpp $(DIR)cadena.cpp $(DIR)Makefile | \
-	tar -cvzf ../../Lopez_Sierra_Javier.tar.gz -T -
+	tar -cvzf ../Lopez_Sierra_Javier.tar.gz -T -
 
 clean: 
 	@$(RM) $(EXES) *.o
