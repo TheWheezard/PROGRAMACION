@@ -1,162 +1,174 @@
 #include "tarjeta.hpp"
+//#include "../luhn.cpp"
+
 #include <iomanip>
 #include <cstring>
-#include <string.h>
 #include <cctype>
 
-/*ALGORITMO DE LUHN*/
-bool luhn(const Cadena&);
-
-/***CLASE NUMERO***/
-/*CONSTRUCTORES*/
-Numero::Numero(const Cadena& num){
-	char keys[]="./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	size_t ii=strcspn(num.c_str(), keys);			//caracteres del primer elemento que no esten en el segundo
-	if(ii<num.length()) throw Incorrecto(Razon::DIGITOS);
-	char *pch;
-	char *aux=new char[30];
-	pch=strpbrk(const_cast<char*>(num.c_str()),"1234567890");  //buscar una cadena por cualquier caracter del conjunto
-	int i=0;
-	while(pch !=NULL){
-		aux[i++]=*pch;
-		pch=strpbrk(pch+1,"1234567890");
-	}
-	aux[i]='\0';
-	Cadena n(aux);
-	delete[] aux;
-	if(n.length()>19 || n.length()<13)			//Verificamos que tamanio no este entre 13 y 19 caracteres
-		throw Incorrecto(Razon::LONGITUD);
-	if(!luhn(n))								//Verificamos si el numero es invalido segun el algoritmo de lunh
-		throw Incorrecto(Razon::NO_VALIDO);
-	numero_=n;
-}
-/*DESTRUCTOR*/
-Numero::~Numero(){}	
-
-/**NUMERO INCORRECTO**/
-Numero::Incorrecto::Incorrecto(const Numero::Razon r):r_(r){}
-
-/*FUNCION eliminar*/
-void eliminarChar(Cadena& cad, size_t pos){
-	Cadena nuevo = cad.substr(0,pos);			//Obtener lo que necesitamos de cad y lo guardamos
-	if((pos+1)<cad.length())
-		nuevo+=Cadena(cad.substr(pos+1, cad.length()));
-	cad=move(nuevo);
-} 
-
-/***CLASE TARJETA***/
-/*CONSTRUCTOR*/
-Tarjeta::Tarjeta(const Numero& n, Usuario& u, const Fecha& f):numero_(n), usuario_(&u), caducidad_(f), activa_(1), tipo_(esTipo()){
-	if(f<Fecha()) throw Caducada(f);
-	usuario_->es_titular_de(*this);
-}
-/*GETER*/
-bool& Tarjeta::activa(bool a){
-	activa_=a;
-	return activa_;
-}
-/*DESTRUCTOR*/
-Tarjeta::~Tarjeta(){
-	if(usuario_) usuario_->no_es_titular_de(*this);
+/* CLASE NUMERO */
+bool luhn(const Cadena& numero);
+Numero::Numero(const Cadena& cad):num_(elimEsp(cad)){
+    for(size_t i = 0; num_[i] != '\0'; ++i)
+        if (!isdigit(num_[i])) throw Incorrecto(DIGITOS);
+    if (num_.length() < 13 || num_.length() > 19) throw Incorrecto(LONGITUD);
+    if (!luhn(num_)) throw Incorrecto(NO_VALIDO);
 }
 
-/**CLASE CADUCADA**/
-/*CONSTRUCTOR*/
-Tarjeta::Caducada::Caducada(const Fecha& f):fecha_caducada(f){}
+Cadena Numero::elimEsp(const Cadena& cad){
+    char* aux = new char[cad.length()+1];
+    size_t i = 0;
+    size_t j = 0;
+    while (cad[i] != '\0'){
+        if (!isspace(cad[i])){
+            aux[j] = cad[i];
+            ++j;
+        }
+        ++i;
+    }
+    aux[j] = cad[i];
+    return Cadena {aux};
+}
 
-/**CLASE NUM_DUPLICADO**/
-/*CONSTRUCTOR*/
-Tarjeta::Num_duplicado::Num_duplicado(const Numero& n):numer_(n){}
-
-/**CLASE DESACTIVADA**/
-/*CONSTRUCTOR*/
-Tarjeta::Desactivada::Desactivada(){}
-
-/*FUNCIONES DE TARJETA*/
+/* CLASE TARJETA */
+std::unordered_set<Cadena> Tarjeta::numeros;
+Tarjeta::Tarjeta(const Numero& num, Usuario& us, const Fecha& f):num_(num), titular_(&us), caducidad_(f), activa_(true){
+    //if (!numeros.insert(num.num()).second) throw Num_duplicado(num);
+    Fecha hoy{};
+    if (f < hoy) throw Caducada(f);
+    switch (num_.num()[0])
+    {
+    case '3': // dig 3
+        {
+        if (num_.num()[1] == '4' || num_.num()[1] == '7') //dig 3 && (4|7)
+            tipo_ = AmericanExpress;
+        else //dig 3 && !(4|7)
+            tipo_ = JCB;
+        break;
+        }
+    case '4': {
+        tipo_ = VISA;
+        break;
+        }
+    case '5': {
+        tipo_ = Mastercard;
+        break;
+        }
+    case '6': {
+        tipo_ = Maestro;
+        break;
+        }
+    default: {
+        tipo_ = Otro;
+        break;
+        }
+    }
+    titular_->es_titular_de(*this);
+}
 void Tarjeta::anula_titular(){
-	activa_=false;
-	const_cast<Usuario*&>(usuario_)=nullptr;
+    this->activa_ = false;
+    this->titular_ = nullptr;
 }
-
-Tarjeta::Tipo Tarjeta::esTipo(){
-	int a=atoi(numero_.num().substr(0,2).c_str());
-	switch(a/10){
-		case 3:
-			if(a==34 || a==37) return Tarjeta::AmericanExpress;
-			else return Tarjeta::JCB;
-			break;
-		case 4:
-			return Tarjeta::VISA;
-			break;
-		case 5:
-			return Tarjeta::Mastercard;
-			break;
-		case 6:
-			return Tarjeta::Maestro;
-			break;
-		default:
-			return Tarjeta::Otro;
-	}
-}
-
-/*FLUJO DE SALIDA*/
-ostream& operator <<(ostream& os, const Tarjeta& t){
-	os<<t.tipo()<<endl<<t.numero()<<endl;
-	//Transformar nombre y apellidos en mayusculas
-	Cadena aux=t.titular()->nombre();					 //Asignamos un nombre a la cadena aux modificable
-	int i=0;
-	while(aux[i]!='\0'){
-		if(islower(aux[i])) aux[i]=toupper(aux[i]);			//Pasamos a mayusculas si no lo esta
-		i++;
-	}
-	os<<aux<<" ";
-	i=0;
-	aux=t.titular()->apellidos();
-	while(aux[i]!='\0'){
-		if(islower(aux[i])) aux[i]=toupper(aux[i]);			//Pasamos a mayusculas si no lo esta
-		i++;
-	}
-	os<<aux<<endl;
-	os<<"Caduca: "<<setfill('0')<<setw(2)<<t.caducidad().mes()<<"/"<<setw(2)<<(t.caducidad().anno()%100)<<endl;
-	return os;
-}
-
-ostream& operator <<(ostream& os, const Tarjeta::Tipo& tipo){
-	switch(tipo){//segun tipo de tarjeta
-		case Tarjeta::VISA: 
-			os<<"VISA";
-			break;
-		case Tarjeta::Mastercard:
-			os << "Mastercard";
-			break;
-		case Tarjeta::Maestro:
-			os<<"Maestro";
-			break;
-		case Tarjeta::JCB: 
-			os<<"JCB";
-			break;
-		case Tarjeta::AmericanExpress:
-			os<<"AmericanExpress";
-			break;
-		case Tarjeta::Otro:
-			os<<"Otro";
-			break;
-		default:
-			os<<"Error";
-	}
-	return os;
-}
-
-/*OPERADORES LOGICOS*/
-bool operator <(const Numero& a, const Numero& b){
-	return strcmp(a,b)<0;
-}
-bool operator <(const Tarjeta& a, const Tarjeta& b){
-	return a.numero()<b.numero();
-}
-bool operator >(const Tarjeta& a, const Tarjeta& b){
-	return b.numero()<a.numero();
+Tarjeta::~Tarjeta(){
+    //numeros.erase(this->numero().num());
+    if (this->titular_ != nullptr){
+        this->titular_->no_es_titular_de(*this);
+    }
 }
 
 
-
+//Salida Tipo
+std::ostream& operator<<(std::ostream& os, const Tarjeta::Tipo& t){
+    switch (t){
+    case Tarjeta::Otro:
+        os << "Otro";
+        break;
+    case Tarjeta::VISA:
+        os << "VISA";
+        break;
+    case Tarjeta::Mastercard:
+        os << "Mastercard";
+        break;
+    case Tarjeta::Maestro:
+        os << "Maestro";
+        break;
+    case Tarjeta::JCB:
+        os << "JCB";
+        break;
+    case Tarjeta::AmericanExpress:
+        os << "American Express";
+        break;
+    
+    default:
+        os << "Error";
+        break;
+    }
+    return os;
+}
+//Salida Tarjeta
+std::ostream& operator<<(std::ostream& os, const Tarjeta& t){
+// Inicio de la tarjeta
+    os  << " ____________________" << std::endl
+        << "/                    \\" <<std::endl;
+// Tipo de la tarjeta
+    switch (t.tipo())
+    {
+    case Tarjeta::Otro:
+        os << "| " << t.tipo() << "               |" << std::endl;
+        break;
+    case Tarjeta::VISA:
+        os << "| " << t.tipo() << "               |" << std::endl;
+        break;
+    case Tarjeta::Mastercard:
+        os << "| " << t.tipo() << "         |" << std::endl;
+        break;
+    case Tarjeta::Maestro:
+        os << "| " << t.tipo() << "            |" << std::endl;
+        break;
+    case Tarjeta::JCB:
+        os << "| " << t.tipo() << "                |" << std::endl;
+        break;
+    case Tarjeta::AmericanExpress:
+        os << "| " << t.tipo() << "   |" << std::endl;
+        break;
+    
+    default:
+        os << "Error" << std::endl;
+        break;
+    }
+// Numero de la tarjeta
+    os << "| " << t.numero();
+    int cont = 19 - t.numero().num().length(); // conteo de los espacios restantes hasta '|'
+    while (cont > 0){
+        os << " "; // tantos espacios como haga falta para llegar a '|'
+        --cont;
+    }
+    os << "|" << std::endl;
+// Usuario de la tarjeta
+    //Nombre
+    Cadena aux {t.titular()->nombre()};
+    for(size_t i = 0; aux[i] != '\0'; ++i){
+        if (islower(aux[i]))
+            aux[i] = toupper(aux[i]);
+    }
+    cont = 19 - aux.length(); // conteo de los espacios restantes hasta '|'
+    os << "| " << aux << " ";
+    --cont; // espacio
+    //Apellidos
+    aux = t.titular()->apellidos();
+    for(size_t i = 0; aux[i] != '\0'; ++i){
+        if (islower(aux[i]))
+            aux[i] = toupper(aux[i]);
+    }
+    cont -= aux.length();
+    os << aux;
+    while (cont > 0){
+        os << " "; // tantos espacios como haga falta para llegar a '|'
+        --cont;
+    }
+    os << "|" << std::endl;
+// Caducidad y fin
+    os << "| Caduca: " << std::setfill('0') << std::setw(2) << t.caducidad().mes() << "/" << std::setw(2) << t.caducidad().anno()%100 << "      |" << std::endl
+       << "\\____________________/";
+    
+    return os;
+}

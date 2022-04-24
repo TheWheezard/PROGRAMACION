@@ -1,38 +1,37 @@
 #ifndef ARTICULO_HPP
 #define ARTICULO_HPP
 
+#include <iostream>
+#include <iomanip>
+#include <locale>
 #include "fecha.hpp"
 #include "cadena.hpp"
-#include <iomanip>
-#include <stdlib.h>
-#include <iostream>
-#include <locale>
 
-using namespace std;
-
-/**CLASE ARTICULO**/
 class Articulo{
-private:
-	Cadena referencia_;
-	Cadena titulo_;
-	Fecha f_publi_;
-	double precio_;
-	unsigned stock_;
 public:
-	/*CONSTRUCTOR*/
-	Articulo (const Cadena &r, const Cadena &t, const Fecha &f, double p, unsigned s);
-	
-	/*GETERS*/
-	Cadena referencia() const {return referencia_;}
-	Cadena titulo() const {return titulo_;}
-	Fecha f_publi() const {return f_publi_;}
-	double precio()const {return precio_;}
-	unsigned stock()const {return stock_;}
-	double& precio() {return precio_;}
-	unsigned& stock() {return stock_;}
+    Articulo(const Cadena&, const Cadena&, const Fecha&, double, size_t);
+    const Cadena& referencia() const noexcept;
+    const Cadena& titulo() const noexcept;
+    const Fecha& f_publi() const noexcept;
+    double precio() const noexcept;
+    double& precio();
+    size_t stock() const noexcept;
+    size_t& stock();
+private:
+    const Cadena referencia_;
+    const Cadena titulo_;
+    const Fecha f_publicacion;
+    double precio_;
+    size_t ejemplares;
 };
 
-/*FUNCION SALIDA*/
-ostream& operator <<(ostream& os, const Articulo& ar) noexcept;
+std::ostream& operator<<(std::ostream&,const Articulo&) noexcept;
+inline const Cadena& Articulo::referencia() const noexcept{ return referencia_; }
+inline const Cadena& Articulo::titulo() const noexcept{ return titulo_; }
+inline const Fecha& Articulo::f_publi() const noexcept{ return f_publicacion; }
+inline double Articulo::precio() const noexcept{ return precio_; }
+inline double& Articulo::precio(){ return precio_; }
+inline size_t Articulo::stock() const noexcept{ return ejemplares; }
+inline size_t& Articulo::stock(){ return ejemplares; }
 
-#endif //FIN_ARTICULO_HPP
+#endif // !ARTICULO_HPP

@@ -1,122 +1,97 @@
 #ifndef TARJETA_HPP
 #define TARJETA_HPP
+
 #include "cadena.hpp"
-#include "tarjeta.hpp"
-#include "articulo.hpp"
 #include "usuario.hpp"
+#include <unordered_set>
 
-using namespace std;
-
-class Usuario;
 class Clave;
+class Usuario;
 
-/***CLASE NUMERO***/
+
+/* CLASE NUMERO */
 class Numero{
-private:
-	Cadena numero_;
 public:
-	enum Razon {LONGITUD, DIGITOS, NO_VALIDO};
-	/*CONSTRUCTOR*/
-	Numero (const Cadena&);
-		
-	/*OPERADOR*/
-	operator const char*()const{return numero_.c_str();}
-	
-	/*GETER*/
-	const Cadena& num() const{return numero_;}
-
-	/*DESTRUCTOR*/
-	~Numero(); 
-		
-	/**CLASE INCORRECTO**/
-	class Incorrecto{
-	public:	
-		/*CONSTRUCTOR*/
-		Incorrecto(const Numero::Razon r);
-		/*GETER*/
-		Numero::Razon razon()const{return r_;}
-	private:
-		Numero::Razon r_;
-	};
+    enum Razon {LONGITUD, DIGITOS, NO_VALIDO};
+    class Incorrecto{
+        Razon r;
+    public:
+        Incorrecto(Razon raz): r(raz){}
+        const Razon razon() const {return r;}
+    };
+    Numero(const Cadena&);
+    operator const char*() const;
+    const Cadena& num() const;
+private:
+    Cadena num_;
+    Cadena elimEsp(const Cadena&); //elimina espacios en blanco
 };
+inline Numero::operator const char*() const {return this->num_.c_str();}
+inline const Cadena& Numero::num() const {return this->num_;}
 
-/*FUNCION eliminar*/
-void eliminarChar(Cadena& cad, size_t pos);
+inline bool operator<(const Numero& n1, const Numero& n2){
+    return n1.num() < n2.num();
+}
 
-
-/***CLASE TARJETA***/
+/* CLASE TARJETA */
 class Tarjeta{
 public:
-	enum Tipo{Otro, VISA, Mastercard, Maestro, JCB, AmericanExpress};
+    friend Usuario;
 
-	/*CONSTRUCTORES*/
-	Tarjeta(const Numero& n, Usuario& usuario, const Fecha& caducidad);
-	Tarjeta (const Tarjeta& that)=delete;
-	Tarjeta& operator=(const Tarjeta &)=delete;
-		
-	/*GETERS*/
-	const Tarjeta::Tipo& tipo() const {return tipo_;}
-	const Numero& numero() const {return numero_;}
-	Usuario* titular() const {return usuario_;}
-	const Fecha& caducidad() const {return caducidad_;}
-	const bool activa()const {return activa_;}
+    enum Tipo {Otro, VISA, Mastercard, Maestro, JCB, AmericanExpress};
+    class Caducada{
+        Fecha f;
+    public:
+        Caducada(const Fecha& fec):f(fec){}
+        const Fecha& cuando() const {return f;}
+    };
+    class Num_duplicado{
+        Numero n;
+    public:
+        Num_duplicado(const Numero& num):n(num){}
+        const Numero que() const {return n;}
+    };
+    class Desactivada{
+    public:
+        Desactivada(){}
+    };
 
-	bool &activa(bool a=true);
+    Tarjeta(const Numero&, Usuario&, const Fecha&);//aparte activa y tipo
+    Tarjeta(const Tarjeta&) = delete;
+    Tarjeta& operator=(const Tarjeta&) = delete;
 
-	/*DESTRUCTOR*/
-	~Tarjeta();		
+    const Numero& numero() const noexcept;
+    Usuario* const titular() const noexcept;
+    const Fecha& caducidad() const noexcept;
+    const bool activa() const noexcept;
+    bool &activa(bool);
+    const Tipo& tipo() const noexcept;
 
-	/**CLASE CADUCADA**/
-	class Caducada{
-	public:
-		/*CONSTRUCTOR*/
-		Caducada(const Fecha& f);
-		/*GETER*/
-		const Fecha& cuando()const{return fecha_caducada;}
-	private:
-		Fecha fecha_caducada;
-	};
-		
-	/**CLASE NUM_DUPLICADO**/
-	class Num_duplicado{
-	public:
-		/*CONSTRUCTOR*/
-		Num_duplicado(const Numero&);
-		/*GETER*/
-		const Numero& que()const{return numer_;}
-	private:
-		Numero numer_;
-	};
-	
-	/**CLASE DESACTIVADA**/
-	class Desactivada{
-	public:
-		/*CONSTRUCTOR*/
-		Desactivada();
-	private:
-	};
-	
-	/*FUNCIONES DE TARJETA*/
-	void anula_titular();
-	Tipo esTipo();
-	
-	/*OPERADOR DE SALIDA*/
-	friend ostream& operator<<(ostream& os, const Tarjeta& t);
-
+    ~Tarjeta();
 private:
-	Numero numero_; 		//numero troquelado
-	Usuario* const usuario_;	//su titular
-	Fecha caducidad_;		//caducidad
-	bool activa_;	//1==activa; 0==no
-	Tipo tipo_;		//tipo de tarjeta
+    static std::unordered_set<Cadena> numeros;
+    Numero num_;
+    Usuario* titular_;
+    const Fecha caducidad_;
+    bool activa_;
+    Tipo tipo_;
+    void anula_titular();
+
 };
 
-/*OPERADORES DE SALIDA*/
-ostream& operator <<(ostream& os, const Tarjeta::Tipo& tipo);
+inline const Numero& Tarjeta::numero() const noexcept {return this->num_;}
+inline Usuario* const Tarjeta::titular() const noexcept {return this->titular_;}
+inline const Fecha& Tarjeta::caducidad() const noexcept {return this->caducidad_;}
+inline const bool Tarjeta::activa() const noexcept {return this->activa_;}
+inline bool& Tarjeta::activa(bool b=true) {return this->activa_ = b;}
+inline const Tarjeta::Tipo& Tarjeta::tipo() const noexcept {return this->tipo_;}
 
-/*OPERADORES LOGICOS*/
-bool operator <(const Numero& a, const Numero& b);
-bool operator <(const Tarjeta& a, const Tarjeta& b);
-bool operator >(const Tarjeta& a, const Tarjeta& b);
+inline bool operator<(const Tarjeta& t1, const Tarjeta& t2){
+    return t1.numero() < t2.numero();
+}
+std::ostream& operator<<(std::ostream&, const Tarjeta::Tipo&);
+std::ostream& operator<<(std::ostream&, const Tarjeta&);
 
-#endif //FIN_TARJETA_HPP
+
+
+#endif // !TARJETA_HPP
