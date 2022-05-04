@@ -83,7 +83,7 @@ inline const Numero& Tarjeta::numero() const noexcept {return this->num_;}
 inline Usuario* const Tarjeta::titular() const noexcept {return this->titular_;}
 inline const Fecha& Tarjeta::caducidad() const noexcept {return this->caducidad_;}
 inline const bool Tarjeta::activa() const noexcept {return this->activa_;}
-inline bool& Tarjeta::activa(bool b=true) {return this->activa_ = b;}
+inline bool& Tarjeta::activa(bool b) {return this->activa_ = b;}
 inline const Tarjeta::Tipo& Tarjeta::tipo() const noexcept {return this->tipo_;}
 
 inline bool operator<(const Tarjeta& t1, const Tarjeta& t2){
