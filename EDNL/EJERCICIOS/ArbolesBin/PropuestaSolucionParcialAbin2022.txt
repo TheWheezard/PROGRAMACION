@@ -1,0 +1,19 @@
+Entero NumeroSubArbolesReflejos (A Abin)
+   Devolver NumeroSubArbolesReflejos_Rec (Raiz(A), A)
+Finfuncion
+
+Entero NumeroSubArbolesReflejos_Rec (n nodo, A Abin)
+   Si n = NODO_NULO entonces
+       Devolver 0
+   Sino
+        Si TieneDosHijosReflejos(n,A) entonces
+            Devolver (2 + NumeroSubArbolesReflejos_Rec (HijoIzquierdo(n,A) ) + NumeroSubArbolesReflejos_Rec(HijoDerecho(n,A))
+        Sino 
+            Devolver (0 + NumeroSubArbolesReflejos_Rec (HijoIzquierdo(n,A) ) + NumeroSubArbolesReflejos_Rec(HijoDerecho(n,A))
+        Fsi
+   Fsi
+Ffuncion
+
+Logico TieneDosHijosReflejos(n nodo, A Abin)
+   Devolver (Hijoizquierdo(n,A) <> NODO_NULO AND HijoDerecho(n,A) <> NODO_NULO AND ReflejosAbin_Rec(HijoIzquierdo(n,A), HijoDerecho(n,A)) 
+Ffuncion  /* Por evaluación lazy no se entra en las condiciones dos y tres si en la una o en la dos aparece un false */
