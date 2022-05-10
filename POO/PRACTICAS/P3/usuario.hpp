@@ -1,123 +1,107 @@
 #ifndef USUARIO_HPP
 #define USUARIO_HPP
 
-#include "cadena.hpp"
-#include "tarjeta.hpp"
 #include "articulo.hpp"
+#include "tarjeta.hpp"
+
 #include <iostream>
 #include <string.h>
+#include <cstdlib>
 #include <random>
-#include <stdlib.h>
+#include <unistd.h>
+#include <iterator>
 #include <map>
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
-#include <unistd.h>
 
-using namespace std;
 
-//Declaramos clases que usaremos en la clase clave
 class Numero;
 class Tarjeta;
 
-/*---CLASE CLAVE---*/
-class Clave
-{
-	public:
-		/*-- CONSTRUCTOR-- */
-		Clave(const char*);
-		
-		/*-- OBSERVADORA-- */
-		Cadena clave() const{return pass_c;}			//Devuelve la clave cifrada
-		
-		/* --CONSTANTE-- */
-		enum Razon{CORTA, ERROR_CRYPT};
-		
-		/* --FUNCION--*/
-		bool verifica (const char*) const;
-		
-		/* ---CLASE INCORRECTA para excepciones--- */
-		class Incorrecta
-		{
-			public:
-				/*-- CONSTRUCTOR-- */
-				Incorrecta(const Clave::Razon r);
-				/*--OBSERVADORA--*/
-				Clave::Razon razon() const{return r_;}
-			private:
-				/*--VARIABLES PRIVADAS--*/
-				Clave::Razon r_;
-		};
-		
-		/* --DESTRUCTOR-- */
-		~Clave();
 
-	private:
-		/*--VARIABLES PRIVADAS--*/
-		Cadena pass_c;
-		
+/* CLASE CLAVE */
+class Clave{
+public:
+    enum motivo{CORTA, ERROR_CRYPT};
+    class Incorrecta{
+        motivo r;
+    public:
+        Incorrecta(motivo m):r(m){}
+        const motivo razon() const {return r;}
+    };
+
+    Clave(const char*);
+    const Cadena& clave() const noexcept;
+    bool verifica(const char*) const noexcept;
+private:
+    Cadena cad;
+    Cadena cifrar(const char*) const;
+    Cadena cifrar(const Cadena&) const;
 };
 
-/*---CLASE USUARIO---*/
-class Usuario
-{
+inline Clave::Clave(const char* c): cad(cifrar(c)){
+    if (strlen(c) < 5)
+        throw Clave::Incorrecta(Clave::CORTA);
+}
 
-	public:
-		/* --CONSTRUCTORES-- */
-		Usuario(const Cadena& _id, const Cadena& _nomb, const Cadena& _apell, const Cadena& _direcc, const Clave& _pass);
-		Usuario(const Usuario& that) = delete;
-		Usuario& operator=(const Usuario &)=delete;
-		
-		/* --COSNTANTES-- */
-		typedef map<Numero,Tarjeta*> Tarjetas;
-		typedef unordered_map<Articulo*,unsigned> Articulos;
-		
-		/* ---CLASE ID_DUPLICADO para excepciones--- */
-		class Id_duplicado
-		{
-			public:
-				/*-- CONSTRUCTOR-- */
-				Id_duplicado(const Cadena&);
-				/*--OBSERVADORA--*/
-				const Cadena& idd() const{return idd_;}
-			private:
-				/*--VARIABLES PRIVADAS--*/
-				Cadena idd_;
-		};
-		
-		/* --OBSERVADORAS */
-		const Cadena& id() const noexcept				{return ID_;}
-		const Cadena& nombre() const noexcept		{return nombre_;}
-		const Cadena& apellidos() const noexcept		{return apell_;}
-		const Cadena& direccion() const noexcept		{return direcc_;}
-		const Tarjetas& tarjetas() const noexcept		{return tarjetas_;}
-		const size_t n_articulos() const noexcept		{return n_articulos_;}
-		const Articulos& compra() const noexcept		{return articulos_;}
-			
-		/* --FUNCIONES clase usuario-- */
-		void es_titular_de (const Tarjeta&);			//Para asociar una tarjeta
-		void no_es_titular_de(Tarjeta&);				//Para desasociar una tarjeta
-		void compra(const Articulo&a, size_t cant=1);
-		
-		/*-- FLUJO DE SALIDA clase usuario--*/
-		friend ostream& operator << (ostream& os, const Usuario &u) noexcept;
-		
-		/* --DESTRUCTOR-- */
-		~Usuario();
+inline const Cadena& Clave::clave() const noexcept{
+    return this->cad;
+}
 
-	private:
-		/*-- VARIABLES PRIVADAS-- */
-		Cadena ID_, nombre_, apell_, direcc_;
-		Clave pass_;
-		Tarjetas tarjetas_;
-		Articulos articulos_;
-		size_t n_articulos_;
-		static unordered_set<Cadena> registrados;
+/* CLASE USUARIO */
+class Usuario{
+public:
+    typedef std::map<Cadena, Tarjeta*> Tarjetas;
+    typedef std::unordered_map<Articulo*, unsigned int> Articulos;
+
+    class Id_duplicado{
+        Cadena iddup;
+    public:
+        Id_duplicado(const Cadena& c):iddup(c){}
+        Id_duplicado(const char* c):iddup(c){}
+        const Cadena idd() const {return iddup;}
+    };
+
+    Usuario(const Cadena&, const Cadena&, const Cadena&, const Cadena&, const Clave&);
+    Usuario(const Usuario&) = delete;
+    Usuario& operator=(const Usuario&) = delete;
+    
+    const Cadena& id() const noexcept;
+    const Cadena& nombre() const noexcept;
+    const Cadena& apellidos() const noexcept;
+    const Cadena& direccion() const noexcept;
+    const Tarjetas& tarjetas() const noexcept;
+    const Articulos& compra() const noexcept;
+    const size_t n_articulos() const;
+
+    void es_titular_de(const Tarjeta &);
+    void no_es_titular_de(const Tarjeta&);
+    void compra(const Articulo& art, int cantidad = 1);
+    friend std::ostream& operator<<(std::ostream&, const Usuario&);
+    
+    ~Usuario();
+private:
+    static std::unordered_set<Cadena> identificadores;
+    Cadena id_, nombre_, apellidos_, direccion_;
+    Clave contrasenia;
+    Tarjetas tarjetas_;
+    Articulos compra_;
+    size_t n_articulos_;
 };
 
-/*--OPERADORES FUERA DE LA CLASE--*/
-void mostrar_carro(ostream&os, const Usuario& u);
+inline Usuario::Usuario(const Cadena& id, const Cadena& nom, const Cadena& apell, const Cadena& dir, const Clave& clave): id_(id), nombre_(nom), apellidos_(apell), direccion_(dir), contrasenia(clave), n_articulos_(0){
+    if (!(identificadores.insert(id_)).second) throw Id_duplicado(id);
+}
 
+inline const Cadena& Usuario::id() const noexcept {return this->id_;}
+inline const Cadena& Usuario::nombre() const noexcept {return this->nombre_;}
+inline const Cadena& Usuario::apellidos() const noexcept {return this->apellidos_;}
+inline const Cadena& Usuario::direccion() const noexcept {return this->direccion_;}
+inline const Usuario::Tarjetas& Usuario::tarjetas() const noexcept {return this->tarjetas_;}
+inline const Usuario::Articulos& Usuario::compra() const noexcept {return this->compra_;}
+inline const size_t Usuario::n_articulos() const{return this->n_articulos_;}
 
+void mostrar_carro(std::ostream&, const Usuario&);
 
-#endif
+#endif // !USUARIO_HPP

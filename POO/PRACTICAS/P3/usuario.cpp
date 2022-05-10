@@ -1,125 +1,74 @@
 #include "usuario.hpp"
 
-unordered_set<Cadena> Usuario::registrados;
+std::unordered_set<Cadena> Usuario::identificadores;
 
-/*---CLASE CLAVE---*/
-/*-- CONSTRUCTOR-- */
-Clave::Clave(const char* p)
-{
-	setlocale(LC_ALL,"");
-	
-	if(strlen(p)<5) throw Clave::Incorrecta(Clave::CORTA);
-	
-	random_device r;
-	uniform_int_distribution<size_t>dist(0,63);
+/* CLASE CLAVE */
+bool Clave::verifica(const char* c) const noexcept{
+    char* pass = crypt(c, this->cad.c_str());
+    return pass == this->cad;
+}
+
+Cadena Clave::cifrar(const char* ch) const{
+    std::random_device r;
+	std::uniform_int_distribution<size_t>dist(0,63);
 	char const MD5chars[] = "./ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	char salt[2] = {MD5chars[dist(r)], MD5chars[dist(r)]};
-	
-	if(crypt(p,salt)==nullptr) throw Clave::Incorrecta(Clave::ERROR_CRYPT);	//ciframos y comprobamos que se haya realizado correctamente
-	pass_c = crypt(p,salt);
+    char* aux = crypt(ch, salt);
+    if (aux == nullptr)
+        throw Clave::Incorrecta(Clave::ERROR_CRYPT);
+    return Cadena(aux);
+}
+Cadena Clave::cifrar(const Cadena& c) const{
+    const char* ch(c.c_str());
+    return cifrar(ch);
 }
 
-/* --FUNCION--*/
-bool Clave::verifica(const char* c) const
-{
-	char *p = crypt (c, pass_c.c_str());		
-	return p == pass_c;		
+
+/* CLASE USUARIO */
+
+
+void Usuario::es_titular_de(const Tarjeta& t){
+    if(t.titular() == this) tarjetas_[t.numero().num()] = const_cast<Tarjeta*>(&t);
+}
+void Usuario::no_es_titular_de(const Tarjeta& t){
+    auto aux = this->tarjetas_.find(t.numero().num());
+    aux->second->anula_titular();
+    this->tarjetas_.erase(t.numero().num());
+}
+void Usuario::compra(const Articulo& art, int cantidad){
+    if (cantidad > 0){
+        if (this->compra_.find(const_cast<Articulo*>(&art)) == this->compra_.end())
+            this->compra_.insert(std::make_pair(const_cast<Articulo*>(&art),cantidad));
+        else
+            this->compra_[const_cast<Articulo*>(&art)] = cantidad;
+    }
+    else if (cantidad == 0 && this->compra_.find(const_cast<Articulo*>(&art)) != this->compra_.end()){
+        this->compra_.erase(const_cast<Articulo*>(&art));
+    }
+    this->n_articulos_ = this->compra_.size();
 }
 
-/* ---CLASE INCORRECTA para excepciones--- */
-/*-- CONSTRUCTOR-- */
-Clave::Incorrecta::Incorrecta(const Clave::Razon r): r_(r){}
-
-/* --DESTRUCTOR-- */
-Clave::~Clave(){}
-
-
-/*---CLASE USUARIO---*/
-/* --CONSTRUCTOR-- */
-Usuario::Usuario(const Cadena& _id, const Cadena& _nomb, const Cadena& _apell, const Cadena& _direcc, const Clave& _pass)
-		:ID_(_id), nombre_(_nomb), apell_(_apell), direcc_(_direcc), pass_(_pass), n_articulos_(articulos_.size())
-{
-	if(!registrados.insert(ID_).second) throw Id_duplicado(ID_);
+Usuario::~Usuario(){
+    for (auto& iter:this->tarjetas_){
+        iter.second->anula_titular();
+    }
+    identificadores.erase(this->id_);
 }
 
-/* ---CLASE ID_DUPLICADO para excepciones--- */
-/*-- CONSTRUCTOR-- */
-Usuario::Id_duplicado::Id_duplicado(const Cadena&c):idd_(c){}
-
-/* --FUNCIONES clase usuario-- */
-void Usuario::es_titular_de(const Tarjeta& t)
-{
-	if(t.titular() == this) tarjetas_[t.numero()] = const_cast<Tarjeta*>(&t);
+void mostrar_carro(std::ostream& os, const Usuario& us){
+    os << "Carrito de compra de " << us.id() << " [Artículos: " << us.n_articulos() << "]" << std::endl
+    << "  Cant. Artículo" << std::endl << "===========================================================" << std::endl;
+    for (auto iter : us.compra()){
+        os << "   " << iter.second << "   " << *iter.first << std::endl;
+    }
 }
 
-void Usuario::no_es_titular_de(Tarjeta &t)
-{
-	tarjetas_.erase(t.numero());
-}
+std::ostream& operator<<(std::ostream& os, const Usuario& us){
+    os << us.id() << " [" << us.contrasenia.clave() << "] " << us.nombre() << " " << us.apellidos() << std::endl
+    << us.direccion() << std::endl << "Tarjetas:" << std::endl;
+    for (auto iter = us.tarjetas().begin(); iter!=us.tarjetas().end(); ++iter){
+        os << *iter->second << std::endl;
+    }
 
-void Usuario::compra(const Articulo &a, size_t cant)
-{
-	Usuario::Articulos::const_iterator got = articulos_.find(const_cast<Articulo*>(&a));
-	
-	if(got == articulos_.end())
-	{
-		if(cant>0)
-		{
-			articulos_[const_cast<Articulo*>(&a)]=cant;
-			n_articulos_++;
-		}
-	}
-	else
-	{
-		if(cant > 0)
-		{
-			articulos_[const_cast<Articulo*>(&a)]=cant;
-		}
-		else
-		{
-			articulos_.erase(const_cast<Articulo*>(&a));
-			n_articulos_--;
-		}
-	}
+    return os;
 }
-
-/*--DESTRUCTOR--*/
-Usuario::~Usuario()
-{
-	for(auto& i:tarjetas_)
-	{
-		i.second->anula_titular();
-	}
-	registrados.erase(ID_);
-}
-
-/*--OPERADORES FUERA DE LA CLASE--*/
-ostream& operator <<(ostream& os, const Usuario& u) noexcept
-{
-	setlocale(LC_ALL,"");		//Elegimos como categoría la localidad total del programa y para localidad el entorno nativo
-	os<<u.ID_<<"["<<u.pass_.clave()<<"]"<<u.nombre_<<" "<<u.apell_<<endl;
-	os<<u.direcc_<<endl;
-	os<<"Tarjetas:\n";
-	
-	for(auto& t:u.tarjetas_)
-	{
-		os<<*t.second<<endl;
-	}
-	
-	return os;
-}
-
-void mostrar_carro (ostream &os, const Usuario &u)
-{
-	os<<"Carrito de compra de "<<u.id()<<" [Artículos: "<<u.n_articulos()<<"]"<< endl<< " Cant.\tArtículo" <<endl;
-	os<<"========================================================"<<endl;
-	
-	for(Usuario::Articulos::const_iterator i = u.compra().begin(); i!=u.compra().end();i++)
-	{
-		os<<" "<<i->second<<"\t"<<"["<<i->first->referencia()<<"] \""<<i->first->titulo()<<"\", ";			//usamos iteradores para mostrar los elementos deseados
-		os<<i->first->f_publi().anno()<<". "<<setprecision(2)<<fixed<<i->first->precio()<<" €"<<endl;
-	}
-	
-}
-	
-		
