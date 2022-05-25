@@ -1,125 +1,103 @@
 #include "pedido-articulo.hpp"
 
-using namespace std;
+//función auxiliar para contar los digitos de un número (conteo de espacios en blanco)
+int contdig(size_t n){
+    if (n/10 == 0)
+        return 1;
+    return 1 + contdig(n / 10);
+}
 
-/*---CLASE LINEAPEDIDO---*/
-/*--CONSTRUCTOR--*/
-LineaPedido::LineaPedido(double pr, unsigned c): precio_(pr), cantidad_(c){}
+/*ORDENA-PEDIDOS BINARY*/
+bool OrdenaPedidos::operator()(const Pedido* p1, const Pedido* p2) const {return p1->numero() < p2->numero();}
 
-/*--OPERATOR <<--*/
-std::ostream& operator<<(std::ostream& os, const LineaPedido& p)
-{
-	os<<fixed<<setprecision(2)<<p.precio_venta()<<" €\t"<<p.cantidad(); 
+/*LINEA PEDIDO*/
+std::ostream& operator<<(std::ostream& os, const LineaPedido& lp){
+    os << std::setprecision(2) << std::fixed << lp.precio_venta() << " €   " << lp.cantidad();
+    return os;
+}
+
+/*PEDIDO-ARTICULO*/
+void Pedido_Articulo::pedir(Pedido& p, Articulo& a, const double precio, const size_t cantidad){
+    ped_art[&p].insert(std::make_pair(&a, LineaPedido(precio, cantidad)));
+    art_ped[&a].insert(std::make_pair(&p, LineaPedido(precio, cantidad)));
+}
+void Pedido_Articulo::pedir(Articulo& a, Pedido& p, const double precio, const size_t cantidad){
+    Pedido_Articulo::pedir(p, a, precio, cantidad);
+}
+
+const Pedido_Articulo::ItemsPedido& Pedido_Articulo::detalle(Pedido& p){
+    return ped_art.find(&p)->second;
+}
+
+const Pedido_Articulo::Pedidos Pedido_Articulo::ventas(Articulo& a){
+    if (art_ped.find(&a) != art_ped.end())
+        return art_ped.find(&a)->second;
+    else{
+        Pedido_Articulo::Pedidos vacio;
+        return vacio;
+    }
+}
+
+std::ostream& Pedido_Articulo::mostrarDetallePedidos(std::ostream& os) const noexcept{
+    double cont = 0.0;
+    for (auto& iter : ped_art){
+        os << "Pedido núm. " << iter.first->numero() << std::endl
+        << "Cliente: " << iter.first->tarjeta()->titular()->nombre()
+        << "\tFecha: " << iter.first->fecha() << std::endl << iter.second << std::endl;
+        cont += iter.first->total();
+    }
+    os << "TOTAL VENTAS: " << std::setprecision(2) << std::fixed << cont << " €" << std::endl;
+    return os;
+}
+
+std::ostream& Pedido_Articulo::mostrarVentasArticulos(std::ostream& os) const noexcept{
+    for (auto& iter : art_ped){
+        os << "Ventas de [" << iter.first->referencia() << "] \"" << iter.first->titulo() << "\""
+        << std::endl << iter.second << std::endl;
+    }
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, const Pedido_Articulo::ItemsPedido& ip){
+	double precio = 0.0;
+
+	os << std::endl << "=========================================================" << std::endl
+	<< " PVP \t Cant. \t\t Articulo" << std::endl
+	<< "=========================================================" << std::endl;
+	for (auto& iter : ip){
+		os << iter.second;
+        for(size_t i = 0; i < 7 - contdig(iter.second.cantidad()); ++i){
+            os << " "; // introducimos los espacios exactos para que todas las líneas queden igual
+        }
+		os << "["<<iter.first->referencia() << "] "
+		<< "\"" << iter.first->titulo() << "\" " << std::endl;
+
+		precio += iter.second.precio_venta() * iter.second.cantidad();
+	}
+	
+	os << "=========================================================" << std::endl
+	<< std::setprecision(2) << std::fixed << precio << " €" << std::endl;
 	return os;
 }
 
-/*---CLASE PEDIDO_ARTICULO---*/
-bool OrdenaPedidos::operator()(const Pedido* p1, const Pedido* p2) const {return(p1->numero()<p2->numero());}
+std::ostream& operator<<(std::ostream& os, const Pedido_Articulo::Pedidos& pedidos){
+	double precio = 0.0;
+	size_t total = 0;
 
-/*-PEDIR-*/
-void Pedido_Articulo::pedir(Pedido& ped, Articulo& art, double precio, unsigned cantidad)
-{
-	ped_art_[&ped].insert(make_pair(&art, LineaPedido(precio, cantidad))); 		//insertamos el par precio cantidad en el pedido
-	art_ped_[&art].insert(make_pair(&ped,LineaPedido(precio, cantidad)));		//insertamos el par precio canridad en el articulo
-}
-
-void Pedido_Articulo::pedir(Articulo& a, Pedido& p, double precio, unsigned cantidad)
-{
-	pedir(p,a,precio,cantidad);
-}
-
-/*-DETALLE-*/
-const Pedido_Articulo::ItemsPedido& Pedido_Articulo::detalle(Pedido& p)
-{
-	return ped_art_.find(&p)->second;
-}
-
-/*-VENTAS-*/
-Pedido_Articulo::Pedidos Pedido_Articulo::ventas(Articulo& a)
-{
-	if(art_ped_.find(&a)!=art_ped_.end())
-	{
-		return art_ped_.find(&a)->second;
-	}
-	else
-	{
-		Pedido_Articulo::Pedidos vacio;
-		return vacio;
-	}
-}
-
-/*--MOSTRARDETALLEPEDIDO--*/
-ostream& Pedido_Articulo::mostrarDetallePedidos(ostream& os) const
-{
-	double precio=0.0;
-	
-	for(auto& iter : ped_art_)
-	{
-		os<<"Pedido num. "<<iter.first->numero(); //LE HE QUITADO LA TILDE A NUM
-		os<<"\tCliente: "<<iter.first->tarjeta()->titular()->nombre() <<" \n";
-		os<<"Fecha: "<<iter.first->fecha() <<iter.second;
-		precio +=iter.first->total();
+	os << "=====================================================" << std::endl
+	<< " PVP \t Cant. \t\t Fecha venta" << std::endl
+    << "=====================================================" << std::endl;
+	for (auto iter : pedidos){
+		os << iter.second;
+        for(size_t i = 0; i < 11 - contdig(iter.second.cantidad()); ++i){
+            os << " "; // introducimos los espacios exactos para que todas las líneas queden igual
+        }
+        os << iter.first->fecha() << std::endl;
+		precio += iter.second.precio_venta() * iter.second.cantidad();
+		total += iter.second.cantidad();
 	}
 	
-	os<< "TOTAL VENTAS: "<<fixed<< setprecision(2)<<precio<< " €"<<endl;
-	return os;
-}
-
-/*--MOSTRARVENTASARTICULOS--*/
-ostream& Pedido_Articulo::mostrarVentasArticulos(ostream& os) const
-{
-	for(auto& iter: art_ped_)
-	{
-		os << "Ventas de " << "[" << iter.first->referencia() << "]";
-		os << "\""<<iter.first->titulo() << "\"\n" << iter.second <<endl;
-	}
-	return os;
-}
-
-/*--OPERADORES <<--*/
-ostream& operator <<(ostream& os, const Pedido_Articulo::ItemsPedido& ip)
-{
-	double precio=0;
-	Pedido_Articulo::ItemsPedido::const_iterator i;
-	os<< endl << "=====================================================\n" <<endl;
-	os<<" PVP \t Cant. \t Articulo \n";
-	os<<"=====================================================\n" <<endl;
-	for(i=ip.begin(); i!=ip.end();++i)
-	{
-		os<<" "<<i->second.precio_venta() << " €\t";
-		os<<i->second.cantidad() << "\t";
-		os<< "["<<i->first->referencia()<< "] ";
-		os<< "\""<<i->first->titulo() << "\" "<<endl;
-		precio=precio+i->second.precio_venta() *i->second.cantidad();
-
-	}
-	
-	os <<"=====================================================\n"<<endl;
-	os<<fixed;
-	os<<setprecision(2) << precio << " €"<<endl;
-	return os;
-}
-
-ostream& operator <<(ostream& os, const Pedido_Articulo::Pedidos& pedidos)
-{
-	double precio=0;
-	unsigned total=0;
-	Pedido_Articulo::Pedidos::const_iterator i;
-	os<< "=====================================================\n"<<endl;
-	os<<" PVP \t Cant. \t Fecha venta \n";
-	os<<"=====================================================\n"<<endl;
-	for(auto iter : pedidos)
-	{
-		os<<" "<<iter.second.precio_venta()<< " €\t";
-		os<<iter.second.cantidad() << "\t";
-		os<<iter.first->fecha() <<endl;
-		precio +=(iter.second.precio_venta() *iter.second.cantidad());
-		total +=iter.second.cantidad();
-	}
-	
-	os<<"=====================================================\n"<<endl;
-	os<<fixed;
-	os<<setprecision(2)<<precio<< " €\t" <<total <<endl;
-	
+	os <<"=====================================================" << std::endl
+	<< std::setprecision(2) << std::fixed << precio << " € \t" << total << std::endl;	
 	return os;
 }

@@ -1,37 +1,21 @@
-#ifndef USUARIO_PEDIDO_HPP_
-#define USUARIO_PEDIDO_HPP_
+#ifndef USUARIO_PEDIDO_HPP
+#define USUARIO_PEDIDO_HPP
 
-#include <map>
 #include <set>
+#include <map>
 
 class Pedido;
 class Usuario;
 
-class Usuario_Pedido
-{
-	public:
-		/*--DEFINICIONES--*/
-		typedef std::set<Pedido*> Pedidos;
-		typedef std::map<Usuario*, Pedidos> UsuarioP;
-		typedef std::map<Pedido*, Usuario*> PedidoU;
-		
-		/*--OBSERVADORES--*/
-		/*-ASOCIA-*/
-		void asocia(Usuario& us, Pedido& ped){usu_ped_[&us].insert(&ped); ped_usu_[&ped]=&us;}		//enlace usuario-pedido
-		void asocia(Pedido& ped, Usuario& us){asocia(us, ped);}											//enlace pedido-usuario
-		
-		/*-PEDIDOS-*/
-		Pedidos& pedidos(Usuario& us){return usu_ped_.find(&us)->second;}
-		
-		/*-CLIENTE-*/
-		Usuario* cliente(Pedido& ped){return ped_usu_.find(&ped)->second;}
-		
-	
-	private:
-		/*--VARIABLES--*/
-		UsuarioP usu_ped_;
-		PedidoU ped_usu_;
+class Usuario_Pedido{
+public:
+    void asocia(Usuario&, Pedido&);
+    void asocia(Pedido&, Usuario&);
+    const std::set<Pedido*>& pedidos(Usuario&) const noexcept;
+    const Usuario* cliente(Pedido&) const noexcept;
+private:
+    std::map<Usuario*,std::set<Pedido*>> user_peds;
+    std::map<Pedido*, Usuario*> ped_user;
 };
 
-#endif
-
+#endif // !USUARIO_PEDIDO_HPP
