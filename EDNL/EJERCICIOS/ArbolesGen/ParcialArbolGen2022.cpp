@@ -22,8 +22,8 @@ void muerto(Agen<tNodo>& a, Agen<tNodo>::nodo n){
 // Realiza el reparto de la riqueza entre sus descendientes (si tiene)
 // Un descendiente se considera heredero si: (está vivo OR (está muerto PERO tiene al menos un descendiente vivo))
 void repartir_herencia(Agen<tNodo>& a, Agen<tNodo>::nodo n){
-    std::set<Agen<tNodo>::nodo> listaHerederos;
-    
+    std::set<Agen<tNodo>::nodo> listaHerederos; //quería usar vector<> pero genera fallos
+
     if (a.hijoIzqdo(n) != Agen<tNodo>::NODO_NULO){ //si tiene al menos un hijo, contamos herederos
         if (a.elemento(a.hijoIzqdo(n)).vivo || comprueba_descendientes(a, a.hijoIzqdo(n))){
             listaHerederos.insert(a.hijoIzqdo(n));
