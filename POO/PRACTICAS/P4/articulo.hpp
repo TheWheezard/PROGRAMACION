@@ -11,7 +11,7 @@
 /*CLASE ARTICULO*/
 class Articulo{
 public:
-    typedef std::set<Autor*> Autores;    
+    typedef std::set<Autor*> Autores;
 
     Articulo(const Autores, const Cadena&, const Cadena&, const Fecha&, double);
     const Cadena& referencia() const noexcept;
@@ -27,13 +27,14 @@ private:
     const Cadena titulo_;
     const Fecha f_publicacion;
     double precio_;
-    
 };
 //Operador de flujo
-inline std::ostream& operator<<(std::ostream& os, const Articulo& a) noexcept{ //necesario metodo con ostream en subcl
+inline std::ostream& operator<<(std::ostream& os, Articulo& a) noexcept{ //necesario metodo con ostream en subcl
     //locale::global(locale(""));
     os << "[" << a.referencia() << "] \"" << a.titulo() << "\", " << a.f_publi().anno() <<". " << std::setprecision(2) << std::fixed << a.precio() << " €";
-    //usar dynamic_cast para aplicar polimorfismo
+    os << std::endl << "\t";
+    a.impresion_especifica(os);
+    
     return os;
 }
 //Constructor
@@ -48,13 +49,13 @@ inline double& Articulo::precio(){ return precio_; }
 
 
 /*CLASE ARTICULOALMACENABLE*/
-class ArticuloAlmacenable: virtual public Articulo{
+class ArticuloAlmacenable: public Articulo{
 public:
     ArticuloAlmacenable(const Autores, const Cadena&, const Cadena&, const Fecha&, double, size_t);
     size_t stock() const noexcept; //mover stock a ArticuloAlmacenable
     size_t& stock();
     virtual ~ArticuloAlmacenable();
-private:
+protected:
     size_t ejemplares;
 };
 //Constructor
@@ -64,9 +65,61 @@ inline ArticuloAlmacenable::ArticuloAlmacenable(const Autores a, const Cadena& r
 inline size_t ArticuloAlmacenable::stock() const noexcept{ return ejemplares; }
 inline size_t& ArticuloAlmacenable::stock(){ return ejemplares; }
 
-class Libro: virtual public ArticuloAlmacenable{};
-class Cederron: virtual public ArticuloAlmacenable{};
-class LibroDigital: virtual public Articulo{};
+/*CLASE LIBRO*/
+class Libro: public ArticuloAlmacenable{
+public:
+    Libro(const Autores, const Cadena&, const Cadena&, const Fecha&, double, size_t, size_t);
+    size_t n_pag() const noexcept;
+    void impresion_especifica(std::ostream&);
+private:
+    size_t npags;
+};
+//Constructor
+inline Libro::Libro(const Autores a, const Cadena& ref, const Cadena& titu, const Fecha& fecha, double pr, size_t pags, size_t existencias = 0):
+    ArticuloAlmacenable(a, ref, titu, fecha, pr, existencias), npags(pags){}
+//Métodos
+inline size_t Libro::n_pag() const noexcept{ return npags; }
+inline void Libro::impresion_especifica(std::ostream& os){
+    os << npags << " págs., " << ejemplares << " unidades.";
+}
+
+/*CLASE CEDERRON*/
+class Cederron: public ArticuloAlmacenable{
+public:
+    Cederron(const Autores, const Cadena&, const Cadena&, const Fecha&, double, double, size_t);
+    double tam() const noexcept;
+    void impresion_especifica(std::ostream&);
+private:
+    double tam_;
+};
+//Constructor
+inline Cederron::Cederron(const Autores a, const Cadena& ref, const Cadena& titu, const Fecha& fecha, double pr, double t, size_t existencias = 0):
+    ArticuloAlmacenable(a, ref, titu, fecha, pr, existencias), tam_(t){}
+//Métodos
+inline double Cederron::tam() const noexcept{ return tam_; }
+inline void Cederron::impresion_especifica(std::ostream& os){
+    os << tam_ << " MB, " << ejemplares << " unidades.";
+}
+
+/*CLASE LIBRODIGITAL*/
+class LibroDigital: public Articulo{
+public:
+    LibroDigital(const Autores, const Cadena&, const Cadena&, const Fecha&, double, const Fecha&);
+    const Fecha& f_expir() const noexcept;
+    void impresion_especifica(std::ostream&);
+private:
+    Fecha expira;
+};
+//Constructor
+inline LibroDigital::LibroDigital(const Autores a, const Cadena& ref, const Cadena& titu, const Fecha& fecha, double pr, const Fecha& exp):
+    Articulo(a, ref, titu, fecha, pr), expira(exp){}
+//Métodos
+inline const Fecha& LibroDigital::f_expir() const noexcept{ return expira; }
+inline void LibroDigital::impresion_especifica(std::ostream& os){
+    os << "A la venta hasta el " << expira << ".";
+}
+
+/*CLASE AUTOR*/
 class Autor;
 
 #endif // !ARTICULO_HPP
