@@ -7,21 +7,34 @@ Pedido::Pedido(Usuario_Pedido& up, Pedido_Articulo& pa, Usuario& usuario, const 
     if (tarjeta.caducidad() < f) throw Tarjeta::Caducada(tarjeta.caducidad());
     if (!tarjeta.activa()) throw Tarjeta::Desactivada();
     auto carro = usuario.compra();
-    if (carro.empty()) throw Pedido::Vacio(&usuario);
+    ArticuloAlmacenable* pArt;
 
-    for (auto& iter : carro){
-        if(iter.first->stock() < iter.second){
-            for (auto& iter2 : carro){
-                usuario.compra(*iter2.first, 0);
+    //Comprobamos stock ArticuloAlmacenable y Libros Digitales caducados
+    for (auto& iter : carro){ 
+        if ((pArt = dynamic_cast<ArticuloAlmacenable*>(iter.first))){ //Si es ArticuloAlmacenable
+            if (pArt->stock() < iter.second){
+                for (auto &iter2 : carro){
+                    usuario.compra(*iter2.first, 0);
+                }
+                throw Pedido::SinStock(iter.first);
             }
-            throw Pedido::SinStock(iter.first);
+        }
+        else{ //Si es LibroDigital
+            LibroDigital* pLib = dynamic_cast<LibroDigital*>(iter.first);
+            if (pLib != nullptr && pLib->f_expir() < f){ //Si LibroDigital ha caducado
+                carro.erase(iter.first); //lo eliminamos del carro
+            }
         }
     }
+    if (carro.empty()) throw Pedido::Vacio(&usuario); //Si carro está vacío, usuario.compra() está vacío o solo tiene LibrosDig caducados
+    
     up.asocia(*this, usuario);
     for (auto& iter : carro){
         importe_ += iter.first->precio() * iter.second;
         pa.pedir(*iter.first, *this, iter.first->precio(), iter.second);
-        iter.first->stock() -= iter.second;
+        if((pArt = dynamic_cast<ArticuloAlmacenable*>(iter.first))){
+            pArt->stock() -= iter.second;
+        }
     }
 
     const_cast<Usuario::Articulos&>(usuario.compra()).clear();
