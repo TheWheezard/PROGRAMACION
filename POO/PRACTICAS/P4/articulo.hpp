@@ -26,7 +26,7 @@ public:
     const Autores& autores() const noexcept;
     double precio() const noexcept;
     double& precio();
-    virtual const void impresion_especifica(std::ostream&) = 0;
+    virtual const void impresion_especifica(std::ostream&) const = 0;
     virtual ~Articulo() = default;
 private:
     Autores autores_;
@@ -36,14 +36,7 @@ private:
     double precio_;
 };
 //Operador de flujo
-inline std::ostream& operator<<(std::ostream& os, Articulo& a) noexcept{
-    //locale::global(locale(""));
-    os << "[" << a.referencia() << "] \"" << a.titulo() << "\", " << a.f_publi().anno() <<". " << std::setprecision(2) << std::fixed << a.precio() << " €"
-    << std::endl << "\t";
-    a.impresion_especifica(os); //no fufa, debemos seleccionar subclase
-    
-    return os;
-}
+std::ostream& operator<<(std::ostream& os, const Articulo& a) noexcept;
 //Constructor
 inline Articulo::Articulo(const Autores a, const Cadena& ref, const Cadena& titu, const Fecha& fecha, double pr): 
     autores_(a), referencia_(ref), titulo_(titu), f_publicacion(fecha), precio_(pr){
@@ -80,7 +73,7 @@ class Libro: public ArticuloAlmacenable{
 public:
     Libro(const Autores, const Cadena&, const Cadena&, const Fecha&, double, size_t, size_t);
     size_t n_pag() const noexcept;
-    const void impresion_especifica(std::ostream&);
+    const void impresion_especifica(std::ostream&) const;
 private:
     size_t npags;
 };
@@ -89,25 +82,25 @@ inline Libro::Libro(const Autores a, const Cadena& ref, const Cadena& titu, cons
     ArticuloAlmacenable(a, ref, titu, fecha, pr, existencias), npags(pags){}
 //Métodos
 inline size_t Libro::n_pag() const noexcept {return npags;}
-inline const void Libro::impresion_especifica(std::ostream& os){
+inline const void Libro::impresion_especifica(std::ostream& os) const{
     os << npags << " págs., " << ejemplares << " unidades.";
 }
 
 /*CLASE CEDERRON*/
 class Cederron: public ArticuloAlmacenable{
 public:
-    Cederron(const Autores, const Cadena&, const Cadena&, const Fecha&, double, double, size_t);
-    double tam() const noexcept;
-    const void impresion_especifica(std::ostream&);
+    Cederron(const Autores, const Cadena&, const Cadena&, const Fecha&, double, size_t, size_t);
+    size_t tam() const noexcept;
+    const void impresion_especifica(std::ostream&) const;
 private:
-    double tam_;
+    size_t tam_;
 };
 //Constructor
-inline Cederron::Cederron(const Autores a, const Cadena& ref, const Cadena& titu, const Fecha& fecha, double pr, double t, size_t existencias = 0):
+inline Cederron::Cederron(const Autores a, const Cadena& ref, const Cadena& titu, const Fecha& fecha, double pr, size_t t, size_t existencias = 0):
     ArticuloAlmacenable(a, ref, titu, fecha, pr, existencias), tam_(t){}
 //Métodos
-inline double Cederron::tam() const noexcept {return tam_;}
-inline const void Cederron::impresion_especifica(std::ostream& os){
+inline size_t Cederron::tam() const noexcept {return tam_;}
+inline const void Cederron::impresion_especifica(std::ostream& os) const{
     os << tam_ << " MB, " << ejemplares << " unidades.";
 }
 
@@ -116,7 +109,7 @@ class LibroDigital: public Articulo{
 public:
     LibroDigital(const Autores, const Cadena&, const Cadena&, const Fecha&, double, const Fecha&);
     const Fecha& f_expir() const noexcept;
-    const void impresion_especifica(std::ostream&);
+    const void impresion_especifica(std::ostream&) const;
 private:
     Fecha expira;
 };
@@ -125,7 +118,7 @@ inline LibroDigital::LibroDigital(const Autores a, const Cadena& ref, const Cade
     Articulo(a, ref, titu, fecha, pr), expira(exp){}
 //Métodos
 inline const Fecha& LibroDigital::f_expir() const noexcept {return expira;}
-inline const void LibroDigital::impresion_especifica(std::ostream& os){
+inline const void LibroDigital::impresion_especifica(std::ostream& os) const{
     os << "A la venta hasta el " << expira << ".";
 }
 
