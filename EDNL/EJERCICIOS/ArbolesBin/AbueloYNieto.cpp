@@ -29,9 +29,8 @@ bool esAbuNieto(Abin<T>& a, typename Abin<T>::nodo n){
 
 template <typename T>
 int esAbuNietoRecorrer(Abin<T>& a, typename Abin<T>::nodo n){
-    if (esAbuNieto(a, n)){
+    if (esAbuNieto(a, n))
         return 1 + esAbuNietoRecorrer(a, a.hijoIzqdo(n)) + esAbuNietoRecorrer(a, a.hijoDrcho(n));
-    }
     else return 0 + esAbuNietoRecorrer(a, a.hijoIzqdo(n)) + esAbuNietoRecorrer(a, a.hijoDrcho(n));
 }
 
