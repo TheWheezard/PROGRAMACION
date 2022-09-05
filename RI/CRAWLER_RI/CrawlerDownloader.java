@@ -6,7 +6,7 @@ import java.util.regex.*;
 /**
  * CrawlerDownloader
  */
-public class JavierLopezSierra_Crawler {
+public class CrawlerDownloader {
     static int tamTotal = 7000;
     static int cont = 0;
     static ArrayList<String> colaWeb;
@@ -19,6 +19,7 @@ public class JavierLopezSierra_Crawler {
         listaVisitadas = new LinkedHashSet<String>();
         ArrayList<String> colaAux = new ArrayList<String>();
         String aux = new String("/wiki/George_Lucas");
+        //String aux = new String("/wiki/Rock_music");
         File fich = new File("direcciones.txt"); // observador de direcciones extraídas
         FileWriter writer = new FileWriter(fich);
         listaVisitadas.add(aux);
