@@ -9,7 +9,7 @@ import java.util.Scanner;
 /**
  * La clase {@code intDefinidaMonteCarlo} que, dada una cantidad de puntos a crear, tratará
  * de calcular la integral definida en el rango [0,1] de la función que
- * escojamos previamente (de unas dadas)
+ * escojamos previamente (de unas dadas).
  * 
  * @author Javier Lopez Sierra
  */
