@@ -9,7 +9,9 @@ import java.util.Scanner;
 /**
  * La clase {@code intDefinidaMonteCarlo} que, dada una cantidad de puntos a crear, tratará
  * de calcular la integral definida en el rango [0,1] de la función que
- * escojamos previamente (de unas dadas).
+ * escojamos previamente. Se ofrece con solo dos funciones:
+ *   -- {@code f(x) = sin(x)}
+ *   -- {@code f(x) = x}
  * 
  * @author Javier Lopez Sierra
  */
