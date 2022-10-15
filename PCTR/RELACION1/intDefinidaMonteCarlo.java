@@ -7,11 +7,11 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * La clase {@code intDefinidaMonteCarlo} que, dada una cantidad de puntos a crear, tratará
+ * <p>La clase {@code intDefinidaMonteCarlo} que, dada una cantidad de puntos a crear, tratará
  * de calcular la integral definida en el rango [0,1] de la función que
- * escojamos previamente. Se ofrece con solo dos funciones:
- *   -- {@code f(x) = sin(x)}
- *   -- {@code f(x) = x}
+ * escojamos previamente. Se ofrece con solo dos funciones:</p>
+ *   <p>-- {@code f(x) = sin(x)}</p>
+ *   <p>-- {@code f(x) = x}</p>
  * 
  * @author Javier Lopez Sierra
  */
