@@ -20,9 +20,9 @@ public class intDefinidaMonteCarlo {
 
     /**
      * Función que permitirá escoger (por teclado) entre dos funciones
-     * para resolver por el método Monte-Carlo. A continuación solicitará al usuario
-     * la cantidad de puntos aleatorios que se deben crear. Llamará a la función
-     * {@link monteCarlo}.
+     * para calcular su integral definida entre [0,1] por el método Monte-Carlo. A
+     * continuación solicitará al usuario la cantidad de puntos aleatorios que se
+     * deben crear. Llamará a la función {@link monteCarlo}.
      * 
      * @param args : No se usa.
      * @see #monteCarlo
