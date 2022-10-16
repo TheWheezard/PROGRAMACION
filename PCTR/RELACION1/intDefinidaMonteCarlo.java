@@ -55,7 +55,7 @@ public class intDefinidaMonteCarlo {
      * 
      * @param n : (<b>double</b>) Cantidad de puntos aleatorios que debe crear la función.
      */
-    public static void monteCarlo(double n) {
+    private static void monteCarlo(double n) {
         double contador_exitos = 0;
         double x, y;
         for (int i = 0; i < n; i++) {
@@ -77,7 +77,7 @@ public class intDefinidaMonteCarlo {
      * @param x : (<b>double</b>) parámetro para resolver la función.
      * @return <b>double</b> que es resultado de la función que se haya aplicado a {@code x}.
      */
-    public static double funcion(double x) {
+    private static double funcion(double x) {
         if (opcion == 1) {
             return Math.sin(x);
         } else {
