@@ -29,13 +29,23 @@ public class intDefinidaMonteCarlo {
      */
     public static void main(String[] args) {
         System.out.println("Cálculo de integral definida entre [0-1] mediante método de Monte-Carlo.");
-        System.out.print("Elija una función:\n  1- f(x) = sin(x)\n  2- f(x) = x\n");
+        boolean ok = true;
         Scanner scan = new Scanner(System.in);
-        opcion = scan.nextInt();
+        while(ok){
+            System.out.print("Elija una función:\n  1- f(x) = sin(x)\n  2- f(x) = x\n");
+            opcion = scan.nextInt();
+            if (opcion == 1 || opcion == 2){
+                ok = false;
+            }
+            else {
+                System.out.println("ERROR, introduzca un valor correcto.");
+            }
+        }
+        
         System.out.println("Introduzca la cantidad de puntos aleatorios que se deben crear:");
         double puntos = scan.nextInt();
-        monteCarlo(puntos);
         scan.close();
+        monteCarlo(puntos);
     }
 
     /**
