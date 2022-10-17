@@ -22,17 +22,17 @@ public class intDefinidaMonteCarlo {
      * Función que permitirá escoger (por teclado) entre dos funciones
      * para calcular su integral definida entre [0,1] por el método Monte-Carlo. A
      * continuación solicitará al usuario la cantidad de puntos aleatorios que se
-     * deben crear. Llamará a la función {@link monteCarlo}.
+     * deben crear. Llamará a la función {@link #monteCarlo}.
      * 
      * @param args : No se usa.
      * @see #monteCarlo
      */
     public static void main(String[] args) {
-        System.out.println("Cálculo de integral definida entre [0-1] mediante método de Monte-Carlo.");
+        System.out.println("Calculo de integral definida entre [0-1] mediante metodo de Monte-Carlo.");
         boolean ok = true;
         Scanner scan = new Scanner(System.in);
         while(ok){
-            System.out.print("Elija una función:\n  1- f(x) = sin(x)\n  2- f(x) = x\n");
+            System.out.print("Elija una funcion:\n  1- f(x) = sin(x)\n  2- f(x) = x\n");
             opcion = scan.nextInt();
             if (opcion == 1 || opcion == 2){
                 ok = false;
