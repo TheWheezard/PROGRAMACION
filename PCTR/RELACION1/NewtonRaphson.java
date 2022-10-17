@@ -29,8 +29,8 @@ public class NewtonRaphson {
      * @see #newtonRaphson
      */
     public static void main(String[] args) {
-        System.out.println("Método de Newton-Raphson");
-        System.out.println("Seleccione una ecuación:");
+        System.out.println("Metodo de Newton-Raphson");
+        System.out.println("Seleccione una ecuacion:");
         System.out.println("1) f(x) = cos(x)-x^3  en [0,1]");
         System.out.println("2) f(x) = x^2-5  en [2,3]");
         Scanner scan = new Scanner(System.in);
@@ -40,7 +40,7 @@ public class NewtonRaphson {
         Scanner scanD = new Scanner(System.in);
 
         while(ok){ // el bucle se termina al introducir los datos de acuerdo a la especificación
-            System.out.println("Introduzca aproximación inicial: ");
+            System.out.println("Introduzca aproximacion inicial: ");
             x0 = scanD.nextDouble();
             scanD.reset();
             // verificamos qué función escoge y si la aproximación inicial está en el rango
@@ -50,7 +50,7 @@ public class NewtonRaphson {
                 System.out.println("ERROR, introduzca un valor correcto.");
             }
         }
-        System.out.println("Introduzca máximo de iteraciones: ");
+        System.out.println("Introduzca maximo de iteraciones: ");
         int iteraciones = scan.nextInt();
         scan.close(); scanD.close();
         newtonRaphson(x0, iteraciones);
@@ -81,7 +81,7 @@ public class NewtonRaphson {
         for (int i = 0; i < iteraciones; i++) {
             if (f_derivada(xN) != 0) {
                 xN1 = xN - f(xN) / f_derivada(xN);
-                System.out.println("Iteración " + (i+1) + ". Valor de x = " + xN + ". Resultado = " + xN1);
+                System.out.println("Iteracion " + (i+1) + ". Valor de x = " + xN + ". Resultado = " + xN1);
                 xN = xN1;
             }
         }
