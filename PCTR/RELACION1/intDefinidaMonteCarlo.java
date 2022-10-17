@@ -51,9 +51,11 @@ public class intDefinidaMonteCarlo {
     /**
      * Función que creará los {@code n} puntos aleatorios indicados por el usuario,
      * y comprobará para cada uno de ellos si se encuentran o no bajo la curva de la
-     * función escogida. Devolverá por pantalla el resultado que alcance.
+     * función escogida. Devolverá por pantalla la cantidad de éxitos y el resultado
+     * que alcance.
      * 
-     * @param n : (<b>double</b>) Cantidad de puntos aleatorios que debe crear la función.
+     * @param n : (<b>double</b>) Cantidad de puntos aleatorios que debe crear la
+     *          función.
      */
     private static void monteCarlo(double n) {
         double contador_exitos = 0;
@@ -73,9 +75,12 @@ public class intDefinidaMonteCarlo {
     }
 
     /**
-     * Función privada que resuelve la función escogida por el usuario para la ordenada {@code x} de un punto aleatorio.
+     * Función privada que resuelve la función escogida por el usuario para la
+     * ordenada {@code x} de un punto aleatorio.
+     * 
      * @param x : (<b>double</b>) parámetro para resolver la función.
-     * @return <b>double</b> que es resultado de la función que se haya aplicado a {@code x}.
+     * @return <b>double</b> que es resultado de la función que se haya aplicado a
+     *         {@code x}.
      */
     private static double funcion(double x) {
         if (opcion == 1) {
