@@ -17,11 +17,11 @@ public class tareaRunnable implements Runnable {
     /**
      * Constructor de tareaRunnable.
      * 
-     * @param vueltas  Este parámetro indica la cantidad total de vueltas que hará
+     * @param vueltas  : (<b>int</b>) Este parámetro indica la cantidad total de vueltas que hará
      *                 el bucle.
-     * @param subeBaja Este parámetro indica si la hebra hará aumentar (0) o
-     *                 disminuir (1) el valor de 'n'.
-     * @param clase    Este parámetro contiene la clase sobre la que se va a probar
+     * @param subeBaja : (<b>int</b>) Este parámetro indica si la hebra hará aumentar (0) o
+     *                 disminuir (1) el valor de {@code n}.
+     * @param clase    : (<b>ClaseAux</b>) Este parámetro contiene la clase sobre la que se va a probar
      *                 la condición de concurso.
      */
     public tareaRunnable(int vueltas, int subeBaja, ClaseAux clase) {
@@ -32,8 +32,8 @@ public class tareaRunnable implements Runnable {
 
     /**
      * Sobrecarga del método run() de la interfaz Runnable. Aumentará o disminuirá
-     * en 1 el valor de la variable n de 'clase' según indique subeBaja, tantas
-     * veces como indique 'vueltas'
+     * en 1 el valor de la variable {@code n} de {@code clase} según indique {@code subeBaja} , tantas
+     * veces como indique {@code vueltas}.
      * 
      * @see Runnable#run()
      */
@@ -50,44 +50,5 @@ public class tareaRunnable implements Runnable {
             }
             break;
         }
-    }
-}
-
-/**
- * Clase que contiene una variable con valor inicial 0 cuyo valor puede ser
- * incrementado o decrementado.
- * 
- * @author Javier López Sierra
- */
-class ClaseAux {
-    private static int n = 0; // Variable que se irá modificando.
-
-    /**
-     * Constructor de la clase ClaseAux.
-     */
-    public ClaseAux() {
-    }
-
-    /**
-     * Método modificador que aumenta en 1 el valor de n.
-     */
-    public void incrementar() {
-        n++;
-    }
-
-    /**
-     * Método modificador que disminuye en 1 el valor de n.
-     */
-    public void decrementar() {
-        n--;
-    }
-
-    /**
-     * Método que devuelve el valor de la variable n.
-     * 
-     * @return valor de n en el momento de ser llamada.
-     */
-    public int getN() {
-        return (n);
     }
 }

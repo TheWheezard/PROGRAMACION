@@ -35,6 +35,6 @@ public class redCajeros {
         }
 
         // imprimimos el resultado
-        System.out.println("La cuenta " + cuenta.verNumCuenta() + " tiene un saldo de " + cuenta.verSaldo() + " €");
+        System.out.println("La cuenta " + cuenta.verNumCuenta() + " tiene un saldo de " + cuenta.verSaldo() + " Euros");
     }
 }

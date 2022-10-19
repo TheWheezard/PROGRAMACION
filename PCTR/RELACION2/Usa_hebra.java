@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Usa_hebra {
     public static void main(String[] args) throws InterruptedException {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Ejercicio 1. Indique número de vueltas:");
+        System.out.println("Ejercicio 1. Indique numero de vueltas:");
         int numVueltas = scan.nextInt();
         hebra hSube = new hebra(numVueltas, 0); // sube el valor de res.
         hebra hBaja = new hebra(numVueltas, 1); // baja el valor de res.
@@ -17,7 +17,7 @@ public class Usa_hebra {
         hBaja.start();
         hSube.join(); // termina hilo
         hBaja.join();
-        System.out.println(hebra.getN()); // imprimimos por pantalla el resultado final de n
+        System.out.println("n = " + hebra.getN()); // imprimimos por pantalla el resultado final de n
         scan.close();
     }
 }

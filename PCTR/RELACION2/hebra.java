@@ -17,10 +17,10 @@ public class hebra extends Thread {
     /**
      * Constructor de hebra.
      * 
-     * @param vueltas  Este parámetro indica la cantidad total de vueltas que hará
+     * @param vueltas : (<b>int</b>) Este parámetro indica la cantidad total de vueltas que hará
      *                 el bucle.
-     * @param subeBaja Este parámetro indica si la hebra hará aumentar (0) o
-     *                 disminuir (1) el valor de 'n'.
+     * @param subeBaja : (<b>int</b>) Este parámetro indica si la hebra hará aumentar (0) o
+     *                 disminuir (1) el valor de {@code n}.
      */
     public hebra(int vueltas, int subeBaja) {
         this.vueltas = vueltas;
@@ -31,7 +31,7 @@ public class hebra extends Thread {
      * Método observador que devuelve el valor de una variable compartida por los
      * objetos hebra.
      * 
-     * @return valor de la variable común a las hebras generadas.
+     * @return (<b>int</b>) valor de la variable común a las hebras generadas.
      */
     public static int getN() {
         return n;
@@ -40,7 +40,7 @@ public class hebra extends Thread {
     /**
      * Sobrecarga del método run() de la clase Thread. Aumentará o disminuirá en 1
      * el valor de la variable n según indique subeBaja, tantas veces como indique
-     * 'vueltas'.
+     * {@code vueltas}.
      * 
      * @see Thread#run()
      */

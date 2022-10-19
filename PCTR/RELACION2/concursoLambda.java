@@ -1,10 +1,10 @@
 /**
- * La clase tareaLambda realiza dos operaciones concurrentes usando la interfaz
+ * La clase concursoLambda realiza dos operaciones concurrentes usando la interfaz
  * Runnable con funciones lambda.
  * 
  * @author Javier López Sierra
  */
-public class tareaLambda {
+public class concursoLambda {
     static int n = 0; // Variable estática que modificaremos
 
     public static void main(String[] args) throws InterruptedException {

@@ -41,7 +41,7 @@ public class escalaVPar {
             }
         }
 
-        System.out.println("Fin ejecución");
+        System.out.println("Fin ejecucion");
         scan.close();
     }
 }

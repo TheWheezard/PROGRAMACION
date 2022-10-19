@@ -1,6 +1,7 @@
 /**
  * Esta clase creará un array de nuestra clase VectorPrueba y llamará a su
- * método para multiplicarlo de forma secuencial por el escalar.
+ * método para multiplicarlo de forma secuencial por el escalar. Se requiere
+ * haber compilado previamente el fichero {@code escalaVPar.java}
  * 
  * @author Javier López Sierra
  */
