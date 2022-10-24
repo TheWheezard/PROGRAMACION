@@ -25,7 +25,7 @@ public class Usa_tareaRunnable {
         t0.join();
         t1.join();
 
-        System.out.println(c.getN()); // imprimimos por pantalla el resultado final de n
+        System.out.println("c.n = " + c.getN()); // imprimimos por pantalla el resultado final de n
         scan.close();
     }
 }
