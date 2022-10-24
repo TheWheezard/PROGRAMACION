@@ -3,7 +3,8 @@
  * cantidad de dinero en una determinada cuenta bancaria.
  * 
  * @author Javier López Sierra
- * 
+ * @see cajero
+ * @see cuentaCorriente
  */
 public class redCajeros {
     public static void main(String[] args) throws InterruptedException {
