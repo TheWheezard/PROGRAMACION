@@ -9,17 +9,17 @@
 public class redCajeros {
     public static void main(String[] args) throws InterruptedException {
         cuentaCorriente cuenta = new cuentaCorriente("CUENTA1", 30000);
-        Runnable[] depositos = new Runnable[100]; // creamos array de 100 objetos runnable para depósitos (300)
+        Runnable[] depositos = new Runnable[1000]; // creamos array de 100 objetos runnable para depósitos (300)
         for (int i = 0; i < depositos.length; i++) {
             depositos[i] = new cajero(cuenta, 1, 3000);
         }
 
-        Runnable[] reintegros = new Runnable[50]; // creamos array de 50 objetos runnable para reintegros (600)
+        Runnable[] reintegros = new Runnable[500]; // creamos array de 50 objetos runnable para reintegros (600)
         for (int i = 0; i < reintegros.length; i++) {
             reintegros[i] = new cajero(cuenta, 2, 6000);
         }
 
-        Thread[] operaciones = new Thread[150]; // creamos array de 150 threads
+        Thread[] operaciones = new Thread[1500]; // creamos array de 150 threads
         int i;
         for (i = 0; i < depositos.length; i++) {
             operaciones[i] = new Thread(depositos[i]); // introducimos los objetos runnable de depósito
