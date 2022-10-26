@@ -4,7 +4,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * La clase matVector realiza el producto de una matriz cuadrada [n][n] por otra
+ * La clase <b>matVector</b> realiza el producto de una matriz cuadrada [n][n] por otra
  * matriz [n], ambas de valores enteros.
  * 
  * Está probado con un tamaño máximo de n = 30000 añadiendo necesariamente el
@@ -21,7 +21,7 @@ public class matVector {
 
         Random random = new Random();
         Scanner scan = new Scanner(System.in);
-        System.out.println("Introduzca tamaño de las matrices:");
+        System.out.println("Introduzca tamano de las matrices:");
         int n = scan.nextInt();
 
         // cronómetro 1 (proceso completo)
@@ -56,7 +56,7 @@ public class matVector {
         // fin cronómetro 2
         long finCronom = System.currentTimeMillis(); // se para el cronometro
         d2.setTime(finCronom);
-        System.out.println("Cálculo finalizado a las " + df2.format(d2) + " tras " + (finCronom - inicCronom2) + " milisegundos");
+        System.out.println("Calculo finalizado a las " + df2.format(d2) + " tras " + (finCronom - inicCronom2) + " milisegundos");
 
         // fin cronómetro 1
         System.out.println("Proceso finalizado a las " + df1.format(d1) + " tras " + (finCronom - inicCronom1) + " milisegundos");
