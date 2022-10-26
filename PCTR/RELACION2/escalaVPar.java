@@ -22,12 +22,12 @@ public class escalaVPar {
             j = VectorPrueba.vector.length * (i + 1) / partes; // dará el final y principio de cada parte
         }
 
-        System.out.println("Creando array de threads");
+        System.out.println("Creando array de hilos");
         for (int i = 0; i < hilos.length; i++) {
             hilos[i] = new Thread(tareas[i]);
         }
 
-        System.out.println("Iniciando threads del array");
+        System.out.println("Iniciando hilos");
         for (int i = 0; i < hilos.length; i++) {
             hilos[i].start();
         }
