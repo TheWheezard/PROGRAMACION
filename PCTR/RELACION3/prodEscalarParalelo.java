@@ -3,7 +3,7 @@ import java.text.*;
 import java.util.Date;
 
 /**
- * La clase prodEscalarParalelo crea dos vectores de tipo double de misma
+ * La clase <b>prodEscalarParalelo</b> crea dos vectores de tipo double de misma
  * longitud y los divide en partes que se multiplican de forma concurrente
  * mediante el uso de la clase prodEscalarParalelo.
  * 
@@ -16,10 +16,10 @@ public class prodEscalarParalelo {
     
     /**
      * <p>
-     * La función main rellena dos vectores de tipo <b>double</b> con números
+     * La función <b>main</b> rellena dos vectores de tipo <b>double</b> con números
      * aleatorios, para acto seguido dividirlos en tantas partes como indique el
      * usuario por teclado. Dichas partes se enviarán a hebras de tipo
-     * EscalarParalelo, que se ejecutarán al mismo tiempo.
+     * <b>EscalarParalelo</b>, que se ejecutarán al mismo tiempo.
      * </p>
      * <p>
      * Esta clase main recibirá los resultados y terminará la operación de producto
@@ -87,7 +87,7 @@ public class prodEscalarParalelo {
 }
 
 /**
- * La clase EscalarParalelo crea un hilo con un vector auxiliar donde
+ * La clase <b>EscalarParalelo</b> crea un hilo con un vector auxiliar donde
  * efectuará el producto escalar entre los elementos comprendidos entre dos
  * posiciones dadas de dos vectores principales.
  * 
@@ -101,12 +101,12 @@ class EscalarParalelo extends Thread {
     /**
      * Constructor de la clase prodEscalarParalelo.
      * 
-     * @param idHebra Parámetro de tipo Int que identificará el número de
+     * @param idHebra (<b>int</b>) Parámetro de tipo Int que identificará el número de
      *                hebra/vector.
-     * @param inicio  Parámetro de tipo Int que indicará la posición inicial del
+     * @param inicio  (<b>int</b>) Parámetro de tipo Int que indicará la posición inicial del
      *                rango de posiciones en los vectores principales donde se hará
      *                el cálculo.
-     * @param fin     Parámetro de tipo Int que indicará la posición final del rango
+     * @param fin     (<b>int</b>) Parámetro de tipo Int que indicará la posición final del rango
      *                de posiciones en los vectores principales donde se hará el
      *                cálculo.
      */
@@ -120,7 +120,7 @@ class EscalarParalelo extends Thread {
      * Método observador que devuelve el identificador de la hebra/vector
      * resultante.
      * 
-     * @return <b>int</b> identificador de la hebra/vector resultante.
+     * @return (<b>int</b>) identificador de la hebra/vector resultante.
      */
     public int getIdHebra() {
         return idHebra;
@@ -130,7 +130,7 @@ class EscalarParalelo extends Thread {
      * Método observador que devuelve el valor de la variable resultante del
      * producto escalar sobre el rango indicado anteriormente.
      * 
-     * @return <b>double</b> Resultado del producto escalar parcial.
+     * @return (<b>double</b>) Resultado del producto escalar parcial.
      */
     public double getRes() {
         return res;
@@ -152,7 +152,7 @@ class EscalarParalelo extends Thread {
     }
 
     /**
-     * Sobrecarga del método run() de la clase Thread que llama al método calcular
+     * Sobrecarga del método {@code run()} de la clase Thread que llama al método calcular
      * de la clase prodEscalarParalelo.
      * 
      * @see Java.lang.Thread.run
