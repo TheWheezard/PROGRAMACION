@@ -3,14 +3,14 @@ import java.text.*;
 import java.util.Date;
 
 /**
- * La clase prodEscalar realiza el producto escalar de dos vectores de tipo
+ * La clase <b>prodEscalar</b> realiza el producto escalar de dos vectores de tipo
  * Double y guarda el resultado en una variable que muestra por pantalla.
  * 
  * @author Javier López Sierra
  */
 public class prodEscalar {
     /**
-     * La función main crea dos vectores de tipo <b>double</b> y los inicializa con
+     * La función <b>main</b> crea dos vectores de tipo <b>double</b> y los inicializa con
      * valores aleatorios. Acto seguido realizaremos el producto escalar de ambos
      * vectores, midiendo el tiempo que tarda en realizarlo. Se imprime por pantalla
      * el resultado de dicho producto, así como fecha, hora y tiempo que se ha
