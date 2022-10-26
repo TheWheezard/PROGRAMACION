@@ -14,7 +14,7 @@ import java.util.Scanner;
  * solo recomendamos no superar n = 10000.
  * 
  * @author Javier López Sierra
- * @see matVectorConcurrente
+ * @see MatVecConcurrente
  */
 public class ClasePrincipalVector {
     static int[][] matrizCuadrada;
@@ -23,9 +23,9 @@ public class ClasePrincipalVector {
     public static void main(String[] args) {
         Random random = new Random();
         Scanner scan = new Scanner(System.in);
-        System.out.println("Introduzca tamaño de las matrices:");
+        System.out.println("Introduzca tamano de las matrices:");
         int n = scan.nextInt();
-        System.out.println("Introduzca en cuántas partes se dividirá el proceso:");
+        System.out.println("Introduzca en cuantas partes se dividira el proceso:");
         int numHilos = scan.nextInt();
         matrizCuadrada = new int[n][n];
         matrizB = new int[n];
@@ -47,12 +47,12 @@ public class ClasePrincipalVector {
             matRes[i] = 0;
         }
 
-        matVectorConcurrente[] matrices = new matVectorConcurrente[numHilos];
+        MatVecConcurrente[] matrices = new MatVecConcurrente[numHilos];
         Runnable[] tareas = new Runnable[numHilos];
         Thread[] hilos = new Thread[numHilos];
         int j = 0;
         for (int i = 0; i < tareas.length; i++) {
-            tareas[i] = matrices[i] = new matVectorConcurrente(i, n * i / numHilos, j);
+            tareas[i] = matrices[i] = new MatVecConcurrente(i, n * i / numHilos, j);
             j = n * i / numHilos;
         }
 
@@ -86,7 +86,7 @@ public class ClasePrincipalVector {
         // fin cronómetro 2
         long finCronom = System.currentTimeMillis(); // se para el cronometro
         d2.setTime(finCronom);
-        System.out.println("Cálculo finalizado a las " + df2.format(d2) + " tras " + (finCronom - inicCronom2) + " milisegundos");
+        System.out.println("Calculo finalizado a las " + df2.format(d2) + " tras " + (finCronom - inicCronom2) + " milisegundos");
 
         // fin cronómetro 1
         System.out.println("Proceso finalizado a las " + df1.format(d1) + " tras " + (finCronom - inicCronom1) + " milisegundos");
