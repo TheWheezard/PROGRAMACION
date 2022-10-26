@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * La clase <b>prodEscalar</b> realiza el producto escalar de dos vectores de tipo
- * Double y guarda el resultado en una variable que muestra por pantalla.
+ * <b>double</b> y guarda el resultado en una variable que muestra por pantalla.
  * 
  * @author Javier López Sierra
  */

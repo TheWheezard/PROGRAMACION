@@ -4,8 +4,8 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * La clase matVectorConcurrente crea una matriz cuadrada de la forma
- * [n][n] y otra de la forma [n], ambas de tipo entero, y realiza el producto
+ * La clase <b>matVectorConcurrente</b> crea una matriz cuadrada de la forma
+ * [n][n] y otra de la forma [n], ambas de tipo <b>int</b>, y realiza el producto
  * entre sí, separando las filas por grupos para resolverla en diferentes hilos
  * de forma concurrente.
  * 
@@ -23,18 +23,17 @@ public class matVectorConcurrente {
     /**
      * <p>
      * La función <b>main</b> rellena una {@code matrizCuadrada[][]} y una
-     * {@code matrizB[]} de tipo <b>double</b> con números
-     * aleatorios, para acto seguido dividir {@code matrizCuadrada} en tantas partes
-     * como indique el usuario por teclado. Dichas partes se enviarán a hebras de
-     * tipo <b>MatVecConcurrente</b>, que ejecutarán el producto con
-     * {@code matrizB[]} al mismo tiempo.
+     * {@code matrizB[]} de tipo <b>double</b> con números aleatorios, para acto
+     * seguido dividir {@code matrizCuadrada} en tantas partes como indique el
+     * usuario por teclado. Dichas partes se enviarán a hebras de tipo
+     * <b>MatVecConcurrente</b>, que ejecutarán el producto con {@code matrizB[]} al
+     * mismo tiempo.
      * </p>
      * <p>
-     * Esta clase <b>main</b> recibirá los resultados y terminará la operación de
-     * producto
-     * realizando la suma de éstos. Toda la operación de producto será controlada
-     * por un cronómetro. Se devuelve por pantalla el resultado, así como fecha,
-     * hora y tiempo que se ha tardado en completar la operación.
+     * Esta función <b>main</b> recibirá los resultados y terminará la operación de
+     * producto realizando la suma de éstos. Toda la operación de producto será
+     * controlada por un cronómetro. Se devuelve por pantalla el resultado, así como
+     * fecha, hora y tiempo que se ha tardado en completar la operación.
      * </p>
      * 
      * @param args No se emplea
@@ -116,10 +115,10 @@ public class matVectorConcurrente {
 }
 
 /**
- * La clase MatVecConcurrente recibe un conjunto de filas de una matriz
- * cuadrada[n][n] y la posición de la fila inicial y realiza el producto con
- * otra matriz[n], guardando el resultado parcial en un array. Ambas matrices
- * están rellenas de valores enteros aleatorios.
+ * La clase <b>MatVecConcurrente</b> recibe un conjunto de filas de una matriz
+ * {@code cuadrada[n][n]} y la posición de la fila inicial y realiza el producto con
+ * otra {@code matriz[n]}, guardando el resultado parcial en un array. Ambas matrices
+ * están rellenas de valores <b>int</b> aleatorios.
  * 
  * @author Javier López Sierra
  * @see Java.lang.Runnable
@@ -132,7 +131,7 @@ class MatVecConcurrente implements Runnable {
     int[] matResParcial;
 
     /**
-     * Constructor para la clase matVectorConcurrente.
+     * Constructor para la clase <b>MatVecConcurrente</b>.
      * 
      * @param idHilo (<b>int</b>) Parámetro que identifica el objeto.
      * @param filas  (<b>int</b>) Parámetro que indica el número de filas de la matriz cuadrada
@@ -149,7 +148,7 @@ class MatVecConcurrente implements Runnable {
     }
 
     /**
-     * Método modificador que realiza el producto escalar de un grupo de filas de
+     * Método modificador que realiza el producto de un grupo de filas de
      * una matriz {@code cuadrada[n][n]} con una {@code matriz[n]} de la clase
      * matVectorConcurrente.
      * 
