@@ -17,6 +17,20 @@ public class matVector {
     static int[][] matrizCuadrada;
     static int[] matrizB;
 
+    /**
+     * <p>
+     * La función <b>main</b> rellena una {@code matrizCuadrada[][]} y una
+     * {@code matrizB[]} de tipo <b>double</b> con números
+     * aleatorios, para ejecutar el producto con {@code matrizB[]}.
+     * </p>
+     * <p>
+     * Toda la operación de producto será controlada por un cronómetro. Se devuelve
+     * por pantalla el resultado, así como fecha, hora y tiempo que se ha tardado en
+     * completar la operación.
+     * </p>
+     * 
+     * @param args No se emplea
+     */
     public static void main(String[] args) {
 
         Random random = new Random();
