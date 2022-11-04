@@ -69,7 +69,7 @@ public class algPeterson implements Runnable {
     }
 
     /**
-     * Sobrecarga del método run() de la interfaz Runnable que emplea el algoritmo de
+     * Sobrecarga del método {@code run()} de la interfaz <b>Runnable</b> que emplea el algoritmo de
      * Peterson para llamar a la función que realiza lo exigido en la actividad.
      * 
      * @see Runnable#run()
