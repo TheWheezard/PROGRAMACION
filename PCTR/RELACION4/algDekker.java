@@ -16,6 +16,23 @@ public class algDekker extends Thread {
     private static volatile int turno = 1;
 
     /**
+     * Función que crea los hilos que prueban la aproximación final del algoritmo de
+     * Dekker
+     * 
+     * @throws InterruptedException gestión de posibles errores al lanzar o terminar
+     *                              los hilos
+     */
+    public static void main(String[] args) throws InterruptedException {
+        algDekker h1 = new algDekker(1);
+        algDekker h2 = new algDekker(2);
+        h1.start();
+        h2.start();
+        h1.join();
+        h2.join();
+        System.out.println(n);
+    }
+    
+    /**
      * Constructor para la clase algDekker
      * 
      * @param tipoHilo Entero que identifica al hilo en el algoritmo
@@ -39,12 +56,10 @@ public class algDekker extends Thread {
                         C1 = true; // pedir acceso de nuevo
                     }
                 }
-
                 n++; // Sección Crítica
-
+                System.out.println(getName()); // Nombre hilo
                 turno = 2; // Fin de la SC, cede el turno
                 C1 = false; // Señala que ha finalizado su uso del recurso
-
             break;
             case 2:
                 C2 = true; // Solicita acceso a la SC
@@ -55,12 +70,10 @@ public class algDekker extends Thread {
                         C2 = true; // pedir acceso de nuevo
                     }
                 }
-
                 n--; // Sección Crítica
-
+                System.out.println(getName()); // Nombre hilo
                 turno = 1; // Fin de la SC, cede el turno
                 C2 = false; // Señala que ha finalizado su uso del recurso
-
             break;
         }
     }
@@ -78,22 +91,5 @@ public class algDekker extends Thread {
         for (int i = 0; i < nVueltas; ++i) {
             exclusionMutua();
         }
-    }
-
-    /**
-     * Función que crea los hilos que prueban la aproximación final del algoritmo de
-     * Dekker
-     * 
-     * @throws InterruptedException gestión de posibles errores al lanzar o terminar
-     *                              los hilos
-     */
-    public static void main(String[] args) throws InterruptedException {
-        algDekker h1 = new algDekker(1);
-        algDekker h2 = new algDekker(2);
-        h1.start();
-        h2.start();
-        h1.join();
-        h2.join();
-        System.out.println(n);
     }
 }
