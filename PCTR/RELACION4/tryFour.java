@@ -14,6 +14,22 @@ public class tryFour extends Thread {
     private static volatile boolean C2 = false;
 
     /**
+     * Función que crea los hilos que prueban la cuarta aproximación de Dekker
+     * 
+     * @throws InterruptedException gestión de posibles errores al lanzar o terminar
+     *                              los hilos
+     */
+    public static void main(String[] args) throws InterruptedException {
+        tryFour h1 = new tryFour(1);
+        tryFour h2 = new tryFour(2);
+        h1.start();
+        h2.start();
+        h1.join();
+        h2.join();
+        System.out.println(n);
+    }
+
+    /**
      * Constructor para la clase tryFour
      * 
      * @param tipoHilo Entero que identifica al hilo en el algoritmo
@@ -42,6 +58,7 @@ public class tryFour extends Thread {
                 }
 
                 n++; // Sección Crítica
+                System.out.println(getName()); // Nombre hilo
 
                 C1 = false; // Fin de SC, libera el recurso
             }
@@ -57,26 +74,11 @@ public class tryFour extends Thread {
                 }
 
                 n--; // Sección Crítica
+                System.out.println(getName()); // Nombre hilo
                 
                 C2 = false; // Fin de SC, libera el recurso
             }
             break;
         }
-    }
-
-    /**
-     * Función que crea los hilos que prueban la cuarta aproximación de Dekker
-     * 
-     * @throws InterruptedException gestión de posibles errores al lanzar o terminar
-     *                              los hilos
-     */
-    public static void main(String[] args) throws InterruptedException {
-        tryFour h1 = new tryFour(1);
-        tryFour h2 = new tryFour(2);
-        h1.start();
-        h2.start();
-        h1.join();
-        h2.join();
-        System.out.println(n);
     }
 }
