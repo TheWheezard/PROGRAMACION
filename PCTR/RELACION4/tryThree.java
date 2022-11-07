@@ -13,6 +13,22 @@ public class tryThree extends Thread {
     private static volatile boolean C2 = false;
 
     /**
+     * Función que crea los hilos que prueban la tercera aproximación de Dekker
+     * 
+     * @throws InterruptedException gestión de posibles errores al lanzar o terminar
+     *                              los hilos
+     */
+    public static void main(String[] args) throws InterruptedException {
+        tryThree h1 = new tryThree(1);
+        tryThree h2 = new tryThree(2);
+        h1.start();
+        h2.start();
+        h1.join();
+        h2.join();
+        System.out.println(n);
+    }
+
+    /**
      * Constructor para la clase tryThree
      * 
      * @param tipoHilo Entero que identifica al hilo en el algoritmo
@@ -36,6 +52,7 @@ public class tryThree extends Thread {
                 while (C2 == true); // Espera a que el otro hilo libere la SC
 
                 n++; // Sección Crítica
+                System.out.println(getName()); // Nombre hilo
                 
                 C1 = false; // Fin de SC, libera el recurso
             }
@@ -46,26 +63,11 @@ public class tryThree extends Thread {
                 while (C1 == true); // Espera a que el otro hilo libere la SC
 
                 n--; // Sección Crítica
+                System.out.println(getName()); // Nombre hilo
 
                 C2 = false; // Fin de SC, libera el recurso
             }
             break;
         }
-    }
-
-    /**
-     * Función que crea los hilos que prueban la tercera aproximación de Dekker
-     * 
-     * @throws InterruptedException gestión de posibles errores al lanzar o terminar
-     *                              los hilos
-     */
-    public static void main(String[] args) throws InterruptedException {
-        tryThree h1 = new tryThree(1);
-        tryThree h2 = new tryThree(2);
-        h1.start();
-        h2.start();
-        h1.join();
-        h2.join();
-        System.out.println(n);
     }
 }
