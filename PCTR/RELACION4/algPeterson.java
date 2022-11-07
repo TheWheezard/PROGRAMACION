@@ -55,6 +55,7 @@ public class algPeterson implements Runnable {
             while (bandera1 == true && turno == 1); // espera activa
             // sección crítica
             ++n;
+            System.out.println(Thread.currentThread().getName()); // nombre hilo
             // fin sección crítica
             bandera0 = false;
         } else {
@@ -63,23 +64,23 @@ public class algPeterson implements Runnable {
             while (bandera0 == true && turno == 0); // espera activa
             // sección crítica
             --n;
+            System.out.println(Thread.currentThread().getName()); // nombre hilo
             // fin sección crítica
             bandera1 = false;
         }
     }
 
     /**
-     * Sobrecarga del método {@code run()} de la interfaz <b>Runnable</b> que emplea el algoritmo de
-     * Peterson para llamar a la función que realiza lo exigido en la actividad.
+     * Sobrecarga del método {@code run()} de la interfaz <b>Runnable</b> que llama
+     * a la función de que realiza lo exigido en la actividad mediante el algortimo
+     * de Peterson.
      * 
      * @see Runnable#run()
      */
     @Override
     public void run() {
-        int i = 0;
-        while (i < numVueltas){
+        for (int i = 0; i < numVueltas; ++i) {
             exclusionMutua();
-            ++i;
         }
     }
 }
