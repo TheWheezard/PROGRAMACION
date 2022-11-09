@@ -54,7 +54,7 @@ public class numPerfectosParalelo {
  * @author Javier López Sierra
  * @see Callable
  */
-class InnerNumPerfectosParalelo implements Callable {
+class InnerNumPerfectosParalelo implements Callable<Integer> {
     private long ini;
     private long fin;
     private int total = 0;
