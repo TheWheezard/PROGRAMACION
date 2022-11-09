@@ -24,3 +24,4 @@ public class PrimosSecuencial {
     System.out.println("Encontrados " + total + " primos" + " en " + tiempoTotal + " segundos");
   }
 }
+//TODO comentarios Javadoc

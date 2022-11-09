@@ -38,3 +38,4 @@ public class primosParalelos {
     System.out.println("Calculo finalizado en " + tiempoTotal + " segundos");
   }
 }
+//TODO comentarios Javadoc
