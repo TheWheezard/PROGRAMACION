@@ -1,6 +1,6 @@
 import java.util.concurrent.Callable;
 
-public class tareaPrimos implements Callable {
+public class tareaPrimos implements Callable<Long> {
 
   private final long linf;
   private final long lsup;
@@ -27,3 +27,4 @@ public class tareaPrimos implements Callable {
     return (total);
   }
 }
+//TODO comentarios Javadoc
