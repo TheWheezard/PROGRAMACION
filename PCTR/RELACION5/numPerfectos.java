@@ -6,8 +6,13 @@
  * @author Javier López Sierra
  */
 public class numPerfectos {
+    /**
+     * Función Main de numPerfectos en un rango [1-args].
+     * 
+     * @param args Valor numérico que determina el máximo del rango a comprobar.
+     */
     public static void main(String[] args) {
-        long rango = 100000;//Long.parseLong(args[0]);
+        long rango = Long.parseLong(args[0]);
         int cont = 0;
 
         long inicTiempo = System.nanoTime(); // empezamos cronómetro
