@@ -3,8 +3,8 @@ import java.util.Date;
 import java.util.Random;
 
 /**
- * La clase prodMatricesSecuencial realiza el producto de una matriz cuadrada [n][n] por otra
- * matriz [n], ambas de valores enteros.
+ * La clase prodMatricesSecuencial realiza el producto de una matriz cuadrada
+ * [n][n] por otra matriz [n], ambas de valores enteros.
  * 
  * @author Javier López Sierra
  */

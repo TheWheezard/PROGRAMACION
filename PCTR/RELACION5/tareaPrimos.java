@@ -27,4 +27,3 @@ public class tareaPrimos implements Callable<Long> {
     return (total);
   }
 }
-//TODO comentarios Javadoc
