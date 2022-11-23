@@ -14,7 +14,7 @@ public class clienteMultiple {
         for (int j = 0; j < 16; j++) {
             try {
                 System.out.println("Realizando conexion...");
-                Socket cable = new Socket("localhost", 2001);
+                Socket cable = new Socket("localhost", puerto);
                 System.out.println("Realizada conexion a " + cable);
                 PrintWriter salida = new PrintWriter(
                         new BufferedWriter(new OutputStreamWriter(cable.getOutputStream())));
