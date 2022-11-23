@@ -1,5 +1,5 @@
 /**
- * Clase Sem que recrea el funcionamiento de un semáforo para controlar el
+ * La clase Sem recrea el funcionamiento de un semáforo para controlar el
  * acceso de hilos a una Sección Crítica.
  * 
  * @author Javier López Sierra
