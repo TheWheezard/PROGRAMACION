@@ -32,7 +32,6 @@ public class Servidor_Hilos extends Thread {
     }// run
 
     public static void main(String[] args) {
-        int i;
         int puerto = 2001;
         try {
             ServerSocket chuff = new ServerSocket(puerto, 3000);
