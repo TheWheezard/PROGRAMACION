@@ -15,12 +15,6 @@ public class prodCon {
 
     public prodCon() {}
 
-    //TODO: delete.
-    public prodCon(int consumidores, boolean escribiendo) {
-        this.consumidores = consumidores;
-        this.escribiendo = escribiendo;
-    }
-
     /**
      * La función <b>solicitarLeer()</b> permite a un consumidor solicitar el acceso
      * al buffer para leer, incrementando el contador de consumidores.
@@ -62,7 +56,7 @@ public class prodCon {
     }
     
     /**
-     * La función <b>solicitarEscribir</b> permite dar paso a un productor para
+     * La función <b>solicitarEscribir()</b> permite dar paso a un productor para
      * escribir en el buffer. Solo podrá hacerlo si no hay lectores o productores
      * accediendo al buffer.
      */
@@ -72,19 +66,27 @@ public class prodCon {
                 wait();
             } catch (InterruptedException e) {}
         }
+        escribiendo = true;
     }
 
     /**
+     * La función <b>escribir()</b> permite a un productor escribir en el buffer en la
+     * posición que lleve más tiempo sin haber sido reescrita.
      * 
      * @param valor : (<b>int</b>) Valor que se va a introducir en el buffer.
      */
-    public void escribir(int valor){}
+    public void escribir(int valor){
+        buffer[nuevo] = valor;
+    }
 
     /**
      * La función <b>finEscribir()</b> pone a false la bandera de productores
      * escribiendo y notifica a todos los hilos.
      */
-    public synchronized void finEscribir(){}
-
-    //TODO: crear funciones específicas de acceso a contenido, funciones flag solo como flag
+    public synchronized void finEscribir(){
+        nuevo = (nuevo + 1) % n;
+        contLecturas++;
+        escribiendo = false;
+        notifyAll();
+    }
 }
