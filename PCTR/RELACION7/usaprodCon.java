@@ -1,3 +1,3 @@
-public class usaprodCon {
+public class usaprodCon extends Thread {
     //
 }
