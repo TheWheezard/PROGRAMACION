@@ -7,86 +7,47 @@
  */
 public class prodCon {
     private final int n = 100; // tamaño del buffer
-    private volatile int contLecturas = 0; // Controla la cantidad de lecturas realizadas (para no eliminar contenido sin leer o leer contenido sin actualizar)
-    private volatile int antiguo = 0, nuevo = 0; // punteros de lectura y escritura en el buffer
     private int buffer[] = new int[n];
-    private int consumidores = 0; // número de consumidores concurrentes
-    private boolean escribiendo = false; // productor activo (true) o inactivo (false)
-
-    public prodCon() {}
+    private volatile int antiguo = 0, nuevo = 0; // punteros de lectura y escritura en el buffer
+    private volatile int contLecturas = 0; // Controla la cantidad de lecturas realizadas (para no eliminar contenido sin leer o leer contenido sin actualizar)
 
     /**
-     * La función <b>solicitarLeer()</b> permite a un consumidor solicitar el acceso
-     * al buffer para leer, incrementando el contador de consumidores.
-     * Controla que se accede a dicho buffer solo si no se está escribiendo en él y
-     * además hay contenido por leer.
+     * La función <b>leer()</b> permite a un consumidor solicitar turno para leer un
+     * dato de la posición más antigua sin leer del buffer. Actualiza el contador de
+     * lecturas pendientes y notifica al final del proceso de lectura. Controla que
+     * se accede a dicho buffer solo si hay contenido por leer.
+     * 
+     * @return <b>int</b> : valor más antiguo sin leer almacenado en el buffer.
      */
-    public synchronized void solicitarLeer(){
-        while (escribiendo || contLecturas == 0){ //comprobamos si hay productores activos o lecturas disponibles
+    public synchronized int leer(){
+        while (contLecturas == 0){ //comprobamos si hay productores activos o lecturas disponibles
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
-        ++consumidores; // incorporamos consumidor
-        notifyAll();
-    }
-
-    /**
-     * La función <b>leer()</b> permite a un consumidor tomar y extraer el valor más
-     * antiguo del buffer. Actualiza el contador de lecturas disponibles.
-     * 
-     * @return <b>int</b> : valor más antiguo almacenado en el buffer.
-     */
-    public int leer(){
         int temp = buffer[antiguo];
-        return temp;
-    }
-
-    /**
-     * La función <b>finLeer()</b> decrementa el número de consumidores activos y,
-     * si ese contador llega a 0, notifica a todos los hilos.
-     */
-    public synchronized void finLeer(){
         antiguo = (antiguo + 1) % n;
         contLecturas--;
-        consumidores--;
-        if (consumidores == 0){
-            notifyAll();
-        }
+        notifyAll();
+        return temp;
     }
     
     /**
-     * La función <b>solicitarEscribir()</b> permite dar paso a un productor para
-     * escribir en el buffer. Solo podrá hacerlo si no hay lectores o productores
-     * accediendo al buffer.
+     * La función <b>escribir()</b> permite a un productor escribir en el buffer.
+     * Solo podrá hacerlo en la posición ya leída que lleve más tiempo sin ser
+     * actualizada.
+     * 
+     * @param valor : (<b>int</b>) Valor que se va a introducir en el buffer.
      */
-    public synchronized void solicitarEscribir(){
-        while (consumidores > 0 && contLecturas == n){
+    public synchronized void escribir(int valor){
+        while (contLecturas == n){
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
-        escribiendo = true;
-    }
-
-    /**
-     * La función <b>escribir()</b> permite a un productor escribir en el buffer en la
-     * posición que lleve más tiempo sin haber sido reescrita.
-     * 
-     * @param valor : (<b>int</b>) Valor que se va a introducir en el buffer.
-     */
-    public void escribir(int valor){
         buffer[nuevo] = valor;
-    }
-
-    /**
-     * La función <b>finEscribir()</b> pone a false la bandera de productores
-     * escribiendo y notifica a todos los hilos.
-     */
-    public synchronized void finEscribir(){
         nuevo = (nuevo + 1) % n;
         contLecturas++;
-        escribiendo = false;
         notifyAll();
     }
 }
