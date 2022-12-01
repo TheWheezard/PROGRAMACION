@@ -6,10 +6,10 @@
  * @author Javier López Sierra
  */
 public class prodCon {
-    private final int n = 100; // tamaño del buffer
+    private final int n = 100000; // tamaño del buffer
     private int buffer[] = new int[n];
     private volatile int antiguo = 0, nuevo = 0; // punteros de lectura y escritura en el buffer
-    private volatile int contLecturas = 0; // Controla la cantidad de lecturas realizadas (para no eliminar contenido sin leer o leer contenido sin actualizar)
+    private volatile int contLecturas = 0; // Controla la cantidad de nuevas lecturas (para no eliminar contenido sin leer o leer contenido sin actualizar)
 
     /**
      * La función <b>leer()</b> permite a un consumidor solicitar turno para leer un
