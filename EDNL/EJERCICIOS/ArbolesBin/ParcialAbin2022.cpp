@@ -1,7 +1,7 @@
 #include "..\..\Implementaciones\Abin.hpp"
 
-/* Implementa una función que, dado un árbol binario de tipo genérico T, devuelva el nº de nodos */
-/* que, siendo hermanos entre sí, sean raíces de subárboles reflejados. */
+/* Implementa una función que, dado un árbol binario de tipo genérico T, devuelva el nº de nodos 
+que, siendo hermanos entre sí, sean raíces de subárboles reflejados. */
 
 template <typename T>
 bool compara(Abin<T>& a, typename Abin<T>::nodo n1, typename Abin<T>::nodo n2){
