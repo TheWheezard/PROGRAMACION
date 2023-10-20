@@ -8,3 +8,13 @@ EDNL/EJERCICIOS/ArbolesGen/.vscode/settings.json
 *.class
 AlgorithmDesign/
 EDNL/EJERCICIOS/ABB/.vscode/settings.json
+*.lock
+.classpath
+.log
+.location
+.version
+.index
+.tree
+.resources
+.ser.dat
+.prefs
