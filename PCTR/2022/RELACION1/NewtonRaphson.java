@@ -44,7 +44,7 @@ public class NewtonRaphson {
             x0 = scanD.nextDouble();
             scanD.reset();
             // verificamos qué función escoge y si la aproximación inicial está en el rango
-            if ((op == 1 && x0 >= 0.0 && x0 <= 1.0) || (op == 2 && x0 >= 2.0 && x0 <= 3.0)) {
+            if ((op == 1 && x0 > 0.0 && x0 <= 1.0) || (op == 2 && x0 >= 2.0 && x0 <= 3.0)) {
                 ok = false;
             } else {
                 System.out.println("ERROR, introduzca un valor correcto.");
