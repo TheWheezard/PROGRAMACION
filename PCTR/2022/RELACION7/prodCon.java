@@ -10,6 +10,7 @@ public class prodCon {
     private int buffer[] = new int[n];
     private volatile int antiguo = 0, nuevo = 0; // punteros de lectura y escritura en el buffer
     private volatile int contLecturas = 0; // Controla la cantidad de nuevas lecturas (para no eliminar contenido sin leer o leer contenido sin actualizar)
+    public volatile Sem semaforo = new Sem(1);
 
     /**
      * La función <b>leer()</b> permite a un consumidor solicitar turno para leer un
@@ -25,10 +26,12 @@ public class prodCon {
                 wait();
             } catch (InterruptedException e) {}
         }
+
+        semaforo.waitS();
         int temp = buffer[antiguo];
         antiguo = (antiguo + 1) % n;
         contLecturas--;
-        notifyAll();
+        semaforo.signalS();
         return temp;
     }
     
@@ -45,9 +48,11 @@ public class prodCon {
                 wait();
             } catch (InterruptedException e) {}
         }
+
+        semaforo.waitS();
         buffer[nuevo] = valor;
         nuevo = (nuevo + 1) % n;
         contLecturas++;
-        notifyAll();
+        semaforo.signalS();
     }
 }
