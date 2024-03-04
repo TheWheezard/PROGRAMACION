@@ -41,11 +41,10 @@ public class prodMatricesParalelo {
             matRes[i] = 0;
         }
 
-        // Nt=Nc/1-Cb == numHilos = Runtime.getRuntime().availableProcessors() / 1 - 0
-        int numHilos = Runtime.getRuntime().availableProcessors();
-        System.out.println("El proceso se dividirá en tantas tareas como indique la ecuación de Subramanian: " + numHilos);
-        int nPuntos = n;
+        // Nt=Nc/1-Cb == nTareas = Runtime.getRuntime().availableProcessors() / 1 - 0
     	int nTareas = Runtime.getRuntime().availableProcessors();
+        System.out.println("El proceso se dividirá en tantas tareas como indique la ecuación de Subramanian: " + nTareas + " hilos.");
+        int nPuntos = n;
     	int tVentana = nPuntos/nTareas;
     	int linf = 0;
     	int lsup = tVentana;
