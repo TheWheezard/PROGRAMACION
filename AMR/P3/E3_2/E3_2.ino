@@ -1,3 +1,6 @@
+/* Para este ejercicio he heredado el funcionamiento de los pines 2 y 3 de ejercicios anteriores
+   con el propósito de aún poder comprobar visualmente si el sensor se está calibrando o ya está funcionando*/
+
 // These constants won't change:
 const int sensorPin = A0; // pin that the sensor is attached to
 const int ledStartTest = 2;  // LED to notice calibration starts

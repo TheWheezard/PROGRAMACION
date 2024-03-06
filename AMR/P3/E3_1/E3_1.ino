@@ -1,3 +1,6 @@
+/* Para este ejercicio he heredado el funcionamiento de los pines 2 y 3 de ejercicios anteriores
+   con el propósito de aún poder comprobar visualmente si el sensor se está calibrando o ya está funcionando*/
+
 // These constants won't change:
 const int sensorPin = A0; // pin that the sensor is attached to
 const int ledStartTest = 2;  // LED to notice calibration starts
@@ -14,11 +17,13 @@ int sensorValueMap = 0;  // the sensor value mapped
 void setup() {
   pinMode(ledStartTest, OUTPUT);
   pinMode(ledStopTest, OUTPUT);
+  pinMode(outputLED, OUTPUT);
   //To initialize the serial port
   Serial.begin(9600);
   // turn on LED START to signal the start of the calibration period:
   digitalWrite(ledStartTest, HIGH);
   digitalWrite(ledStopTest, LOW);
+  digitalWrite(outputLED, LOW);
 
   /* Checks if the program execution time is less than 15ms
   If the calibration time has not finished, the calibration
