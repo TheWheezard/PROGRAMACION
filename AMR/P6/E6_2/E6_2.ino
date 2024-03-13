@@ -20,5 +20,6 @@ void loop() {
     tone(buzzer, lotr_n[nota], lotr_f[nota]);
     delay(lotr_f[nota]);
     noTone(buzzer);
+    delay(10);
   }
 }
