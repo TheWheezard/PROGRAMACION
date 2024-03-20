@@ -12,7 +12,7 @@ void loop() {
   miservo.write(180);
   delay(3000);
   //Decrease the angle from 90
-  for (angulo = 180; angulo > 0; angulo--) {
+  for (angulo = 180; angulo >= 0; angulo--) {
     miservo.write(angulo);
     delay(100);
   }

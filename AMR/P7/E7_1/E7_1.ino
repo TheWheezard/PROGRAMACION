@@ -15,7 +15,7 @@ void setup() {
   pinMode(L293D_Pin2, OUTPUT);
   pinMode(L293D_Pin7, OUTPUT);
   pinMode(L293D_enablePin, OUTPUT);
-  pinMode(pushButtom_Pin, INPUT_PULLUP);
+  //pinMode(pushButtom_Pin, INPUT_PULLUP);
 }
 
 void loop() {
@@ -30,7 +30,7 @@ void loop() {
     valuePotentiometerMap = map(valuePotentiometer, 523, 1023, 0, 255);
     valueRotation = false;
   } else {
-    valuePotentiometerMap = map(valuePotentiometer, 501, 523, 0, 0);
+    valuePotentiometerMap = map(valuePotentiometer, 501, 522, 0, 0);
   }
 
   //Call function with the arguments
