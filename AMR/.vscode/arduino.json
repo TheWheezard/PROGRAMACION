@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "programmer": "arduinoisp",
+    "port": "COM1",
+    "sketch": "P9\\E9_1\\E9_1.ino"
+}
