@@ -4,7 +4,7 @@
  * @author Javier Lopez
  */
 
- // Pines del TCS3200 conectados a Arduino
+// Pines del TCS3200 conectados a Arduino
 #define S0 3
 #define S1 4
 #define S2 5
@@ -15,6 +15,13 @@ int redFrequency = 0;
 int greenFrequency = 0;
 int blueFrequency = 0;
 int Pot = 0;
+
+int redCount = 0;
+int greenCount = 0;
+int blueCount = 0;
+int whiteCount = 0;
+int blackCount = 0;
+
 char letter = ' ';
 
 
@@ -45,24 +52,29 @@ void setup() {
  * @author Javier Lopez
  */
 void loop() {
-  checkColor();
+  if (Serial.available() > 0) {  //Checks if there is a byte in Serial Port
+    letter = Serial.read();      //Reads the value from Serial port
 
-  if (redFrequency < 35 && redFrequency >= 25 && greenFrequency < 100 && greenFrequency >= 90 && blueFrequency < 75 && blueFrequency >= 65) {
-    Serial.println("Cubo Rojo");
+    // If the real letter is 'Y' switch on the LED
+    if ((letter == 'Y') || (letter == 'y')) {
+      // We reset the counts before making the measurements
+      redCount = 0;
+      greenCount = 0;
+      blueCount = 0;
+      for (int i = 0; i < 1000; i++) {
+        checkColor();
+        redCount += redFrequency;
+        greenCount += greenFrequency;
+        blueCount += blueFrequency;
+      }
+
+      redCount = redCount / 1000;
+      greenCount = greenCount / 1000;
+      blueCount = blueCount / 1000;
+    }
   }
-  //// if (redFrequency < 30 && redFrequency >= 26 && greenFrequency < 97 && greenFrequency >= 93 && blueFrequency < 72 && blueFrequency >= 67) {
-  ////   Serial.println("Cubo verde");
-  //// }
-  else if (redFrequency < 15 && greenFrequency < 15 && blueFrequency < 15) {
-    Serial.println("Cubo Blanco");
-  }
-  else if (redFrequency < 50 && greenFrequency < 30 && blueFrequency < 15) {
-    Serial.println("Cubo Azul");
-  }
-  else if (redFrequency >= 110 && greenFrequency >= 110 && blueFrequency >= 80) {
-    Serial.println("Cubo Negro");
-  }
-  delay(500);
+
+  printColor();
 }
 
 /**
@@ -110,16 +122,16 @@ void checkColor() {
   //delay(100);
 }
 
-// void printColor() {
-//   Pot = analogRead(A0);
-//   Serial.print("Pot: ");
-//   Serial.print(Pot);
-//   Serial.print("Red: ");
-//   Serial.print(redFrequency, DEC);
-//   Serial.print(" Green: ");
-//   Serial.print(greenFrequency, DEC);
-//   Serial.print(" Blue: ");
-//   Serial.print(blueFrequency, DEC);
-//   Serial.println();
-//   delay(1000);
-// }
+void printColor() {
+  Pot = analogRead(A0);
+  Serial.print("Pot: ");
+  Serial.print(Pot);
+  Serial.print("Red: ");
+  Serial.print(redCount, DEC);
+  Serial.print(" Green: ");
+  Serial.print(greenCount, DEC);
+  Serial.print(" Blue: ");
+  Serial.print(blueCount, DEC);
+  Serial.println();
+  delay(1000);
+}

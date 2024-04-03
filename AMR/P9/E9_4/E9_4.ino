@@ -15,6 +15,18 @@ int redFrequency = 0;
 int greenFrequency = 0;
 int blueFrequency = 0;
 int Pot = 0;
+
+int redCount = 0;
+int greenCount = 0;
+int blueCount = 0;
+int whiteCount = 0;
+int blackCount = 0;
+
+int redArray[] = {0, 0, 0};
+int blueArray[] = {0, 0, 0};
+int whiteArray[] = {0, 0, 0};
+int blackArray[] = {0, 0, 0};
+
 char letter = ' ';
 
 
@@ -45,24 +57,72 @@ void setup() {
  * @author Javier Lopez
  */
 void loop() {
+  if (Serial.available() > 0) {  //Checks if there is a byte in Serial Port
+    letter = Serial.read();      //Reads the value from Serial port
+
+    // If the real letter is 'Y' switch on the LED
+    if ((letter == 'R') || (letter == 'r')) {
+      calibrate();
+
+      redArray[0] = redCount / 10;
+      redArray[1] = greenCount / 10;
+      redArray[2] = blueCount / 10;
+    }
+    else if ((letter == 'A') || (letter == 'a')) {
+      calibrate();
+
+      blueArray[0] = redCount / 10;
+      blueArray[1] = greenCount / 10;
+      blueArray[2] = blueCount / 10;
+    }
+    else if ((letter == 'B') || (letter == 'b')) {
+      calibrate();
+
+      whiteArray[0] = redCount / 10;
+      whiteArray[1] = greenCount / 10;
+      whiteArray[2] = blueCount / 10;
+    } else if ((letter == 'N') || (letter == 'n')) {
+      calibrate();
+
+      blackArray[0] = redCount / 10;
+      blackArray[1] = greenCount / 10;
+      blackArray[2] = blueCount / 10;
+    }
+  }
+
   checkColor();
 
-  if (redFrequency < 35 && redFrequency >= 25 && greenFrequency < 100 && greenFrequency >= 90 && blueFrequency < 75 && blueFrequency >= 65) {
+  if (redFrequency <= redArray[0]+5 && redFrequency >= redArray[0]-5 && greenFrequency <= redArray[1]+5 && greenFrequency >= redArray[1]-5 && blueFrequency <= redArray[2]+5 && blueFrequency >= redArray[2]-5) {
     Serial.println("Cubo Rojo");
   }
-  //// if (redFrequency < 30 && redFrequency >= 26 && greenFrequency < 97 && greenFrequency >= 93 && blueFrequency < 72 && blueFrequency >= 67) {
+  //// if (redCount < 30 && redCount >= 26 && greenCount < 97 && greenCount >= 93 && blueCount < 72 && blueCount >= 67) {
   ////   Serial.println("Cubo verde");
   //// }
-  else if (redFrequency < 15 && greenFrequency < 15 && blueFrequency < 15) {
-    Serial.println("Cubo Blanco");
-  }
-  else if (redFrequency < 50 && greenFrequency < 30 && blueFrequency < 15) {
+  else if (redFrequency <= blueArray[0]+2 && redFrequency >= blueArray[0]-2 && greenFrequency <= blueArray[1]+2 && greenFrequency >= blueArray[1]-2 && blueFrequency <= blueArray[2]+2 && blueFrequency >= blueArray[2]-2) {
     Serial.println("Cubo Azul");
   }
-  else if (redFrequency >= 110 && greenFrequency >= 110 && blueFrequency >= 80) {
-    Serial.println("Cubo Negro");
+  else if (redFrequency <= whiteArray[0]+2 && redFrequency >= whiteArray[0]-2 && greenFrequency <= whiteArray[1]+2 && greenFrequency >= whiteArray[1]-2 && blueFrequency <= whiteArray[2]+2 && blueFrequency >= whiteArray[2]-2) {
+    Serial.println("Cubo Blanco");
   }
-  delay(500);
+  else if (redFrequency <= blackArray[0]+5 && redFrequency >= blackArray[0]-5 && greenFrequency <= blackArray[1]+5 && greenFrequency >= blackArray[1]-5 && blueFrequency <= blackArray[2]+5 && blueFrequency >= blackArray[2]-5) {
+    Serial.println("Cubo Negro");
+  } 
+  else
+    Serial.println("Color no detectado");
+
+  //printColor();
+}
+
+void calibrate() {
+  redCount = 0;
+  greenCount = 0;
+  blueCount = 0;
+  for (int i = 0; i < 10; i++) {
+    checkColor();
+    redCount += redFrequency;
+    greenCount += greenFrequency;
+    blueCount += blueFrequency;
+  }
 }
 
 /**
@@ -110,16 +170,16 @@ void checkColor() {
   //delay(100);
 }
 
-// void printColor() {
-//   Pot = analogRead(A0);
-//   Serial.print("Pot: ");
-//   Serial.print(Pot);
-//   Serial.print("Red: ");
-//   Serial.print(redFrequency, DEC);
-//   Serial.print(" Green: ");
-//   Serial.print(greenFrequency, DEC);
-//   Serial.print(" Blue: ");
-//   Serial.print(blueFrequency, DEC);
-//   Serial.println();
-//   delay(1000);
-// }
+void printColor() {
+  Pot = analogRead(A0);
+  Serial.print("Pot: ");
+  Serial.print(Pot);
+  Serial.print("Red: ");
+  Serial.print(redCount, DEC);
+  Serial.print(" Green: ");
+  Serial.print(greenCount, DEC);
+  Serial.print(" Blue: ");
+  Serial.print(blueCount, DEC);
+  Serial.println();
+  delay(1000);
+}

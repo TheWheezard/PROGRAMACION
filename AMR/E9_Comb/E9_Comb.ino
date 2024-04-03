@@ -4,7 +4,7 @@
  * @author Javier Lopez
  */
 
- // Pines del TCS3200 conectados a Arduino
+// Pines del TCS3200 conectados a Arduino
 #define S0 3
 #define S1 4
 #define S2 5
@@ -15,6 +15,13 @@ int redFrequency = 0;
 int greenFrequency = 0;
 int blueFrequency = 0;
 int Pot = 0;
+
+int redCount = 0;
+int greenCount = 0;
+int blueCount = 0;
+int whiteCount = 0;
+int blackCount = 0;
+
 char letter = ' ';
 
 
@@ -45,24 +52,48 @@ void setup() {
  * @author Javier Lopez
  */
 void loop() {
-  checkColor();
+  if (Serial.available() > 0) {  //Checks if there is a byte in Serial Port
+    letter = Serial.read();      //Reads the value from Serial port
 
-  if (redFrequency < 35 && redFrequency >= 25 && greenFrequency < 100 && greenFrequency >= 90 && blueFrequency < 75 && blueFrequency >= 65) {
-    Serial.println("Cubo Rojo");
+    // If the real letter is 'Y' switch on the LED
+    if ((letter == 'Y') || (letter == 'y')) {
+      redCount = 0;
+      greenCount = 0;
+      blueCount = 0;
+      for (int i = 0; i < 10; i++) {
+        checkColor();
+        redCount += redFrequency;
+        greenCount += greenFrequency;
+        blueCount += blueFrequency;
+      }
+
+      redCount = redCount / 10;
+      greenCount = greenCount / 10;
+      blueCount = blueCount / 10;
+    }
   }
-  //// if (redFrequency < 30 && redFrequency >= 26 && greenFrequency < 97 && greenFrequency >= 93 && blueFrequency < 72 && blueFrequency >= 67) {
+
+  if (redCount == 0 && greenCount == 0 && blueCount == 0) {
+    Serial.println("No hay cubo");
+  }
+
+  else if (redCount < 35 && redCount >= 25 && greenCount < 100 && greenCount >= 90 && blueCount < 75 && blueCount >= 65) {
+   Serial.println("Cubo Rojo");
+  }
+  //// if (redCount < 30 && redCount >= 26 && greenCount < 97 && greenCount >= 93 && blueCount < 72 && blueCount >= 67) {
   ////   Serial.println("Cubo verde");
   //// }
-  else if (redFrequency < 15 && greenFrequency < 15 && blueFrequency < 15) {
-    Serial.println("Cubo Blanco");
+  else if (redCount < 15 && greenCount < 15 && blueCount < 15) {
+   Serial.println("Cubo Blanco");
   }
-  else if (redFrequency < 50 && greenFrequency < 30 && blueFrequency < 15) {
-    Serial.println("Cubo Azul");
+  else if (redCount < 50 && greenCount < 30 && blueCount < 15) {
+   Serial.println("Cubo Azul");
   }
-  else if (redFrequency >= 110 && greenFrequency >= 110 && blueFrequency >= 80) {
-    Serial.println("Cubo Negro");
+  else if (redCount >= 110 && greenCount >= 110 && blueCount >= 80) {
+   Serial.println("Cubo Negro");
   }
-  delay(500);
+
+  //printColor();
 }
 
 /**
@@ -110,16 +141,16 @@ void checkColor() {
   //delay(100);
 }
 
-// void printColor() {
-//   Pot = analogRead(A0);
-//   Serial.print("Pot: ");
-//   Serial.print(Pot);
-//   Serial.print("Red: ");
-//   Serial.print(redFrequency, DEC);
-//   Serial.print(" Green: ");
-//   Serial.print(greenFrequency, DEC);
-//   Serial.print(" Blue: ");
-//   Serial.print(blueFrequency, DEC);
-//   Serial.println();
-//   delay(1000);
-// }
+void printColor() {
+  Pot = analogRead(A0);
+  Serial.print("Pot: ");
+  Serial.print(Pot);
+  Serial.print("Red: ");
+  Serial.print(redCount, DEC);
+  Serial.print(" Green: ");
+  Serial.print(greenCount, DEC);
+  Serial.print(" Blue: ");
+  Serial.print(blueCount, DEC);
+  Serial.println();
+  delay(1000);
+}

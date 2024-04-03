@@ -1,9 +1,9 @@
 // Pines del TCS3200 conectados a Arduino
-#define S0 4
-#define S1 5
-#define S2 6
-#define S3 7
-#define sensorOut 8
+#define S0 3
+#define S1 4
+#define S2 5
+#define S3 6
+#define sensorOut 2
 // Fijar frecuencia leída por los fotodiodos y el valor inicial del potenciómetro
 int redFrequency = 0;
 int greenFrequency = 0;
