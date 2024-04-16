@@ -2,5 +2,5 @@
     "board": "arduino:avr:uno",
     "programmer": "arduinoisp",
     "port": "COM1",
-    "sketch": "P9\\P9_2\\P9_2.ino"
+    "sketch": "Sesion-7\\E7_1\\E7_1.ino"
 }
