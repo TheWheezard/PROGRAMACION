@@ -20,25 +20,25 @@
 // incluyen las coordenadas de la esquina superior izquierda y de la esquina inferior
 // derecha del cuadrante que representa.
 
-// Pasos: 
-// 1- Comprobar si es cuaternario.
-// 2- Determinar valor de k.
-// 3- Crear matriz 2^k.
-// 4- Pintar determinando el algoritmo para "bajar" y recorrer.
+
 #include "..\..\Implementaciones\Agen.hpp"
 #include <cmath>
 
 enum color { blanco, negro, vacio };
 
 void pintarCuadrado(Agen<color>& A) {
+    // 1- Comprobar si es cuaternario.
     if (!A.arbolVacio() && esEstrictamenteCuaternarioRec(A, A.raiz())) {
+        // 2- Determinar valor de k.
         int k = alturaArbol(A, A.raiz()) - 1;
 
-        color** matriz = new color*[static_cast<int>(pow(2, k))];
+        // 3- Crear matriz 2^k.
+        color** matriz = new color * [static_cast<int>(pow(2, k))];
         for (int i = 0; i < static_cast<int>(pow(2, k)); i++) {
             matriz[i] = new color[static_cast<int>(pow(2, k))];
         }
 
+        // 4- Pintar determinando el algoritmo para "bajar" y recorrer.
         divideLoad(A, A.raiz(), matriz, 0, static_cast<int>(pow(2, k)), 0, static_cast<int>(pow(2, k)));
     }
 }
