@@ -75,7 +75,7 @@ bool esEstrictamenteCuaternarioRec(Agen<color>& A, typename Agen<color>::nodo n)
 }
 
 bool esHoja(Agen<color>& A, typename Agen<color>::nodo n) {
-    return A.hijoIzqdo(n) == Agen<color>::NODO_NULO;
+    return n != Agen<color>::NODO_NULO && A.hijoIzqdo(n) == Agen<color>::NODO_NULO;
 }
 
 int contarHermanos(Agen<color>& A, typename Agen<color>::nodo n) {
