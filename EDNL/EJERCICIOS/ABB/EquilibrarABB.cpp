@@ -13,7 +13,7 @@ Implementa este algoritmo para equilibrar un ABB.*/
 /// @tparam T Tipo genérico
 /// @param A (ref) Árbol binario de búsqueda
 template<typename T>
-void equilibrarABB(Abb<T>& A){
+void equilibrarABB(Abb<T>& A) {
     std::vector<T> vec = new std::vector<T>;
     extraerEltos(A, vec);
     Abb<T>& B = new Abb<T>;
@@ -27,19 +27,19 @@ void equilibrarABB(Abb<T>& A){
 //Extrae en inorden los elementos de un ABB y los introduce en un vector
 //Devuelve (ref) el vector con los elementos del ABB ordenados
 template<typename T>
-void extraerEltos(Abb<T>& A, std::vector<T>& vec){
-    extraerEltos(A.izqdo(), vec);
-    if (!A.vacio()){
+void extraerEltos(Abb<T>& A, std::vector<T>& vec) {
+    if (!A.vacio()) {
+        extraerEltos(A.izqdo(), vec);
         vec.push_back(A.elemento());
+        extraerEltos(A.drcho(), vec);
     }
-    extraerEltos(A.drcho(), vec);
 }
 
 //Recibe un ABB (ref), un vector (ref) y dos enteros ini y fin
 //Introduce en el ABB el valor de la posición del vector que se encuentra en el centro de las posiciones marcadas por ini y fin
 //Devuelve (ref) el ABB relleno con los valores del vector
 template<typename T>
-void rellenarABB(Abb<T>& A, std::vector<T>& vec, int ini, int fin){
+void rellenarABB(Abb<T>& A, std::vector<T>& vec, int ini, int fin) {
     if (ini != fin) {
         posicion = (ini + fin) / 2;
         A.insertar(vec[posicion]);
