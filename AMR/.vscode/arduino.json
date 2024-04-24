@@ -1,6 +1,6 @@
 {
     "board": "arduino:avr:uno",
-    "programmer": "arduinoisp",
+    "programmer": "usbtinyisp",
     "port": "COM1",
     "sketch": "Sesion-7\\E7_1\\E7_1.ino"
 }
