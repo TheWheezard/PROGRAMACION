@@ -7,35 +7,33 @@
 // Devuelve true si cumple la especificación de un AVL, false en caso contrario
 template<typename T>
 bool esAVL(Abin<T>& A) {
-    // std::vector<T> vec = new std::vector<T>;
-    // rellenarVector(A, A.raiz(), vec);
-    // return elementosOrdenados(vec) && estaEquilibrado(A, A.raiz());
-    return comparaElementos(A, A.raiz()) && estaEquilibrado(A, A.raiz());
+    std::vector<T*> vec = new std::vector<T*>;
+    rellenarVector(A, A.raiz(), vec);
+    return elementosOrdenados(vec) && estaEquilibrado(A, A.raiz());
+    // return comparaElementos(A, A.raiz()) && estaEquilibrado(A, A.raiz());
 }
 
 // @param A un árbol binario (referencia) 
 // @param n un nodo que pertenece al árbol
 // @param vec un vector (referencia)
 // @return (ref) el vector relleno con los elementos del árbol, en inorden
-// @deprecated ya no se rellena el vector y se compara directamente sobre los elementos del árbol
 template<typename T>
-void rellenarVector(Abin<T>& A, typename Abin<T>::nodo n, std::vector<T>& vec) {
+void rellenarVector(Abin<T>& A, typename Abin<T>::nodo n, std::vector<T*>& vec) {
     if (n != Abin<T>::NODO_NULO) { 
         rellenarVector(A, A.hijoIzqdo(n), vec);
-        vec.push_back(A.elemento(n));
+        vec.push_back(&A.elemento(n)); // Store pointer to T object
         rellenarVector(A, A.hijoDrcho(n), vec);
     }
 }
 
 // @param vec Un vector por referencia
 // @returns Devuelve true si todos los elementos están ordenados de menor a mayor, false en caso contrario
-// @deprecated Ya no se compara el vector y se compara directamente sobre los elementos del árbol
 template<typename T>
 bool elementosOrdenados(std::vector<T>& vec) {
     int i = 1;
     bool condicion = true;
     while (i < vec.size() && condicion) {
-        condicion = vec[i-1] < vec[i];
+        condicion = *vec[i-1] < *vec[i];
         ++i;
     }
     return condicion;
@@ -44,6 +42,8 @@ bool elementosOrdenados(std::vector<T>& vec) {
 // @param A un árbol binario (referencia) 
 // @param n un nodo que pertenece al árbol
 // @return true si el árbol desde el nodo n cumple con la condición de orden
+// @deprecated he descubierto que esto solo comprueba por cada nodo y sus hijos,
+// pero no garantiza la propiedad de orden para todo el árbol
 template<typename T>
 bool comparaElementos(Abin<T>& A, typename Abin<T>::nodo n) {
     if (n != Abin<T>::NODO_NULO) { 
