@@ -6,27 +6,25 @@ bool esPseudocompleto(Abin<T>& A) {
         size_t alturaMax = calcularAlturaMax(A, A.raiz());
         size_t alturaMin = calcularAlturaMin(A, A.raiz());
 
-        if (alturaMax - alturaMin > 1) return false;
+
+        if (alturaMax - alturaMin > 1) return false; //doubt, check question
         else if (alturaMax - alturaMin == 0) return true;
         else {
-           return comprobarPosicionHojas(A, A.raiz());
+            return pseudocompleto_rec(A.raiz(), A, alturaMax - 1);
         }
     }
     else return true;
 }
 
-template<typename T>
-bool comprobarPosicionHojas(Abin<T>& A, typename Abin<T>::nodo n) {
-    if (n == Abin<T>::NODO_NULO) { // dudo que funcione perfectamente, no identificará si una hoja está un nivel por encima de las demás
+template <typename T>
+bool pseudocompleto_rec(typename Abin<T> ::nodo n, const Abin<T>& A, unsigned altura_max, unsigned actual) {
+    if (n == Abin<T> ::NODO_NULO)
         return true;
-    } else if (A.hijoIzqdo(n) == Abin<T>::NODO_NULO && A.hijoDrcho(n) == Abin<T>::NODO_NULO) {
-        return true;
-    } else if (A.hijoIzqdo(n) == Abin<T>::NODO_NULO && A.hijoDrcho(n) != Abin<T>::NODO_NULO) {
-        return false;
-    } else if (A.hijoIzqdo(n) != Abin<T>::NODO_NULO && A.hijoDrcho(n) == Abin<T>::NODO_NULO) {
-        return comprobarPosicionHojas(A, A.hijoIzqdo(n));
-    } else {
-        return comprobarPosicionHojas(A, A.hijoIzqdo(n)) && comprobarPosicionHojas(A, A.hijoDrcho(n));
+    else {
+        if (altura_max == 1) // Voy restando 1 a altura_max y acabo cuando valga 1
+            return (A.hijoDrcho(n) != Abin<T> ::NODO_NULO and A.hijoIzqdo(n) != Abin<T> ::NODO_NULO) or (A.hijoDrcho(n) == Abin<T> ::NODO_NULO and A.hijoIzqdo(n) == Abin<T> ::NODO_NULO);
+        else
+            return pseudocompleto_rec(A.hijoDrcho(n), A, altura_max - 1) and pseudocompleto_rec(A.hijoIzqdo(n), A, altura_max - 1);
     }
 }
 
