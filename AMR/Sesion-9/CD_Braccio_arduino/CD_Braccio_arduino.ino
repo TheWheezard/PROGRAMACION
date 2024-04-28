@@ -7,17 +7,17 @@ Servo elbow;
 Servo wrist_rot;
 Servo wrist_ver;
 Servo gripper;
-double r1 = 0;
-double r2 = 0;
-double r3 = 180;
-double r4 = 0;
-double r5 = 0;
+double d1 = 0;
+double d2 = 0;
+double d3 = 180;
+double d4 = 0;
+double d5 = 0;
 
-double q1 = r1 * PI / 180.0;
-double q2 = r2 * PI / 180.0;
-double q3 = r3 * PI / 180.0;
-double q4 = r4 * PI / 180.0;
-double q5 = r5 * PI / 180.0;
+double q1 = d1 * PI / 180.0;
+double q2 = d2 * PI / 180.0;
+double q3 = d3 * PI / 180.0;
+double q4 = d4 * PI / 180.0;
+double q5 = d5 * PI / 180.0;
 
 // double x_3 = PI/2;
 // double x_4 = 0;
@@ -38,15 +38,15 @@ mtx_type T1[4][4];
 mtx_type T2[4][4];
 mtx_type T3[4][4];
 mtx_type T[4][4];
+
+
 void setup() {
   Serial.begin(9600);
   Braccio.begin();
 }
 
 void loop() {
-  
-
-  // Braccio.ServoMovement(20, r1, r2, r3, r4, r5, 43); // Todo neutral
+  Braccio.ServoMovement(20, d1, d2, d3, d4, d5, 43); // Todo neutral
   Matrix.Print((mtx_type*)A, 4, 4, "A");
   Matrix.Print((mtx_type*)B, 4, 4, "B");
   Matrix.Print((mtx_type*)C, 4, 4, "C");
@@ -64,5 +64,5 @@ void loop() {
 }
 
 double degToRad(double degrees) {
-    return degrees * PI / 180.0;
+  return degrees * PI / 180.0;
 }
