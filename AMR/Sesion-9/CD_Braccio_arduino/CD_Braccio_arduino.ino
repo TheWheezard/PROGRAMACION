@@ -1,12 +1,14 @@
 #include <Braccio.h>
 #include <MatrixMath.h>
 #include <Servo.h>
+
 Servo base;
 Servo shoulder;
 Servo elbow;
 Servo wrist_rot;
 Servo wrist_ver;
 Servo gripper;
+
 double d1 = 0;
 double d2 = 0;
 double d3 = 180;
