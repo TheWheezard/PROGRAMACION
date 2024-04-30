@@ -85,17 +85,19 @@ void print_q(float *q) {
 void loop() {
   char comando = 0;
   float q[6] = { 0, 90, 90, 90, 0, 50 };
-  // float pos_1[3] = { .3, .25, .1 };
+  
   // DESPL EN X/Y/Z RESPECTO DE BASE!!!!!!
-  float pos_1[3] = { .3, 0, .1 };
+  // Imagina que la base está en el origen de coordenadas [0,0,0]
+  // y el extremo del robot se desplaza respecto de la base
+  // float pos_1[3] = { .3, .25, .1 };
+  float pos_1[3] = { .3, 0, .1 }; // .3 == 30cm, etc
   float pos_2[3] = { -.26, .28, .15 };
   float pos_test[3] = { 1.250, -.1, 0 };
   float q_reposo[6] = { 0, 90, 90, 90, 0, 43 };
-  float valor_cierre = 50;
 
   // TODO
   // Definir el valor de la pinza para que al cerrar coja la pieza
-  valor_cierre = 40;
+  float valor_cierre = 50;
 
   // Ponemos el robot en posición de reposo inicial
   Braccio.ServoMovement(20, q_reposo[0], q_reposo[1], q_reposo[2], q_reposo[3], q_reposo[4], q_reposo[5]);
