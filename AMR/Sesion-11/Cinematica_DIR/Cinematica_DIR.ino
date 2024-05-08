@@ -98,3 +98,4 @@ void descargarRojo(){}
 void descargarBlanco(){}
 void descargarNegro(){}
 void descargarAzul(){}
+void moverBarrera(){}
