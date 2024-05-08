@@ -12,6 +12,8 @@ Servo wrist_rot;
 Servo wrist_ver;
 Servo gripper;
 
+enum color {VACIO, ROJO, BLANCO, NEGRO};
+
 void setup() {
   
   // Setup the lengths and rotation limits for each link
@@ -42,6 +44,7 @@ void setup() {
     Serial.print(a2b(a1)); Serial.print(',');
     Serial.print(a2b(a2)); Serial.print(',');
     Serial.println(a2b(a3));
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   } else {
     Serial.println("No solution found!");
   }
@@ -58,19 +61,19 @@ void setup() {
   }
   */
   
-  Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
 //PARECE QUE ES Y/X/Z SIENDO X SENTIDO HACIA LA PISTA
   if(InverseK.solve(200, 0, 30, b0, b1, b2, b3)) {
     Serial.print(a2b(b0)); Serial.print(',');
     Serial.print(a2b(b1)); Serial.print(',');
     Serial.print(a2b(b2)); Serial.print(',');
     Serial.println(a2b(b3));
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 10);
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 10);
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 20);
   } else {
     Serial.println("No solution found! -1-");
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   }
-  Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 20);
-  Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 10);
-  Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 10);
 
 
   if(InverseK.solve(0, 200, 75, b0, b1, b2, b3)) { // try -75 for Z
@@ -78,28 +81,83 @@ void setup() {
     Serial.print(a2b(b1)); Serial.print(',');
     Serial.print(a2b(b2)); Serial.print(',');
     Serial.println(a2b(b3));
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 20);
   } else {
     Serial.println("No solution found! -2-");
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   }
-  Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 20);
+
   if(InverseK.solve(100, 100, 70, b0, b1, b2, b3)) { // try -75 for Z
     Serial.print(a2b(b0)); Serial.print(',');
     Serial.print(a2b(b1)); Serial.print(',');
     Serial.print(a2b(b2)); Serial.print(',');
     Serial.println(a2b(b3));
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 10);
   } else {
     Serial.println("No solution found! -3-");
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   }
-  Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 10);
   
   delay(2000);
-  Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
 
 }
 
 void loop() {
 
+  // comprobarCubo();
+  // delay(1000);
+  // color c = leerColor();
+  // delay(1000);
+  // moverBarrera(c);
+
+  // cargarCubo();
+  // delay(100000);
+  // switch(c) {
+  //   case ROJO:
+  //     descargarRojo();
+  //     break;
+  //   case BLANCO:
+  //     descargarBlanco();
+  //     break;
+  //   case NEGRO:
+  //     descargarNegro();
+  //     break;
+
+  //   default;
+  // }
+  delay(5000);
 }
+
+// @brief Mueve el cubo de la zona de recogida al sensor de color
+void comprobarCubo(){
+  // Recoger el primer cubo
+  Braccio.ServoMovement(20, 0, 89, 5, 5, 90, 10); // Acercarse al primer cubo
+  delay(1000);
+  Braccio.ServoMovement(20, 0, 89, 5, 5, 90, 43); // Acercarse al primer cubo
+  delay(1000);
+  Braccio.ServoMovement(20, 0, 89, 5, 5, 90, 43); // Cerrar pinza para agarrar el cubo
+  delay(1000);
+
+  // Mover el tercer cubo encima del segundo
+  Braccio.ServoMovement(20, 76, 120, 5, 5, 90, 43); // Mover hacia la posición de apilamiento
+  delay(1000);
+  Braccio.ServoMovement(20, 76, 91, 15, 10, 90, 43); // Mover hacia la posición de apilamiento
+  delay(1000);
+  Braccio.ServoMovement(20, 76, 91, 15, 10, 90, 43); // Soltar el cubo
+  delay(1000);
+  Braccio.ServoMovement(20, 76, 91, 15, 6, 90, 10); // Soltar el cubo
+  delay(1000);
+}
+
+// @brief Mueve el cubo de la zona de color al vehículo en parada de carga
+void cargarCubo(){}
+void descargarRojo(){}
+void descargarBlanco(){}
+void descargarNegro(){}
+void descargarAzul(){}
+color leerColor(){}
+void moverBarrera(color c){}
+
 
 // Quick conversion from the Braccio angle system to radians
 float b2a(float b){
