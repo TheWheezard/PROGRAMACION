@@ -5,8 +5,8 @@
 
 
 
-// Pines motor (cambiar segun usados)
-// Pin de PWM
+ // Pines motor (cambiar segun usados)
+ // Pin de PWM
 #define M1 9
 #define M2 16
 
@@ -36,7 +36,7 @@
 /**
  * @brief Enumeración para representar los colores detectados por los sensores CNY.
  */
-enum color {VACIO, ROJO, BLANCO, NEGRO, AZUL};
+enum color { VACIO, ROJO, BLANCO, NEGRO, AZUL };
 
 
 
@@ -60,63 +60,67 @@ void setup() {
   pinMode(CNY4, INPUT);
 
   Serial.begin(230400);
+
+  // Una vez iniciado todo, lo ponemos en modo "avanzar"
+  // para que se coloque por sí solo en la zona de carga
+  avanzarCargar();
 }
 
 void loop() {
-    // Uso de sensores CNY
-    // int inCNY1 = analogRead(CNY1); //5
-    // int inCNY2 = analogRead(CNY2); //6
-    // int inCNY3 = analogRead(CNY3); //7
-    // int inCNY4 = analogRead(CNY4); //8
-    // Serial.print(inCNY1);
-    // Serial.print(", ");
-    // Serial.print(inCNY2);
-    // Serial.print(", ");
-    // Serial.print(inCNY3);
-    // Serial.print(", ");
-    // Serial.print(inCNY4);
-    // Serial.print("\n");
-    // delay(1000);
-    
+  // Uso de sensores CNY
+  // int inCNY1 = analogRead(CNY1); //5
+  // int inCNY2 = analogRead(CNY2); //6
+  // int inCNY3 = analogRead(CNY3); //7
+  // int inCNY4 = analogRead(CNY4); //8
+  // Serial.print(inCNY1);
+  // Serial.print(", ");
+  // Serial.print(inCNY2);
+  // Serial.print(", ");
+  // Serial.print(inCNY3);
+  // Serial.print(", ");
+  // Serial.print(inCNY4);
+  // Serial.print("\n");
+  // delay(1000);
 
-    int c = color::VACIO;
-    while (!hayCarga() && c == color::VACIO && detectarObstaculo()){
-      while (!hayCarga()) {}
-      while (c == color::VACIO) {
-        c = detectarColor();
-      }
+
+  int c = color::VACIO;
+  while (!hayCarga() && c == color::VACIO && detectarObstaculo()) {
+    while (!hayCarga()) {}
+    while (c == color::VACIO) {
+      c = detectarColor();
     }
+  }
 
-    delay(2000);
+  delay(2000);
 
-    switch (c) {
-    case color::ROJO:
-      avanzaRojo();
-      break;
-    
-    case color::NEGRO:
-      avanzaNegro();
-      break;
-    
-    case color::BLANCO:
-      avanzaBlanco();
-      break;
-    
-    default: // TODO: Decidir qué hacer
-      break;
-    }
+  switch (c) {
+  case color::ROJO:
+    avanzaRojo();
+    break;
 
-    while (hayCarga()) {}
-    delay(2000);
+  case color::NEGRO:
+    avanzaNegro();
+    break;
 
-    avanzarCargar();
+  case color::BLANCO:
+    avanzaBlanco();
+    break;
+
+  default: // TODO: Decidir qué hacer
+    break;
+  }
+
+  while (hayCarga()) {}
+  delay(2000);
+
+  avanzarCargar();
 }
 
 /**
  * @brief Función para detectar el color de la superficie.
- * 
+ *
  * Realiza lecturas de los sensores CNY hasta detectar un obstáculo.
- * 
+ *
  * @param None
  * @return El número de lecturas realizadas antes de detectar el obstáculo.
  */
@@ -131,15 +135,15 @@ int detectarColor() {
 
 /**
  * @brief Función para detectar la presencia de un obstáculo.
- * 
+ *
  * @param None
  * @return true si hay un obstáculo, false en caso contrario.
  */
 bool detectarObstaculo() { return ultraSound() <= 150; }
 
 /**
- * @brief Función para detectar si hay carga en el coche.
- * 
+ * @brief Función para detectar si hay un cubo cargado en el coche.
+ *
  * @param None
  * @return true si hay carga, false en caso contrario.
  */
@@ -147,7 +151,7 @@ bool hayCarga() {} //devolvemos aquí lo que detecte el LDR
 
 /**
  * @brief Función para medir la distancia mediante un sensor de ultrasonido.
- * 
+ *
  * @param None
  * @return La distancia medida en centímetros.
  */
@@ -171,9 +175,13 @@ long ultraSound() {
 
 /**
  * @brief Función para avanzar el coche.
- * 
+ *
  * Mueve el coche hacia adelante o hacia atrás dependiendo de las lecturas de los sensores CNY.
- * 
+ * Si no detecta línea, el coche se mueve hacia atrás.
+ * Si detecta línea en el sensor izquierdo, el coche se desvía a la derecha.
+ * Si detecta línea en el sensor derecho, el coche se desvía a la izquierda.
+ * Si detecta línea en ambos sensores, el coche avanza hacia adelante.
+ *
  * @param None
  * @return None
  */
@@ -248,8 +256,8 @@ void avanza() {
 }
 
 /**
- * @brief Función para avanzar el coche hasta detectar un color rojo.
- * 
+ * @brief Función para avanzar el coche hasta detectar la parada del color rojo.
+ *
  * @param None
  * @return None
  */
@@ -263,12 +271,12 @@ void avanzaRojo() {
 }
 
 /**
- * @brief Función para avanzar el coche hasta detectar un color blanco.
- * 
+ * @brief Función para avanzar el coche hasta detectar la parada del color blanco.
+ *
  * @param None
  * @return None
  */
-void avanzaBlanco(){
+void avanzaBlanco() {
   int inCNY1 = analogRead(CNY1);  //5
   int inCNY4 = analogRead(CNY4);  //8
 
@@ -278,12 +286,12 @@ void avanzaBlanco(){
 }
 
 /**
- * @brief Función para avanzar el coche hasta detectar un color negro.
- * 
+ * @brief Función para avanzar el coche hasta detectar la parada del color negro.
+ *
  * @param None
  * @return None
  */
-void avanzaNegro(){
+void avanzaNegro() {
   int inCNY1 = analogRead(CNY1);  //5
   int inCNY4 = analogRead(CNY4);  //8
 
@@ -293,15 +301,15 @@ void avanzaNegro(){
 }
 
 /**
- * @brief Función para avanzar el coche mientras carga un objeto.
- * 
+ * @brief Función para avanzar el coche hasta la zona de carga.
+ *
  * Avanza el coche y verifica la distancia medida por el sensor de ultrasonido.
  * Si la distancia es menor o igual a 200 cm, el motor se pone en modo standby.
- * 
+ *
  * @param None
  * @return None
  */
-void avanzarCargar(){
+void avanzarCargar() {
   avanza();
   if (ultraSound() <= 200) {
     digitalWrite(SLP_M1, LOW);
