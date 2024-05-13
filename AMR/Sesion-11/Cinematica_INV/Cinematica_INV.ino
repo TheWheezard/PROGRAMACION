@@ -71,7 +71,7 @@ void loop() {
   // delay(1000);
   // moverBarrera(c);
 
-  // cargarCubo();
+  cargarCubo();
   // delay(100000);
   // switch(c) {
   //   case ROJO:
@@ -86,7 +86,7 @@ void loop() {
 
   //   default;
   // }
-  delay(30000);
+  delay(8000);
 
   float a0, a1, a2, a3;
   if(InverseK.solve(0, 0, 505-75, a0, a1, a2, a3)) {
@@ -109,7 +109,7 @@ void comprobarCubo() {
   InverseK.solve(0, 0, 505-75, a0, a1, a2, a3);
 
   // Orientar el brazo en la primera zona y sobre el cubo
-  if(InverseK.solve(0, -200, 100, b0, b1, b2, b3)) { // try -75 for Z
+  if(InverseK.solve(0, -170, 100, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-1a-");
     Serial.print(a2b(b0)); Serial.print(',');
     Serial.print(a2b(b1)); Serial.print(',');
@@ -120,25 +120,26 @@ void comprobarCubo() {
     Serial.println("No solution found! -1a-");
     Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   }
-  delay(6000);
+  delay(1000);
 
   // Recoger el primer cubo
-  if(InverseK.solve(0, -200, -2, b0, b1, b2, b3)) { // try -75 for Z
+  if(InverseK.solve(0, -170, -55, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-1b-");
     Serial.print(a2b(b0)); Serial.print(',');
     Serial.print(a2b(b1)); Serial.print(',');
     Serial.print(a2b(b2)); Serial.print(',');
     Serial.println(a2b(b3));
     Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 10);
+    delay(1000);
     Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 45);
   } else {
     Serial.println("No solution found! -1b-");
     Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   }
-  delay(6000);
+  delay(1000);
 
   // Elevar
-  if(InverseK.solve(0, -200, 100, b0, b1, b2, b3)) { // try -75 for Z
+  if(InverseK.solve(0, -170, 100, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-1a-");
     Serial.print(a2b(b0)); Serial.print(',');
     Serial.print(a2b(b1)); Serial.print(',');
@@ -149,31 +150,144 @@ void comprobarCubo() {
     Serial.println("No solution found! -1a-");
     Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   }
-  delay(6000);
+  delay(1000);
 
   // Mover el cubo al CNY
-  if(InverseK.solve(200, -50, 100, b0, b1, b2, b3)) { // try -75 for Z
+  if(InverseK.solve(200, -61, 100, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-1c-");
     Serial.print(a2b(b0)); Serial.print(',');
     Serial.print(a2b(b1)); Serial.print(',');
     Serial.print(a2b(b2)); Serial.print(',');
     Serial.println(a2b(b3));
-    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 45);
-    delay(2000);
-    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 0, 10);
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 45);
   } else {
     Serial.println("No solution found! -1c-");
     Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   }
-  delay(6000);
-  /* Habría que orientar y bajar */
+  delay(1000);
+  /* Hay que orientar y bajar */
+  if(InverseK.solve(203, -60, 0, b0, b1, b2, b3)) { // try -75 for Z
+    Serial.println("-1d-");
+    Serial.print(a2b(b0)); Serial.print(',');
+    Serial.print(a2b(b1)); Serial.print(',');
+    Serial.print(a2b(b2)); Serial.print(',');
+    Serial.println(a2b(b3));
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 76, 45);
+    delay(1000);
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 76, 10);
+  } else {
+    Serial.println("No solution found! -1d-");
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
+  }
+  delay(1000);
 
   // Soltar cubo
-  /* Habría que soltar y elevar*/
+  /* Hay que soltar y elevar*/
+  // if(InverseK.solve(200, -61, 100, b0, b1, b2, b3)) { // try -75 for Z
+  //   Serial.println("-1c-");
+  //   Serial.print(a2b(b0)); Serial.print(',');
+  //   Serial.print(a2b(b1)); Serial.print(',');
+  //   Serial.print(a2b(b2)); Serial.print(',');
+  //   Serial.println(a2b(b3));
+  //   Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 10);
+  // } else {
+  //   Serial.println("No solution found! -1c-");
+  //   Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
+  // }
+  //delay(6000);
   
 }
 // @brief Mueve el cubo de la zona de color al vehículo en parada de carga
-void cargarCubo(){}
+void cargarCubo() {
+  float a0, a1, a2, a3;
+  float b0, b1, b2, b3;
+  InverseK.solve(0, 0, 505-75, a0, a1, a2, a3);
+  /* Hay que orientar y bajar */
+  if(InverseK.solve(203, -60, 0, b0, b1, b2, b3)) { // try -75 for Z
+    Serial.println("-2a-");
+    Serial.print(a2b(b0)); Serial.print(',');
+    Serial.print(a2b(b1)); Serial.print(',');
+    Serial.print(a2b(b2)); Serial.print(',');
+    Serial.println(a2b(b3));
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 10);
+    delay(1000);
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 45);
+  } else {
+    Serial.println("No solution found! -2a-");
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
+  }
+  delay(1000);
+
+  // Soltar cubo
+  /* Hay que elevar */
+  if(InverseK.solve(204, -60, 100, b0, b1, b2, b3)) { // try -75 for Z
+    Serial.println("-2b-");
+    Serial.print(a2b(b0)); Serial.print(',');
+    Serial.print(a2b(b1)); Serial.print(',');
+    Serial.print(a2b(b2)); Serial.print(',');
+    Serial.println(a2b(b3));
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 45);
+  } else {
+    Serial.println("No solution found! -2b-");
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
+  }
+
+  // Maniobra de giro
+  if(InverseK.solve(130, -61, 100, b0, b1, b2, b3)) { // try -75 for Z
+    Serial.println("-2b-");
+    Serial.print(a2b(b0)); Serial.print(',');
+    Serial.print(a2b(b1)); Serial.print(',');
+    Serial.print(a2b(b2)); Serial.print(',');
+    Serial.println(a2b(b3));
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 45);
+  } else {
+    Serial.println("No solution found! -2b-");
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
+  }
+
+  if(InverseK.solve(0, 170, 100, b0, b1, b2, b3)) { // try -75 for Z
+    Serial.println("-2c-");
+    Serial.print(a2b(b0)); Serial.print(',');
+    Serial.print(a2b(b1)); Serial.print(',');
+    Serial.print(a2b(b2)); Serial.print(',');
+    Serial.println(a2b(b3));
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 45);
+  } else {
+    Serial.println("No solution found! -2c-");
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
+  }
+  delay(1000);
+
+  // Orientar el brazo en la zona de carga
+  if(InverseK.solve(95, 180, 100, b0, b1, b2, b3)) { // try -75 for Z
+    Serial.println("-2c-");
+    Serial.print(a2b(b0)); Serial.print(',');
+    Serial.print(a2b(b1)); Serial.print(',');
+    Serial.print(a2b(b2)); Serial.print(',');
+    Serial.println(a2b(b3));
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 45);
+  } else {
+    Serial.println("No solution found! -2c-");
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
+  }
+  delay(1000);
+
+  // Bajar el brazo en la zona de carga
+  if(InverseK.solve(95, 180, 0, b0, b1, b2, b3)) { // try -75 for Z
+    Serial.println("-2c-");
+    Serial.print(a2b(b0)); Serial.print(',');
+    Serial.print(a2b(b1)); Serial.print(',');
+    Serial.print(a2b(b2)); Serial.print(',');
+    Serial.println(a2b(b3));
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 45);
+    delay(1000);
+    Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 10);
+  } else {
+    Serial.println("No solution found! -2c-");
+    Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
+  }
+  delay(1000);
+}
 void descargarRojo(){}
 void descargarBlanco(){}
 void descargarNegro(){}
