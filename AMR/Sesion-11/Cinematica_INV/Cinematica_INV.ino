@@ -46,6 +46,7 @@ void setup() {
     Serial.print(a2b(a2)); Serial.print(',');
     Serial.println(a2b(a3));
     Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
+    Serial.println("INIT POSITION");
   } else {
     Serial.println("No solution found!");
   }
@@ -88,6 +89,7 @@ void loop() {
   // }
   delay(8000);
 
+  // RESET POSITION
   float a0, a1, a2, a3;
   if(InverseK.solve(0, 0, 505-75, a0, a1, a2, a3)) {
     Serial.println("-0-");
@@ -96,6 +98,7 @@ void loop() {
     Serial.print(a2b(a2)); Serial.print(',');
     Serial.println(a2b(a3));
     Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
+    Serial.println("RESET POSITION");
   } else {
     Serial.println("No solution found!");
   }
@@ -122,7 +125,7 @@ void comprobarCubo() {
   }
   delay(1000);
 
-  // Recoger el primer cubo
+  // Agarrar el primer cubo
   if(InverseK.solve(0, -170, -55, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-1b-");
     Serial.print(a2b(b0)); Serial.print(',');
@@ -138,7 +141,7 @@ void comprobarCubo() {
   }
   delay(1000);
 
-  // Elevar
+  // Elevar brazo con cubo
   if(InverseK.solve(0, -170, 100, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-1a-");
     Serial.print(a2b(b0)); Serial.print(',');
@@ -152,7 +155,7 @@ void comprobarCubo() {
   }
   delay(1000);
 
-  // Mover el cubo al CNY
+  // Mover el cubo sobre el CNY
   if(InverseK.solve(200, -61, 100, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-1c-");
     Serial.print(a2b(b0)); Serial.print(',');
@@ -165,7 +168,8 @@ void comprobarCubo() {
     Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   }
   delay(1000);
-  /* Hay que orientar y bajar */
+
+  // Orientar muñeca y colocar cubo
   if(InverseK.solve(203, -60, 0, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-1d-");
     Serial.print(a2b(b0)); Serial.print(',');
@@ -202,7 +206,8 @@ void cargarCubo() {
   float a0, a1, a2, a3;
   float b0, b1, b2, b3;
   InverseK.solve(0, 0, 505-75, a0, a1, a2, a3);
-  /* Hay que orientar y bajar */
+  
+  // Orientar muñeca y recoger cubo
   if(InverseK.solve(203, -60, 0, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-2a-");
     Serial.print(a2b(b0)); Serial.print(',');
@@ -218,8 +223,7 @@ void cargarCubo() {
   }
   delay(1000);
 
-  // Soltar cubo
-  /* Hay que elevar */
+  // Elevar brazo con cubo
   if(InverseK.solve(204, -60, 100, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-2b-");
     Serial.print(a2b(b0)); Serial.print(',');
@@ -232,7 +236,7 @@ void cargarCubo() {
     Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   }
 
-  // Maniobra de giro
+  // Maniobra de giro hacia la zona de carga (retraer brazo)
   if(InverseK.solve(130, -61, 100, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-2b-");
     Serial.print(a2b(b0)); Serial.print(',');
@@ -245,6 +249,7 @@ void cargarCubo() {
     Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
   }
 
+  // Maniobra de giro hacia la zona de carga (girar brazo)
   if(InverseK.solve(0, 170, 100, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-2c-");
     Serial.print(a2b(b0)); Serial.print(',');
@@ -258,7 +263,7 @@ void cargarCubo() {
   }
   delay(1000);
 
-  // Orientar el brazo en la zona de carga
+  // Posicionar el brazo en la zona de carga
   if(InverseK.solve(95, 180, 100, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-2c-");
     Serial.print(a2b(b0)); Serial.print(',');
@@ -273,6 +278,7 @@ void cargarCubo() {
   delay(1000);
 
   // Bajar el brazo en la zona de carga
+  // TODO: Ajustar la altura de la zona de carga y verificar posición del coche
   if(InverseK.solve(95, 180, 0, b0, b1, b2, b3)) { // try -75 for Z
     Serial.println("-2c-");
     Serial.print(a2b(b0)); Serial.print(',');
