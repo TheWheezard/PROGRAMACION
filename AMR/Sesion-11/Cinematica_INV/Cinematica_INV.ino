@@ -214,6 +214,8 @@ void descargarNegro() {
 }
 void descargarAzul() {}
 
+// @note En lugar de subir y bajar la barrera varias veces,
+// mejor subir la barrera, esperar X segundos y bajar.
 color enviarColor(color c) {
   switch (c) {
   case ROJO:
