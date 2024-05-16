@@ -5,6 +5,8 @@
 #include <Braccio.h>
 #include <Servo.h>
 
+int bucle = 0;
+
 // Define los pines para el sensor CNY70
 #define S0 0   // D3
 #define S1 1   // D4
@@ -102,8 +104,11 @@ void loop() {
   // color c = 3;
   delay(1000);
 
-  cargarCubo();
   enviarColor(c);
+  cargarCubo();
+  resetArm();
+
+  delay(4000);
 
   barrera.write(180);  // Subir
   delay(5000);
@@ -123,11 +128,13 @@ void loop() {
     default:
     break;
   }
-  delay(8000);
+  delay(3000);
 
   // RESET POSITION
   resetArm();
-  while (true) {}
+  while (true){}
+  bucle += 1;
+  while (bucle > 2) {}
 }
 
 // @brief Mueve el cubo de la zona de recogida al sensor de color
@@ -205,10 +212,10 @@ void descargarRojo() {
 void descargarBlanco() {
   Serial.println("MOVER_BLANCO");
   resetArm();
-  moveArm(-5, 160, 60, 74, 10);
-  moveArm(-5, 160, 15, 74, 10);
-  moveArm(-5, 160, 15, 74, 45);
-  moveArm(-5, 160, 100, 74, 45);
+  moveArm(-5, 155, 60, 74, 10);
+  moveArm(-5, 155, 10, 74, 10);
+  moveArm(-5, 155, 10, 74, 45);
+  moveArm(-5, 155, 100, 74, 45);
   moveArm(202, 35, 100, 76, 45);
   moveArm(202, 35, -54, 76, 45);
   moveArm(202, 35, -54, 76, 10);
