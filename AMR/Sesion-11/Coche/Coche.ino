@@ -84,8 +84,11 @@ void loop() {
   // Serial.print("\n");
   // delay(1000);
 
+  while (!hayCarga());
 
   int c = color::VACIO;
+  // TODO: hay que plantearse qué hacer si no detecta color
+  delay(2000);
   while (c == color::VACIO) {
     c = detectarColor();
   }
@@ -123,14 +126,15 @@ void loop() {
  *
  * @param None
  * @return El número de lecturas realizadas antes de detectar el obstáculo.
+ * 
+ * @note Revisar su funcionamiento. Hay que sincronizar con brazo robótico 
+ * para que funcione correctamente.
  */
 int detectarColor() {
   int count = 0;
-  while (count < 4) {
-    if (!detectarObstaculo())
-      count++;
-    else return count;
-    delay(2000);
+  while (!detectarObstaculo()) {
+    count++;
+    delay(1000);
   }
   return count;
 }
@@ -149,7 +153,10 @@ bool detectarObstaculo() { return ultraSound() <= 150; }
  * @param None
  * @return true si hay carga, false en caso contrario.
  */
-bool hayCarga() {} //devolvemos aquí lo que detecte el LDR
+bool hayCarga() {//devolvemos aquí lo que detecte el LDR
+  return true;
+  // return analogRead(LDR) > 500;
+} 
 
 /**
  * @brief Función para medir la distancia mediante un sensor de ultrasonido.
