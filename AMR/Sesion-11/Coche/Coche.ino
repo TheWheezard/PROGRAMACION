@@ -33,11 +33,13 @@
 #define ECHO 12
 #define TRIG 13
 
+// PIN LDR
+#define LDR 14
+
 /**
  * @brief Enumeración para representar los colores detectados por los sensores CNY.
  */
 enum color { VACIO, ROJO, BLANCO, NEGRO, AZUL };
-
 
 
 void setup() {
@@ -206,10 +208,10 @@ void avanza() {
   else if (inCNY2 < 350 && inCNY3 >= 350) {  // Si se desvía a la izqda, reducimos motor dcho
     // Movemos el motor en un sentido de giro
     digitalWrite(SLP_M1, HIGH);  // Despertamos el motor
-    analogWrite(M1, 50);        // Establecemos la velocidad de giro (valor entre 0-255)
+    analogWrite(M1, 25);        // Establecemos la velocidad de giro (valor entre 0-255)
 
     //digitalWrite(SLP_M1, HIGH); // Despertamos el motor
-    analogWrite(M2, 130);  // Establecemos la velocidad de giro (valor entre 0-255)
+    analogWrite(M2, 55);  // Establecemos la velocidad de giro (valor entre 0-255)
 
     // Establecemos sentido de giro
     digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
@@ -220,10 +222,10 @@ void avanza() {
   else if (inCNY2 >= 350 && inCNY3 < 350) {  // Si se desvía a la izqda reducimos motor dcho
     // Movemos el motor en un sentido de giro
     digitalWrite(SLP_M1, HIGH);  // Despertamos el motor
-    analogWrite(M1, 130);       // Establecemos la velocidad de giro (valor entre 0-255)
+    analogWrite(M1, 55);       // Establecemos la velocidad de giro (valor entre 0-255)
 
     //digitalWrite(SLP_M1, HIGH); // Despertamos el motor
-    analogWrite(M2, 50);  // Establecemos la velocidad de giro (valor entre 0-255)
+    analogWrite(M2, 25);  // Establecemos la velocidad de giro (valor entre 0-255)
 
     // Establecemos sentido de giro
     digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
@@ -234,10 +236,10 @@ void avanza() {
   else { // Hacia adelante
     // Movemos el motor en un sentido de giro
     digitalWrite(SLP_M1, HIGH);  // Despertamos el motor
-    analogWrite(M1, 130);       // Establecemos la velocidad de giro (valor entre 0-255)
+    analogWrite(M1, 55);       // Establecemos la velocidad de giro (valor entre 0-255)
 
     //digitalWrite(SLP_M1, HIGH); // Despertamos el motor
-    analogWrite(M2, 130);  // Establecemos la velocidad de giro (valor entre 0-255)
+    analogWrite(M2, 55);  // Establecemos la velocidad de giro (valor entre 0-255)
 
     // Establecemos sentido de giro
     digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
