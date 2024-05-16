@@ -82,18 +82,6 @@ void setup() {
   // InverseK.solve(x, y, z, a0, a1, a2, a3)
   Serial.println("INIT POSITION");
   resetArm();
-  /*
-  // Calculates the angles considering a specific approach angle
-  // InverseK.solve(x, y, z, a0, a1, a2, a3, phi)
-  if(InverseK.solve(550, 0, 50, a0, a1, a2, a3, b2a(90.0))) {
-    Serial.print(a2b(a0)); Serial.print(',');
-    Serial.print(a2b(a1)); Serial.print(',');
-    Serial.print(a2b(a2)); Serial.print(',');
-    Serial.println(a2b(a3));
-  } else {
-    Serial.println("No solution found!");
-  }
-  */
 }
 
 void loop() {
@@ -104,8 +92,9 @@ void loop() {
   // color c = 3;
   delay(1000);
 
-  enviarColor(c);
   cargarCubo();
+  delay(2000);
+  enviarColor(c);
   resetArm();
 
   delay(4000);
@@ -132,7 +121,11 @@ void loop() {
 
   // RESET POSITION
   resetArm();
+  
+  // Si solo queremos que funcione una vez
   while (true){}
+
+  // Si queremos que repita 3 veces (comentar opción anterior)
   bucle += 1;
   while (bucle > 2) {}
 }
@@ -160,18 +153,6 @@ void comprobarCubo() {
   // Soltar cubo
   /* Hay que soltar y elevar? */
   moveArm(202, -68, 100, 76, 10);
-  // if(InverseK.solve(200, -61, 100, b0, b1, b2, b3)) {
-  //   Serial.println("-1c-");
-  //   Serial.print(a2b(b0)); Serial.print(',');
-  //   Serial.print(a2b(b1)); Serial.print(',');
-  //   Serial.print(a2b(b2)); Serial.print(',');
-  //   Serial.println(a2b(b3));
-  //   Braccio.ServoMovement(20, a2b(b0), a2b(b1), a2b(b2), a2b(b3), 74, 10);
-  // } else {
-  //   Serial.println("No solution found! -1c-");
-  //   Braccio.ServoMovement(20, a2b(a0), a2b(a1), a2b(a2), a2b(a3), 0, 20);
-  // }
-  //delay(6000);
 }
 
 // @brief Mueve el cubo de la zona de color al vehículo en parada de carga
@@ -255,9 +236,9 @@ color enviarColor(color c) {
 
 void moverBarrera() {
   barrera.write(180);  // Subir
-  delay(2000);
+  delay(1000);
   barrera.write(0);  // Bajar
-  delay(2000);
+  delay(1000);
 }
 
 
