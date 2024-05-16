@@ -10,7 +10,7 @@
 #define S1 1   // D4
 #define S2 2   // D5
 #define S3 4   // D6
-#define OUT 10 // D2
+#define OUT 7 // D2
 // Define variables globales para el sensor CNY70
 byte countRed = 0;
 byte countGreen = 0;
@@ -51,13 +51,13 @@ void setup() {
   barrera.write(0);
 
   // Init CNY70
-  // pinMode(S0, OUTPUT);
-  // pinMode(S1, OUTPUT);
-  // pinMode(S2, OUTPUT);
-  // pinMode(S3, OUTPUT);
-  // pinMode(OUT, INPUT);
-  // digitalWrite(S0, HIGH);
-  // digitalWrite(S1, HIGH);
+  pinMode(S0, OUTPUT);
+  pinMode(S1, OUTPUT);
+  pinMode(S2, OUTPUT);
+  pinMode(S3, OUTPUT);
+  pinMode(OUT, INPUT);
+  digitalWrite(S0, HIGH);
+  digitalWrite(S1, HIGH);
 
   // Setup the lengths and rotation limits for each link
   Link base1;
@@ -98,8 +98,8 @@ void loop() {
 
   comprobarCubo();
   delay(1000);
-  // color c = leerColor();
-  color c = 3;
+  color c = leerColor();
+  // color c = 3;
   delay(1000);
 
   cargarCubo();
@@ -265,25 +265,39 @@ float a2b(float a) {
 }
 
 //@brief Recibe los valores 0-255 de los sensores del CNY70
-void recibirColor() {
-  digitalWrite(S2, LOW);
-  digitalWrite(S3, LOW);
-  countRed = pulseIn(OUT, digitalRead(OUT) == HIGH ? LOW : HIGH);
-  digitalWrite(S3, HIGH);
-  countBlue = pulseIn(OUT, digitalRead(OUT) == HIGH ? LOW : HIGH);
-  digitalWrite(S2, HIGH);
-  countGreen = pulseIn(OUT, digitalRead(OUT) == HIGH ? LOW : HIGH);
+byte readColorFrequency(bool s2, bool s3) {
+  digitalWrite(S2, s2);
+  digitalWrite(S3, s3);
+  delay(10);
+  return pulseIn(OUT, LOW);
 }
 
 // @brief Llama a recibirColor() e interpreta el valor recibido, devolviendo el color resultante
 color leerColor() {
   color c = VACIO;
   while (c == VACIO) {
-    //Función de tomar color 
-    recibirColor();
+    byte red = readColorFrequency(LOW, LOW);      // Rojo
+    byte green = readColorFrequency(HIGH, HIGH);  // Verde
+    byte blue = readColorFrequency(LOW, HIGH);    // Azul
+
+    Serial.print("Rojo: ");
+    Serial.println(red);
+    Serial.print("Verde: ");
+    Serial.println(green);
+    Serial.print("Azul: ");
+    Serial.println(blue);
+
+    // String color = determineColor(red, green, blue);
+    // Serial.print("Color detectado: ");
+    // Serial.println(color);
+
+    delay(1000);  // Retardo entre mediciones
+
+    //Función de tomar color
+    // recibirColor();
     //Lectura del potenciómetro
     Pot = analogRead(A0);
-    // Imprimir por el puerto serie 
+    // Imprimir por el puerto serie
     Serial.print("Pot: ");
     Serial.print(Pot);
     Serial.print(" Red: ");
@@ -294,25 +308,18 @@ color leerColor() {
     Serial.println(countBlue, DEC);
 
     // Recordatorio Valor del potenciómetro Pot = 185
-    // Intervalo Rojo – Intervalo verde – Intervalo azul
-    if (countRed > 9 && countRed < 15 && countGreen > 15 && countGreen < 20 && countBlue > 6 && countBlue < 15) {
-        Serial.println(" ‐ Color Blanco");
-        c = BLANCO;
+    if (red < 5 && red < blue && red < green && green > 7 && blue > 7) {  // Ajusta estos valores basados en tus pruebas
+      c = ROJO;
+    } else if (red < 10 && green > 20 && blue > 18) {  // Ajusta estos valores basados en tus pruebas
+      c = NEGRO;
+    } else if (red < 7 && green < 7 && blue < 7) {  // Ajusta estos valores basados en tus pruebas
+      c = BLANCO;
+    } else {
+      Serial.println("VACIO");
     }
-    else if (countRed > 13 && countRed < 20 && countGreen > 65 && countGreen < 75 && countBlue > 50 && countBlue < 60) {
-        Serial.println(" ‐ Color Rojo");
-        c = ROJO;
-    }
-    else if (countRed > 30 && countRed < 45 && countGreen > 140 && countGreen < 180 && countBlue > 120 && countBlue < 140) {
-        Serial.println(" ‐ Color Negro");
-        c = NEGRO;
-    }
-    else {
-      Serial.println("‐ VACIO");
-    }
-    delay(1000);
+
   }
-  return c;
+    return c;
 }
 
 // @brief Función genérica que mueve el brazo a la posición x,y,z mediante cinemática inversa.
