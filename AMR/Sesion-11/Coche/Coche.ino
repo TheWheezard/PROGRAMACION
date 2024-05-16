@@ -84,14 +84,12 @@ void loop() {
 
 
   int c = color::VACIO;
-  while (!hayCarga() && c == color::VACIO && detectarObstaculo()) {
-    while (!hayCarga()) {}
-    while (c == color::VACIO) {
-      c = detectarColor();
-    }
+  while (c == color::VACIO) {
+    c = detectarColor();
   }
 
-  delay(2000);
+  delay(4000);
+  while (detectarObstaculo()) {}
 
   switch (c) {
   case color::ROJO:
@@ -126,9 +124,11 @@ void loop() {
  */
 int detectarColor() {
   int count = 0;
-  while (!detectarObstaculo()) {
-    count++;
-    delay(1000);
+  while (count < 4) {
+    if (!detectarObstaculo())
+      count++;
+    else return count;
+    delay(2000);
   }
   return count;
 }
