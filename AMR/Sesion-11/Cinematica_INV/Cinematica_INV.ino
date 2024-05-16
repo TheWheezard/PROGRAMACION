@@ -205,9 +205,9 @@ void descargarRojo() {
   moveArm(5, 170, 40, 74, 10);
   moveArm(5, 170, 40, 74, 45);
   moveArm(5, 170, 100, 74, 45);
-  moveArm(202, 15, 100, 76, 45);
-  moveArm(202, 15, -54, 76, 45);
-  moveArm(202, 15, -54, 76, 10);
+  moveArm(202, 15, 100, 0, 45);
+  moveArm(202, 15, -54, 0, 45);
+  moveArm(202, 15, -54, 0, 10);
 }
 void descargarBlanco() {
   Serial.println("MOVER_BLANCO");
@@ -216,9 +216,9 @@ void descargarBlanco() {
   moveArm(-5, 155, 10, 74, 10);
   moveArm(-5, 155, 10, 74, 45);
   moveArm(-5, 155, 100, 74, 45);
-  moveArm(202, 35, 100, 76, 45);
-  moveArm(202, 35, -54, 76, 45);
-  moveArm(202, 35, -54, 76, 10);
+  moveArm(202, 35, 100, 0, 45);
+  moveArm(202, 35, -54, 0, 45);
+  moveArm(202, 35, -54, 0, 10);
 }
 void descargarNegro() {
   Serial.println("MOVER_NEGRO");
@@ -227,9 +227,9 @@ void descargarNegro() {
   moveArm(-25, 160, 5, 90, 10);
   moveArm(-25, 160, 5, 90, 45);
   moveArm(-25, 160, 100, 90, 45);
-  moveArm(202, 45, 100, 76, 45);
-  moveArm(202, 45, -54, 76, 45);
-  moveArm(202, 45, -54, 76, 10);
+  moveArm(202, 45, 100, 0, 45);
+  moveArm(202, 45, -54, 0, 45);
+  moveArm(202, 45, -54, 0, 10);
 }
 void descargarAzul() {}
 
