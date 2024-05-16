@@ -12,9 +12,9 @@
 #define S3 4   // D6
 #define OUT 10 // D2
 // Define variables globales para el sensor CNY70
-int countRed = 0;
-int countGreen = 0;
-int countBlue = 0;
+byte countRed = 0;
+byte countGreen = 0;
+byte countBlue = 0;
 int Pot = 0;
 
 // Define los pines para el sensor CNY70 (deprecated)
@@ -51,13 +51,13 @@ void setup() {
   barrera.write(0);
 
   // Init CNY70
-  pinMode(s0, OUTPUT);
-  pinMode(s1, OUTPUT);
-  pinMode(s2, OUTPUT);
-  pinMode(s3, OUTPUT);
-  pinMode(OUT, INPUT);
-  digitalWrite(s0, HIGH);
-  digitalWrite(s1, HIGH);
+  // pinMode(S0, OUTPUT);
+  // pinMode(S1, OUTPUT);
+  // pinMode(S2, OUTPUT);
+  // pinMode(S3, OUTPUT);
+  // pinMode(OUT, INPUT);
+  // digitalWrite(S0, HIGH);
+  // digitalWrite(S1, HIGH);
 
   // Setup the lengths and rotation limits for each link
   Link base1;
@@ -98,17 +98,18 @@ void loop() {
 
   comprobarCubo();
   delay(1000);
-  color c = leerColor();
-  // color c = 1;
+  // color c = leerColor();
+  color c = 3;
   delay(1000);
 
   cargarCubo();
   enviarColor(c);
+
   barrera.write(180);  // Subir
   delay(5000);
   barrera.write(0);  // Bajar
 
-  delay(100000);
+  // delay(100000);
   switch(c) {
     case ROJO:
       descargarRojo();
@@ -143,14 +144,15 @@ void comprobarCubo() {
   moveArm(0, -170, 100, 0, 45);
 
   // Mover el cubo sobre el CNY
-  moveArm(200, -78, 100, 74, 45);
+  moveArm(200, -72, 100, 74, 45);
 
   // Orientar muñeca y colocar cubo
-  moveArm(202, -76, 0, 76, 45);
-  moveArm(202, -76, 0, 76, 10);
+  moveArm(202, -68, 0, 76, 45);
+  moveArm(202, -68, 0, 76, 10);
 
   // Soltar cubo
   /* Hay que soltar y elevar? */
+  moveArm(202, -68, 100, 76, 10);
   // if(InverseK.solve(200, -61, 100, b0, b1, b2, b3)) {
   //   Serial.println("-1c-");
   //   Serial.print(a2b(b0)); Serial.print(',');
@@ -169,11 +171,11 @@ void comprobarCubo() {
 void cargarCubo() {
 
   // Orientar muñeca y recoger cubo
-  moveArm(202, -76, 0, 74, 10);
-  moveArm(202, -76, 0, 74, 45);
+  moveArm(202, -68, -8, 76, 10);
+  moveArm(202, -68, -8, 76, 45);
 
   // Elevar brazo con cubo
-  moveArm(202, -76, 100, 74, 45);
+  moveArm(202, -70, 100, 74, 45);
 
   // Maniobra de giro hacia la zona de carga (retraer brazo)
   moveArm(130, -78, 100, 74, 45);
@@ -186,12 +188,42 @@ void cargarCubo() {
 
   // Bajar el brazo en la zona de carga
   // TODO: Ajustar la altura de la zona de carga y verificar posición del coche
-  moveArm(95, 180, 0, 74, 45);
-  moveArm(95, 180, 0, 74, 10);
+  moveArm(95, 180, 40, 74, 45);
+  moveArm(95, 180, 40, 74, 10);
+  moveArm(95, 180, 100, 74, 10);
 }
-void descargarRojo() {}
-void descargarBlanco() {}
-void descargarNegro() {}
+void descargarRojo() {
+  Serial.println("MOVER_ROJO");
+  moveArm(5, 170, 60, 74, 10);
+  moveArm(5, 170, 40, 74, 10);
+  moveArm(5, 170, 40, 74, 45);
+  moveArm(5, 170, 100, 74, 45);
+  moveArm(202, 15, 100, 76, 45);
+  moveArm(202, 15, -54, 76, 45);
+  moveArm(202, 15, -54, 76, 10);
+}
+void descargarBlanco() {
+  Serial.println("MOVER_BLANCO");
+  resetArm();
+  moveArm(-5, 160, 60, 74, 10);
+  moveArm(-5, 160, 15, 74, 10);
+  moveArm(-5, 160, 15, 74, 45);
+  moveArm(-5, 160, 100, 74, 45);
+  moveArm(202, 35, 100, 76, 45);
+  moveArm(202, 35, -54, 76, 45);
+  moveArm(202, 35, -54, 76, 10);
+}
+void descargarNegro() {
+  Serial.println("MOVER_NEGRO");
+  resetArm();
+  moveArm(-25, 160, 60, 90, 10);
+  moveArm(-25, 160, 5, 90, 10);
+  moveArm(-25, 160, 5, 90, 45);
+  moveArm(-25, 160, 100, 90, 45);
+  moveArm(202, 45, 100, 76, 45);
+  moveArm(202, 45, -54, 76, 45);
+  moveArm(202, 45, -54, 76, 10);
+}
 void descargarAzul() {}
 
 color enviarColor(color c) {
@@ -263,17 +295,17 @@ color leerColor() {
 
     // Recordatorio Valor del potenciómetro Pot = 185
     // Intervalo Rojo – Intervalo verde – Intervalo azul
-    if (countRed > 30 && countRed < 45 && countGreen > 65 && countGreen < 80 && countBlue > 55 && countBlue < 75) {
-      Serial.println(" ‐ Color Rojo");
-      c = ROJO;
+    if (countRed > 9 && countRed < 15 && countGreen > 15 && countGreen < 20 && countBlue > 6 && countBlue < 15) {
+        Serial.println(" ‐ Color Blanco");
+        c = BLANCO;
     }
-    else if (countRed > 50 && countRed < 60 && countGreen > 105 && countGreen < 120 && countBlue > 90 && countBlue < 110) {
-      Serial.println(" ‐ Color Blanco");
-      c = BLANCO;
+    else if (countRed > 13 && countRed < 20 && countGreen > 65 && countGreen < 75 && countBlue > 50 && countBlue < 60) {
+        Serial.println(" ‐ Color Rojo");
+        c = ROJO;
     }
-    else if (countRed > 100 /*&& countGreen < 50 && countBlue > 170 && countBlue < 70*/) {
-      Serial.println(" ‐ Color Negro");
-      c = NEGRO;
+    else if (countRed > 30 && countRed < 45 && countGreen > 140 && countGreen < 180 && countBlue > 120 && countBlue < 140) {
+        Serial.println(" ‐ Color Negro");
+        c = NEGRO;
     }
     else {
       Serial.println("‐ VACIO");
