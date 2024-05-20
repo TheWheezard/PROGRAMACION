@@ -30,6 +30,29 @@
 long t = 30000;
 long d = 30000;
 
+// PIN LDR
+#define LDR 14
+
+/**
+ * @brief Enumeración para representar los colores detectados por los sensores CNY.
+ */
+enum color { VACIO,
+             ROJO,
+             BLANCO,
+             NEGRO,
+             AZUL };
+
+/**
+ * @brief Función para detectar si hay un cubo cargado en el coche.
+ *
+ * @param None
+ * @return true si hay carga, false en caso contrario.
+ */
+bool hayCarga() {  //devolvemos aquí lo que detecte el LDR
+  // return true;
+  return analogRead(LDR) > 300;
+}
+int c = VACIO;
 void setup() {
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
@@ -51,79 +74,154 @@ void setup() {
   pinMode(CNY3, INPUT);
   pinMode(CNY4, INPUT);
 
+  int c = VACIO;  
   Serial.begin(230350);
+}
+
+/**
+ * @brief Función para detectar la presencia de un obstáculo.
+ *
+ * @param None
+ * @return true si hay un obstáculo, false en caso contrario.
+ */
+bool detectarObstaculo() {
+  return ultraSound() <= 150;
+}
+
+/**
+ * @brief Función para detectar el color de la superficie.
+ *
+ * Realiza lecturas de los sensores CNY hasta detectar un obstáculo.
+ *
+ * @param None
+ * @return El número de lecturas realizadas antes de detectar el obstáculo.
+ * 
+ * @note Revisar su funcionamiento. Hay que sincronizar con brazo robótico 
+ * para que funcione correctamente.
+ */
+int detectarColor() {
+  // int count = 0;
+  // while (!detectarObstaculo()) {
+  //   count++;
+  //   delay(1000);
+  // }
+  // return count;
+  return ROJO;
 }
 
 // TODO: CON ULTRASONIDO PIERDE EL CNY
 void loop() {
-  
-  if (ultraSound() <= 200) {
+  if (ultraSound() <= 150) {
+    Serial.println("close");
     digitalWrite(SLP_M, LOW);
+    while (!hayCarga()) {}
+    while (c == VACIO) { c = detectarColor(); }
   } else {
+    Serial.println("go");
     // Uso de sensores CNY
     int inCNY1 = analogRead(CNY1);  //5
     int inCNY2 = analogRead(CNY2);  //6
     int inCNY3 = analogRead(CNY3);  //7
     int inCNY4 = analogRead(CNY4);  //8
-    if (inCNY2 < 350 && inCNY3 < 350) {
+    if ((inCNY1 >= 350 && inCNY4 < 350 && inCNY2 > 350 && inCNY3 > 350) && c == ROJO) {
+      digitalWrite(SLP_M, LOW);
+      while(hayCarga()){}
+      delay(4000);
+      c = VACIO;
+      digitalWrite(SLP_M, HIGH);
+    } else if ((inCNY1 < 350 && inCNY4 >= 350 && inCNY2 > 350 && inCNY3 > 350) && c == BLANCO) {
+      digitalWrite(SLP_M, LOW);
+      while(hayCarga()){}
+      delay(4000);
+      c = VACIO;
+      digitalWrite(SLP_M, HIGH);
+    } else if ((inCNY1 >= 350 && inCNY4 >= 350 && inCNY2 > 350 && inCNY3 > 350) && c == NEGRO) {
+      digitalWrite(SLP_M, LOW);
+      while(hayCarga()){}
+      delay(4000);
+      c = VACIO;
+      digitalWrite(SLP_M, HIGH);
+    } else if (inCNY2 < 350 && inCNY3 < 350) {
       digitalWrite(SLP_M, LOW);
       delay(1000);
+      // Movemos el motor en un sentido de giro
+      digitalWrite(SLP_M, HIGH);  // Despertamos el motor
+      analogWrite(M1, 20);        // Establecemos la velocidad de giro (valor entre 0-255)
+
+      //digitalWrite(SLP_M, HIGH); // Despertamos el motor
+      analogWrite(M2, 20);  // Establecemos la velocidad de giro (valor entre 0-255)
+      // Establecemos sentido de giro
+      digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
+      digitalWrite(IN_M2, HIGH);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
+      delay(1000);
+      // if (inCNY1 >= 350) {
+      //   digitalWrite(SLP_M, HIGH);  // Despertamos el motor
+      //   analogWrite(M1, 0);         // Establecemos la velocidad de giro (valor entre 0-255)
+      //   analogWrite(M2, 20);        // Establecemos la velocidad de giro (valor entre 0-255)
+      // } else if (inCNY4 >= 350) {
+      //   digitalWrite(SLP_M, HIGH);  // Despertamos el motor
+      //   analogWrite(M1, 20);        // Establecemos la velocidad de giro (valor entre 0-255)
+      //   analogWrite(M2, 0);         // Establecemos la velocidad de giro (valor entre 0-255)
+      // }
+    } else if (inCNY2 < 350 && inCNY3 >= 350) {  // Si se desvía a la dcha, reducimos motor dcho
+      // Movemos el motor en un sentido de giro
+      digitalWrite(SLP_M, HIGH);  // Despertamos el motor
+      analogWrite(M1, 15);        // Establecemos la velocidad de giro (valor entre 0-255)
+
+      //digitalWrite(SLP_M, HIGH); // Despertamos el motor
+      analogWrite(M2, 30);  // Establecemos la velocidad de giro (valor entre 0-255)
+
+      // Establecemos sentido de giro
+      digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
+      digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
+
+      //delay(1000);  // Mantenemos el estado del motor 1 segundo
+    } else if (inCNY2 >= 350 && inCNY3 < 350) {  // Si se desvía a la izqda reducimos motor izquierdo
+      // Movemos el motor en un sentido de giro
+      digitalWrite(SLP_M, HIGH);  // Despertamos el motor
+      analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255)
+
+      //digitalWrite(SLP_M, HIGH); // Despertamos el motor
+      analogWrite(M2, 15);  // Establecemos la velocidad de giro (valor entre 0-255)
+
+      // Establecemos sentido de giro
+      digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
+      digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
+
+      //delay(1000);  // Mantenemos el estado del motor 1 segundo
+    } else if (c == VACIO && !hayCarga()) {
       // Movemos el motor en un sentido de giro
       digitalWrite(SLP_M, HIGH);  // Despertamos el motor
       analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255)
 
       //digitalWrite(SLP_M, HIGH); // Despertamos el motor
       analogWrite(M2, 30);  // Establecemos la velocidad de giro (valor entre 0-255)
+
       // Establecemos sentido de giro
       digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
       digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
-      delay(1000);
-      if (inCNY1 >= 350) {
-        digitalWrite(SLP_M, HIGH);  // Despertamos el motor
-        analogWrite(M1, 0);         // Establecemos la velocidad de giro (valor entre 0-255)
-        analogWrite(M2, 30);        // Establecemos la velocidad de giro (valor entre 0-255)
-      } else if (inCNY4 >= 350) {
-        digitalWrite(SLP_M, HIGH);  // Despertamos el motor
-        analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255)
-        analogWrite(M2, 0);         // Establecemos la velocidad de giro (valor entre 0-255)
-      }
-    } else if (inCNY2 < 350 && inCNY3 >= 350) {  // Si se desvía a la dcha, reducimos motor dcho
-      // Movemos el motor en un sentido de giro
-      digitalWrite(SLP_M, HIGH);  // Despertamos el motor
-      analogWrite(M1, 50);        // Establecemos la velocidad de giro (valor entre 0-255)
-
-      //digitalWrite(SLP_M, HIGH); // Despertamos el motor
-      analogWrite(M2, 130);  // Establecemos la velocidad de giro (valor entre 0-255)
-
-      // Establecemos sentido de giro
-      digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
-      digitalWrite(IN_M2, HIGH);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
 
       //delay(1000);  // Mantenemos el estado del motor 1 segundo
-    } else if (inCNY2 >= 350 && inCNY3 < 350) {  // Si se desvía a la izqda reducimos motor izquierdo
+
+      // // Movemos el motor en el sentido de giro opuesto
+
+      // //Establecemos sentido de giro opuesto
+      // digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en LOW. El otro pin de direccion estara en HIGH internamente
+      // digitalWrite(IN_M2, HIGH);  // El pin de direccion IN_M2 estara en LOW. El otro pin de direccion estara en HIGH internamente
+
+      // delay(1000);  // Mantenemos el estado del motor 1 segundo
+    }
+    else {
       // Movemos el motor en un sentido de giro
       digitalWrite(SLP_M, HIGH);  // Despertamos el motor
-      analogWrite(M1, 130);       // Establecemos la velocidad de giro (valor entre 0-255)
+      analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255)
 
       //digitalWrite(SLP_M, HIGH); // Despertamos el motor
-      analogWrite(M2, 50);  // Establecemos la velocidad de giro (valor entre 0-255)
+      analogWrite(M2, 30);  // Establecemos la velocidad de giro (valor entre 0-255)
 
       // Establecemos sentido de giro
-      digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
-      digitalWrite(IN_M2, HIGH);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
-
-      //delay(1000);  // Mantenemos el estado del motor 1 segundo
-    } else {
-      // Movemos el motor en un sentido de giro
-      digitalWrite(SLP_M, HIGH);  // Despertamos el motor
-      analogWrite(M1, 130);       // Establecemos la velocidad de giro (valor entre 0-255)
-
-      //digitalWrite(SLP_M, HIGH); // Despertamos el motor
-      analogWrite(M2, 130);  // Establecemos la velocidad de giro (valor entre 0-255)
-
-      // Establecemos sentido de giro
-      digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
-      digitalWrite(IN_M2, HIGH);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
+      digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
+      digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
 
       //delay(1000);  // Mantenemos el estado del motor 1 segundo
 
@@ -149,15 +247,16 @@ void loop() {
 
 long ultraSound() {
   // TRIGGER PULSE
-  digitalWrite(TRIG, HIGH);
-  delayMicroseconds(10);  //Enviamos un pulso de 10us
-  digitalWrite(TRIG, LOW);
+    digitalWrite(TRIG, HIGH);
+    delayMicroseconds(10);  //Enviamos un pulso de 10us
+    digitalWrite(TRIG, LOW);
 
-  t = pulseIn(ECHO, HIGH);  //obtenemos el ancho del pulso
-  d = t / 59;               //escalamos el tiempo a una distancia
-  // Serial.print(t);
-  // Serial.print(" ");
-  // Serial.println(d);
+    t = pulseIn(ECHO, HIGH);  //obtenemos el ancho del pulso
+    d = t / 59;               //escalamos el tiempo a una distancia
+    Serial.print(t);
+    Serial.print(" ");
+    Serial.println(d);
+  
   // 1/(0,034*2) = 59
   // END TRIGGER PULSE
   return d;
