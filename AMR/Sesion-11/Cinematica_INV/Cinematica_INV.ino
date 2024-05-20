@@ -19,6 +19,10 @@ byte countGreen = 0;
 byte countBlue = 0;
 int Pot = 0;
 
+int cubosRojos = 0;
+int cubosBlancos = 0;
+int cubosNegros = 0;
+
 // Define los pines para el sensor CNY70 (deprecated)
 // const int s0 = 3;
 // const int s1 = 4;
@@ -70,7 +74,7 @@ void setup() {
   Braccio.begin();
 
   base1.init(0, b2a(0.0), b2a(180.0));
-  upperarm.init(125, b2a(15.0), b2a(165.0));
+  upperarm.init(125, b2a(15.0), b2a(175.0));
   forearm.init(125, b2a(0.0), b2a(180.0));
   hand.init(190, b2a(0.0), b2a(180.0));
 
@@ -88,7 +92,8 @@ void loop() {
 
   comprobarCubo();
   delay(1000);
-  color c = leerColor();
+  color c = VACIO;
+  c = leerColor();
   // color c = 3;
   delay(1000);
 
@@ -123,7 +128,7 @@ void loop() {
   resetArm();
   
   // Si solo queremos que funcione una vez
-  while (true){}
+  // while (true){}
 
   // Si queremos que repita 3 veces (comentar opción anterior)
   bucle += 1;
@@ -147,20 +152,20 @@ void comprobarCubo() {
   moveArm(200, -72, 100, 74, 45);
 
   // Orientar muñeca y colocar cubo
-  moveArm(202, -68, 0, 76, 45);
-  moveArm(202, -68, 0, 76, 10);
+  moveArm(202, -85, 0, 76, 45);
+  moveArm(202, -85, 0, 76, 10);
 
   // Soltar cubo
   /* Hay que soltar y elevar? */
-  moveArm(202, -68, 100, 76, 10);
+  moveArm(202, -85, 100, 76, 10);
 }
 
 // @brief Mueve el cubo de la zona de color al vehículo en parada de carga
 void cargarCubo() {
 
   // Orientar muñeca y recoger cubo
-  moveArm(202, -68, -8, 76, 10);
-  moveArm(202, -68, -8, 76, 45);
+  moveArm(202, -85, -8, 76, 10);
+  moveArm(202, -85, -8, 76, 45);
 
   // Elevar brazo con cubo
   moveArm(202, -70, 100, 74, 45);
@@ -186,9 +191,16 @@ void descargarRojo() {
   moveArm(5, 170, 40, 74, 10);
   moveArm(5, 170, 40, 74, 45);
   moveArm(5, 170, 100, 74, 45);
-  moveArm(202, 15, 100, 0, 45);
-  moveArm(202, 15, -54, 0, 45);
-  moveArm(202, 15, -54, 0, 10);
+  moveArm(140, 15, 100, 0, 45);
+  if (cubosRojos == 0) {
+    moveArm(140, 15, -52, 0, 45);
+    moveArm(140, 15, -52, 0, 10);
+    cubosRojos++;
+  } else {
+    moveArm(140, 15, -22, 0, 45);
+    moveArm(140, 15, -22, 0, 10);
+  }
+  moveArm(140, 15, 100, 0, 10);
 }
 void descargarBlanco() {
   Serial.println("MOVER_BLANCO");
@@ -197,9 +209,16 @@ void descargarBlanco() {
   moveArm(-5, 155, 10, 74, 10);
   moveArm(-5, 155, 10, 74, 45);
   moveArm(-5, 155, 100, 74, 45);
-  moveArm(202, 35, 100, 0, 45);
-  moveArm(202, 35, -54, 0, 45);
-  moveArm(202, 35, -54, 0, 10);
+  moveArm(170, 35, 100, 0, 45);
+  if (cubosBlancos == 0) {
+    moveArm(170, 35, -52, 0, 45);
+    moveArm(170, 35, -52, 0, 10);
+    cubosBlancos++;
+  } else {
+    moveArm(170, 35, -22, 0, 45);
+    moveArm(170, 35, -22, 0, 10);
+  }
+  moveArm(170, 35, 100, 0, 10);
 }
 void descargarNegro() {
   Serial.println("MOVER_NEGRO");
@@ -209,8 +228,15 @@ void descargarNegro() {
   moveArm(-25, 160, 5, 90, 45);
   moveArm(-25, 160, 100, 90, 45);
   moveArm(202, 45, 100, 0, 45);
-  moveArm(202, 45, -54, 0, 45);
-  moveArm(202, 45, -54, 0, 10);
+  if (cubosNegros == 0) {
+    moveArm(202, 45, -52, 0, 45);
+    moveArm(202, 45, -52, 0, 10);
+    cubosNegros++;
+  } else {
+    moveArm(202, 45, -22, 0, 45);
+    moveArm(202, 45, -22, 0, 10);
+  }
+  moveArm(202, 45, 100, 0, 10);
 }
 void descargarAzul() {}
 
@@ -300,7 +326,7 @@ color leerColor() {
     // Recordatorio Valor del potenciómetro Pot = 185
     if (red < 5 && red < blue && red < green && green > 7 && blue > 7) {  // Ajusta estos valores basados en tus pruebas
       c = ROJO;
-    } else if (red < 10 && green > 20 && blue > 18) {  // Ajusta estos valores basados en tus pruebas
+    } else if (red < 20 && green > 20 && blue > 15) {  // Ajusta estos valores basados en tus pruebas
       c = NEGRO;
     } else if (red < 7 && green < 7 && blue < 7) {  // Ajusta estos valores basados en tus pruebas
       c = BLANCO;
