@@ -41,6 +41,7 @@ enum color { VACIO,
              BLANCO,
              NEGRO,
              AZUL };
+int c; // COLOR GLOBAL VARIABLE
 
 /**
  * @brief Función para detectar si hay un cubo cargado en el coche.
@@ -52,7 +53,7 @@ bool hayCarga() {  //devolvemos aquí lo que detecte el LDR
   // return true;
   return analogRead(LDR) > 300;
 }
-int c = VACIO;
+
 void setup() {
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
@@ -109,9 +110,12 @@ int detectarColor() {
   return ROJO;
 }
 
-// TODO: CON ULTRASONIDO PIERDE EL CNY
+// @note Revisar su funcionamiento. Hay que sincronizar con brazo robótico
+// para que funcione correctamente.
+// @note El principal problema es que ultraSound a veces devuelve ceros y desconocemos el motivo
 void loop() {
-  if (ultraSound() <= 150) {
+  long distancia = ultraSound(); // definitivamente vamos a añadir esto a ver si funciona
+  if (distancia <= 130 && distancia >= 0) { // así saltamos los ceros
     Serial.println("close");
     digitalWrite(SLP_M, LOW);
     while (!hayCarga()) {}
@@ -189,29 +193,7 @@ void loop() {
       digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
 
       //delay(1000);  // Mantenemos el estado del motor 1 segundo
-    } else if (c == VACIO && !hayCarga()) {
-      // Movemos el motor en un sentido de giro
-      digitalWrite(SLP_M, HIGH);  // Despertamos el motor
-      analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255)
-
-      //digitalWrite(SLP_M, HIGH); // Despertamos el motor
-      analogWrite(M2, 30);  // Establecemos la velocidad de giro (valor entre 0-255)
-
-      // Establecemos sentido de giro
-      digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
-      digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
-
-      //delay(1000);  // Mantenemos el estado del motor 1 segundo
-
-      // // Movemos el motor en el sentido de giro opuesto
-
-      // //Establecemos sentido de giro opuesto
-      // digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en LOW. El otro pin de direccion estara en HIGH internamente
-      // digitalWrite(IN_M2, HIGH);  // El pin de direccion IN_M2 estara en LOW. El otro pin de direccion estara en HIGH internamente
-
-      // delay(1000);  // Mantenemos el estado del motor 1 segundo
-    }
-    else {
+    } else {
       // Movemos el motor en un sentido de giro
       digitalWrite(SLP_M, HIGH);  // Despertamos el motor
       analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255)
