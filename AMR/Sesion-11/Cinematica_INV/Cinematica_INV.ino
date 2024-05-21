@@ -252,7 +252,7 @@ color enviarColor(color c) { // Sugerencia: quitar 1s a cada uno, porque es apro
     delay(1000);
     break;
   case BLANCO:
-    delay(2000);
+    delay(1500);
     break;
   case NEGRO:
     delay(3000);
