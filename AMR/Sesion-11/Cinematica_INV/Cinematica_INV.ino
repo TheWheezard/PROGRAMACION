@@ -94,19 +94,22 @@ void loop() {
   delay(1000);
   color c = VACIO;
   c = leerColor();
+  Serial.print("Color: ");
+  Serial.println(c);
   // color c = 3;
   delay(1000);
 
   cargarCubo();
-  delay(2000);
+  delay(1000);
   enviarColor(c);
   resetArm();
 
   delay(4000);
 
   barrera.write(180);  // Subir
-  delay(5000);
+  delay(90000);
   barrera.write(0);  // Bajar
+
 
   // delay(100000);
   switch(c) {
@@ -122,7 +125,7 @@ void loop() {
     default:
     break;
   }
-  delay(3000);
+  delay(4000);
 
   // RESET POSITION
   resetArm();
@@ -177,13 +180,13 @@ void cargarCubo() {
   moveArm(0, 170, 100, 74, 45);
 
   // Posicionar el brazo en la zona de carga
-  moveArm(95, 180, 100, 74, 45);
+  moveArm(105, 180, 100, 65, 45);
 
   // Bajar el brazo en la zona de carga
   // TODO: Ajustar la altura de la zona de carga y verificar posición del coche
-  moveArm(95, 180, 40, 74, 45);
-  moveArm(95, 180, 40, 74, 10);
-  moveArm(95, 180, 100, 74, 10);
+  moveArm(115, 170, 40, 65, 45);
+  moveArm(115, 170, 40, 65, 10);
+  moveArm(115, 170, 100, 65, 10);
 }
 void descargarRojo() {
   Serial.println("MOVER_ROJO");
@@ -242,23 +245,23 @@ void descargarNegro() {
 // @note En lugar de subir y bajar la barrera varias veces,
 // mejor subir la barrera, esperar X segundos y bajar.
 color enviarColor(color c) {
+  barrera.write(180);  // Subir
   switch (c) {
   case ROJO:
-    moverBarrera();
+    //moverBarrera();
+    delay(1000);
     break;
   case BLANCO:
-    moverBarrera();
-    moverBarrera();
+    delay(2000);
     break;
   case NEGRO:
-    moverBarrera();
-    moverBarrera();
-    moverBarrera();
+    delay(3000);
     break;
 
   default:
     break;
   }
+  barrera.write(0);  // Bajar
 }
 
 void moverBarrera() {
