@@ -129,19 +129,19 @@ void loop() {
     int inCNY2 = analogRead(CNY2);  //6
     int inCNY3 = analogRead(CNY3);  //7
     int inCNY4 = analogRead(CNY4);  //8
-    if ((inCNY1 >= 350 && inCNY4 < 350 && inCNY2 > 350 && inCNY3 > 350) && c == ROJO) {
+    if ((inCNY1 >= 350 && inCNY4 < 350 && inCNY2 > 350 && inCNY3 > 350) && c <= ROJO) { // ROJO
       digitalWrite(SLP_M, LOW);
       while(hayCarga()){}
       delay(4000);
       c = VACIO;
       digitalWrite(SLP_M, HIGH);
-    } else if ((inCNY1 < 350 && inCNY4 >= 350 && inCNY2 > 350 && inCNY3 > 350) && c == BLANCO) {
+    } else if ((inCNY1 >= 350 && inCNY4 >= 350 && inCNY2 > 350 && inCNY3 > 350) && c >= NEGRO) { // NEGRO
       digitalWrite(SLP_M, LOW);
       while(hayCarga()){}
       delay(4000);
       c = VACIO;
       digitalWrite(SLP_M, HIGH);
-    } else if ((inCNY1 >= 350 && inCNY4 >= 350 && inCNY2 > 350 && inCNY3 > 350) && c >= NEGRO) {
+    } else if ((inCNY1 < 350 && inCNY4 >= 350 && inCNY2 > 350 && inCNY3 > 350) && c >= BLANCO) { // BLANCO
       digitalWrite(SLP_M, LOW);
       while(hayCarga()){}
       delay(4000);
