@@ -244,7 +244,7 @@ void descargarNegro() {
 
 // @note En lugar de subir y bajar la barrera varias veces,
 // mejor subir la barrera, esperar X segundos y bajar.
-color enviarColor(color c) {
+color enviarColor(color c) { // Sugerencia: quitar 1s a cada uno, porque es aprox lo que tarda en subir y bajar la barrera
   barrera.write(180);  // Subir
   switch (c) {
   case ROJO:
