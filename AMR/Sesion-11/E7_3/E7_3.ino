@@ -132,20 +132,20 @@ void loop() {
     if ((inCNY1 >= 350 && inCNY4 < 350 && inCNY2 > 350 && inCNY3 > 350) && c <= ROJO) { // ROJO
       digitalWrite(SLP_M, LOW);
       while(hayCarga()){}
-      delay(4000);
       c = VACIO;
+      delay(4000);
       digitalWrite(SLP_M, HIGH);
     } else if ((inCNY1 >= 350 && inCNY4 >= 350 && inCNY2 > 350 && inCNY3 > 350) && c >= NEGRO) { // NEGRO
       digitalWrite(SLP_M, LOW);
       while(hayCarga()){}
-      delay(4000);
       c = VACIO;
+      delay(4000);
       digitalWrite(SLP_M, HIGH);
     } else if ((inCNY1 < 350 && inCNY4 >= 350 && inCNY2 > 350 && inCNY3 > 350) && c >= BLANCO) { // BLANCO
       digitalWrite(SLP_M, LOW);
       while(hayCarga()){}
-      delay(4000);
       c = VACIO;
+      delay(4000);
       digitalWrite(SLP_M, HIGH);
     } else if (inCNY2 < 350 && inCNY3 < 350) {
       digitalWrite(SLP_M, LOW);
