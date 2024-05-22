@@ -3,6 +3,11 @@
  * @brief Código para el control de un coche autónomo siguelíneas. Realiza la detección de líneas,
  * colores y obstáculos mediante sensores LDR, CNY y ultrasonido. Su objetivo es recibir un cubo como carga,
  * completar un recorrido y detenerse en una parada concreta según el color del cubo.
+ * 
+ * @author Javier Lopez
+ * @author Rafael Lopez
+ * @author Cesar Cruz
+ * @date 2024-05-22
 */
 
 // Pines motor.
