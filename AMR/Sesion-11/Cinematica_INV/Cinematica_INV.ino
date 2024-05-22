@@ -107,7 +107,7 @@ void loop() {
   delay(4000);
 
   barrera.write(180);  // Subir
-  delay(90000);
+  delay(70000);
   barrera.write(0);  // Bajar
 
 
@@ -125,15 +125,17 @@ void loop() {
     default:
     break;
   }
-  delay(4000);
+  delay(2000);
 
   // RESET POSITION
   resetArm();
+
+  Serial.println("END LOOP");
   
   // Si solo queremos que funcione una vez
-  while (true){}
+  // while (true){}
 
-  // Si queremos que repita 3 veces (comentar opción anterior)
+  // Si queremos que repita 4 veces (comentar opción anterior)
   bucle += 1;
   while (bucle > 3) {}
 }
@@ -180,45 +182,45 @@ void cargarCubo() {
   moveArm(0, 170, 100, 74, 45);
 
   // Posicionar el brazo en la zona de carga
-  moveArm(105, 180, 100, 65, 45);
+  moveArm(100, 180, 100, 45, 45);
 
   // Bajar el brazo en la zona de carga
   // TODO: Ajustar la altura de la zona de carga y verificar posición del coche
-  moveArm(115, 170, 40, 65, 45);
-  moveArm(115, 170, 40, 65, 10);
-  moveArm(115, 170, 100, 65, 10);
+  moveArm(100, 180, 40, 45, 45);
+  moveArm(100, 180, 40, 45, 10);
+  moveArm(100, 180, 100, 45, 10);
 }
 void descargarRojo() {
   Serial.println("MOVER_ROJO");
-  moveArm(5, 170, 60, 70, 10);
-  moveArm(5, 170, 40, 70, 10);
-  moveArm(5, 170, 40, 70, 45);
-  moveArm(5, 170, 100, 70, 45);
-  moveArm(140, 15, 100, 90, 45);
+  moveArm(15, 170, 60, 90, 10);
+  moveArm(15, 170, 45, 90, 10);
+  moveArm(15, 170, 45, 90, 47);
+  moveArm(15, 170, 100, 90, 47);
+  moveArm(135, 15, 100, 90, 47);
   if (cubosRojos == 0) {
-    moveArm(140, 15, -52, 90, 45);
-    moveArm(140, 15, -52, 90, 10);
+    moveArm(135, 15, -52, 90, 47);
+    moveArm(135, 15, -52, 90, 10);
     cubosRojos++;
   } else {
-    moveArm(140, 15, -22, 90, 45);
-    moveArm(140, 15, -22, 90, 10);
+    moveArm(135, 15, -22, 90, 47);
+    moveArm(135, 15, -22, 90, 10);
   }
-  moveArm(140, 15, 100, 90, 10);
+  moveArm(135, 15, 100, 90, 10);
 }
 void descargarBlanco() {
   Serial.println("MOVER_BLANCO");
   resetArm();
-  moveArm(-5, 155, 60, 70, 10);
-  moveArm(-5, 155, 10, 70, 10);
-  moveArm(-5, 155, 10, 70, 45);
-  moveArm(-5, 155, 100, 70, 45);
-  moveArm(170, 15, 100, 90, 45);
+  moveArm(-15, 155, 60, 90, 10);
+  moveArm(-15, 155, 20, 90, 10);
+  moveArm(-15, 155, 20, 90, 47);
+  moveArm(-15, 155, 100, 90, 47);
+  moveArm(170, 15, 100, 90, 47);
   if (cubosBlancos == 0) {
-    moveArm(170, 15, -52, 90, 45);
+    moveArm(170, 15, -52, 90, 47);
     moveArm(170, 15, -52, 90, 10);
     cubosBlancos++;
   } else {
-    moveArm(170, 15, -22, 90, 45);
+    moveArm(170, 15, -22, 90, 47);
     moveArm(170, 15, -22, 90, 10);
   }
   moveArm(170, 15, 100, 90, 10);
@@ -226,20 +228,20 @@ void descargarBlanco() {
 void descargarNegro() {
   Serial.println("MOVER_NEGRO");
   resetArm();
-  moveArm(-25, 160, 60, 90, 10);
-  moveArm(-25, 160, 5, 90, 10);
-  moveArm(-25, 160, 5, 90, 45);
-  moveArm(-25, 160, 100, 90, 45);
-  moveArm(202, 15, 100, 90, 45);
+  moveArm(-15, 150, 60, 90, 10);
+  moveArm(-15, 150, 10, 90, 10);
+  moveArm(-15, 150, 10, 90, 47);
+  moveArm(-15, 150, 100, 90, 47);
+  moveArm(205, 15, 100, 90, 47);
   if (cubosNegros == 0) {
-    moveArm(202, 15, -52, 90, 45);
-    moveArm(202, 15, -52, 90, 10);
+    moveArm(205, 15, -52, 90, 47);
+    moveArm(205, 15, -52, 90, 10);
     cubosNegros++;
   } else {
-    moveArm(202, 15, -22, 90, 45);
-    moveArm(202, 15, -22, 90, 10);
+    moveArm(205, 15, -22, 90, 47);
+    moveArm(205, 15, -22, 90, 10);
   }
-  moveArm(202, 15, 100, 90, 10);
+  moveArm(205, 15, 100, 90, 10);
 }
 
 // @note En lugar de subir y bajar la barrera varias veces,
@@ -252,7 +254,7 @@ color enviarColor(color c) { // Sugerencia: quitar 1s a cada uno, porque es apro
     delay(1000);
     break;
   case BLANCO:
-    delay(1500);
+    delay(1700);
     break;
   case NEGRO:
     delay(3000);
