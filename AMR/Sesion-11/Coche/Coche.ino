@@ -1,38 +1,39 @@
-/**
+/***
  * @file Coche.ino
- * @brief Programa para controlar el movimiento de un coche con motores y sensores.
- */
+ * @brief Código para el control de un coche autónomo siguelíneas. Realiza la detección de líneas,
+ * colores y obstáculos mediante sensores LDR, CNY y ultrasonido. Su objetivo es recibir un cubo como carga,
+ * completar un recorrido y detenerse en una parada concreta según el color del cubo.
+*/
 
-long t = 30000;
-long d = 30000;
-
-// Pines motor (cambiar segun usados)
-// Pin de PWM
+// Pines motor.
+// Pin de PWM.
 #define M1 9
 #define M2 16
 
-// Pin de direccion
+// Pin de direccion.
 #define IN_M1 11
 #define IN_M2 10
 
-// Pin de Standby
-#define SLP_M1 15
+// Pin de Standby.
+#define SLP_M 15
 #define SLP_M2 15
 
-// Pines Sensor CNY
+// Pines Sensor CNY.
 #define CNY1 4
 #define CNY2 3
 #define CNY3 2
 #define CNY4 1
 
-// Pines Buzzer
+// Pines Buzzer y LED.
 #define BUZZ 5
-
 #define LED 8
 
 //Pines UltraSonido
 #define ECHO 12
 #define TRIG 13
+// Variables para el ultrasonido, por defecto.
+long t = 30000;
+long d = 30000;
 
 // PIN LDR
 #define LDR 14
@@ -40,302 +41,210 @@ long d = 30000;
 /**
  * @brief Enumeración para representar los colores detectados por los sensores CNY.
  */
-enum color { VACIO,
-             ROJO,
-             BLANCO,
-             NEGRO,
-             AZUL };
+enum color { VACIO,   // == 0
+             ROJO,    // == 1
+             BLANCO,  // == 2
+             NEGRO }; // == 3
+             
+int c; // COLOR VARIABLE GLOBAL
 
+/**
+ * @brief Función para detectar si hay un cubo cargado en el coche.
+ * Se utiliza para ello el sensor LDR.
+ * @param None
+ * @return true si hay carga, false en caso contrario.
+ */
+bool hayCarga() {  //devolvemos aquí lo que detecte el LDR
+  return analogRead(LDR) > 300;
+}
 
+/**
+ * @brief Inicialización del programa de Arduino.
+ * 
+ */
 void setup() {
-
-  // Pines Ultrasonido
-  pinMode(LDR, INPUT);
+  // Inicializamos los pines del sensor de ultrasonido.
   pinMode(ECHO, INPUT);
   pinMode(TRIG, OUTPUT);
-  //MOTORES M1 Y M2
-  pinMode(M1, OUTPUT);
-  pinMode(M2, OUTPUT);
 
-  pinMode(IN_M1, OUTPUT);
-  pinMode(IN_M2, OUTPUT);
+  // Pines de Motores M1 y M2 para velocidad
+  pinMode(M1, OUTPUT);  // MOTOR DERECHO
+  pinMode(M2, OUTPUT);  // MOTOR IZQUIERDO
 
-  pinMode(SLP_M1, OUTPUT);
+  // Pines de Motores M1 y M2 para el sentido
+  pinMode(IN_M1, OUTPUT);  // MOTOR DERECHO
+  pinMode(IN_M2, OUTPUT);  // MOTOR IZQUIERDO
 
-  digitalWrite(SLP_M1, LOW);  // Dormimos al motor inicialmente (disminuimos consumo)
+  // Pin de encendido/apagado de motores
+  pinMode(SLP_M, OUTPUT);
+  digitalWrite(SLP_M, LOW);  // Dormimos al motor inicialmente (disminuimos consumo)
 
-  // SENSORES CNY
+  // Pines de sensores CNY, de izquierda a derecha
   pinMode(CNY1, INPUT);
   pinMode(CNY2, INPUT);
   pinMode(CNY3, INPUT);
   pinMode(CNY4, INPUT);
 
-  Serial.begin(230400);
-
-  // Una vez iniciado todo, lo ponemos en modo "avanzar"
-  // para que se coloque por sí solo en la zona de carga
-  avanzarCargar();
-}
-
-void loop() {
-  // Uso de sensores CNY
-  // int CNY1 = analogRead(CNY1); //5
-  // int CNY2 = analogRead(CNY2); //6
-  // int CNY3 = analogRead(CNY3); //7
-  // int CNY4 = analogRead(CNY4); //8
-  // Serial.print(CNY1);
-  // Serial.print(", ");
-  // Serial.print(CNY2);
-  // Serial.print(", ");
-  // Serial.print(CNY3);
-  // Serial.print(", ");
-  // Serial.print(CNY4);
-  // Serial.print("\n");
-  // delay(1000);
-
-  while (!hayCarga()){}
-
-  int c = VACIO;
-  // TODO: hay que plantearse qué hacer si no detecta color
-  delay(2000);
-  while (c == VACIO) {
-    c = detectarColor();
-  }
-
-  delay(4000);
-  while (detectarObstaculo()) {}
-
-  switch (c) {
-    case ROJO:
-      avanzaRojo();
-      break;
-
-    case NEGRO:
-      avanzaNegro();
-      break;
-
-    case BLANCO:
-      avanzaBlanco();
-      break;
-
-    default:  // TODO: Decidir qué hacer
-      break;
-  }
-
-  while (hayCarga()) {}
-  delay(2000);
-
-  avanzarCargar();
+  int c = VACIO;  // Inicializamos el color a VACIO
+  Serial.begin(230400); // Inicializamos la comunicación serie.
 }
 
 /**
- * @brief Función para detectar el color de la superficie.
- *
- * Realiza lecturas de los sensores CNY hasta detectar un obstáculo.
- *
+ * @brief Función para medir la distancia a un obstáculo mediante el sensor de ultrasonido.
  * @param None
- * @return El número de lecturas realizadas antes de detectar el obstáculo.
- * 
- * @note Revisar su funcionamiento. Hay que sincronizar con brazo robótico 
- * para que funcione correctamente.
- */
-int detectarColor() {
-  int count = 0;
-  while (!detectarObstaculo()) {
-    count++;
-    delay(1000);
-  }
-  return count;
-}
-
-/**
- * @brief Función para detectar la presencia de un obstáculo.
- *
- * @param None
- * @return true si hay un obstáculo, false en caso contrario.
- */
-bool detectarObstaculo() {
-  return ultraSound() <= 130;
-}
-
-/**
- * @brief Función para detectar si hay un cubo cargado en el coche.
- *
- * @param None
- * @return true si hay carga, false en caso contrario.
- */
-bool hayCarga() {  //devolvemos aquí lo que detecte el LDR
-  //return true;
-  return analogRead(LDR) > 500;
-}
-
-/**
- * @brief Función para medir la distancia mediante un sensor de ultrasonido.
- *
- * @param None
- * @return La distancia medida en centímetros.
+ * @return La distancia en milímetros a un obstáculo.
  */
 long ultraSound() {
   // TRIGGER PULSE
-  digitalWrite(TRIG, HIGH);
-  delayMicroseconds(10);  //Enviamos un pulso de 10us
-  digitalWrite(TRIG, LOW);
+    digitalWrite(TRIG, HIGH);
+    delayMicroseconds(10);  //Enviamos un pulso de 10us
+    digitalWrite(TRIG, LOW);
 
-  t = pulseIn(ECHO, HIGH);  //obtenemos el ancho del pulso
-  d = t / 59;               //escalamos el tiempo a una distancia
-  Serial.print(t);
-  Serial.print(" ");
-  Serial.println(d);
-  // 1/(0,034*2) = 59
+    t = pulseIn(ECHO, HIGH);  //obtenemos el ancho del pulso
+    d = t / 59;               //escalamos el tiempo a una distancia
+    Serial.print(t);
+    Serial.print(" ");
+    Serial.println(d);
+  
   // END TRIGGER PULSE
   return d;
 }
 
 /**
- * @brief Función para avanzar el coche.
+ * @brief Función para detectar la presencia de un obstáculo.
+ * Utiliza el sensor de ultrasonido y comprueba si la distancia es menor o igual a 150 mm.
+ * @param None
+ * @return true si hay un obstáculo, false en caso contrario.
+ */
+bool detectarObstaculo() {
+  return ultraSound() <= 150;
+}
+
+/**
+ * @brief Función para detectar el color de la carga.
  *
- * Mueve el coche hacia adelante o hacia atrás dependiendo de las lecturas de los sensores CNY.
- * Si no detecta línea, el coche se mueve hacia atrás.
- * Si detecta línea en el sensor izquierdo, el coche se desvía a la derecha.
- * Si detecta línea en el sensor derecho, el coche se desvía a la izquierda.
- * Si detecta línea en ambos sensores, el coche avanza hacia adelante.
+ * Realiza el recuento de segundos que tarda el sensor de ultrasonido en detectar un obstáculo.
+ * 
+ * @note - Si se detecta un obstáculo en ~1 segundo, el color es ROJO.
+ * @note - Si se detecta un obstáculo en ~2 segundos, el color es BLANCO.
+ * @note - Si se detecta un obstáculo en ~3 segundos, el color es NEGRO.
  *
  * @param None
- * @return None
+ * @return El número de segundos pasados antes de detectar el obstáculo.
+ * @note Se debe sincronizar con el brazo robótico para que funcione correctamente.
  */
-void avanza() {
-  int inCNY2 = analogRead(CNY2);  //6
-  int inCNY3 = analogRead(CNY3);  //7
-  Serial.println("go");           
+int detectarColor() {
+  int count = 0;
 
-  if (inCNY2 < 350 && inCNY3 < 350) {
-    digitalWrite(SLP_M1, LOW);
+  // Mientras no detecte la barrera, contará segundos
+  while (!detectarObstaculo()) {
+    count++;
     delay(1000);
-    // Movemos el motor en un sentido de giro
-    digitalWrite(SLP_M1, HIGH);  // Despertamos el motor
-    analogWrite(M1, 20);        // Establecemos la velocidad de giro (valor entre 0-255)
-
-    //digitalWrite(SLP_M, HIGH); // Despertamos el motor
-    analogWrite(M2, 20);  // Establecemos la velocidad de giro (valor entre 0-255)
-    // Establecemos sentido de giro
-    digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
-    digitalWrite(IN_M2, HIGH);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
-    delay(1000);
-    // if (CNY1 >= 350) {
-    //   digitalWrite(SLP_M, HIGH);  // Despertamos el motor
-    //   analogWrite(M1, 0);         // Establecemos la velocidad de giro (valor entre 0-255)
-    //   analogWrite(M2, 20);        // Establecemos la velocidad de giro (valor entre 0-255)
-    // } else if (CNY4 >= 350) {
-    //   digitalWrite(SLP_M, HIGH);  // Despertamos el motor
-    //   analogWrite(M1, 20);        // Establecemos la velocidad de giro (valor entre 0-255)
-    //   analogWrite(M2, 0);         // Establecemos la velocidad de giro (valor entre 0-255)
-    // }
-  } else if (inCNY2 < 350 && inCNY3 >= 350) {  // Si se desvía a la dcha, reducimos motor dcho
-    // Movemos el motor en un sentido de giro
-    digitalWrite(SLP_M1, HIGH);  // Despertamos el motor
-    analogWrite(M1, 15);        // Establecemos la velocidad de giro (valor entre 0-255)
-
-    //digitalWrite(SLP_M, HIGH); // Despertamos el motor
-    analogWrite(M2, 30);  // Establecemos la velocidad de giro (valor entre 0-255)
-
-    // Establecemos sentido de giro
-    digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
-    digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
-
-    //delay(1000);  // Mantenemos el estado del motor 1 segundo
-  } else if (inCNY2 >= 350 && inCNY3 < 350) {  // Si se desvía a la izqda reducimos motor izquierdo
-    // Movemos el motor en un sentido de giro
-    digitalWrite(SLP_M1, HIGH);  // Despertamos el motor
-    analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255)
-
-    //digitalWrite(SLP_M, HIGH); // Despertamos el motor
-    analogWrite(M2, 15);  // Establecemos la velocidad de giro (valor entre 0-255)
-
-    // Establecemos sentido de giro
-    digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
-    digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
-
-    //delay(1000);  // Mantenemos el estado del motor 1 segundo
-  } else {
-    // Movemos el motor en un sentido de giro
-    digitalWrite(SLP_M1, HIGH);  // Despertamos el motor
-    analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255)
-
-    //digitalWrite(SLP_M, HIGH); // Despertamos el motor
-    analogWrite(M2, 30);  // Establecemos la velocidad de giro (valor entre 0-255)
-
-    // Establecemos sentido de giro
-    digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente
-    digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente
-
-    //delay(1000);  // Mantenemos el estado del motor 1 segundo
-
-    // // Movemos el motor en el sentido de giro opuesto
-
-    // //Establecemos sentido de giro opuesto
-    // digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en LOW. El otro pin de direccion estara en HIGH internamente
-    // digitalWrite(IN_M2, HIGH);  // El pin de direccion IN_M2 estara en LOW. El otro pin de direccion estara en HIGH internamente
-
-    // delay(1000);  // Mantenemos el estado del motor 1 segundo
   }
+
+  Serial.print("count: ");
+  Serial.println(count);
+
+  return count;
 }
 
-/**
- * @brief Función para avanzar el coche hasta detectar la parada del color rojo.
- *
- * @param None
- * @return None
- */
-void avanzaRojo() {
-  int inCNY1 = analogRead(CNY1);  //5
-  int inCNY4 = analogRead(CNY4);  //8
-
-  while (!(inCNY1 >= 350 && inCNY4 < 350)) {
-    avanza();
-  }
-}
 
 /**
- * @brief Función para avanzar el coche hasta detectar la parada del color blanco.
- *
- * @param None
- * @return None
+ * @brief Función de Arduino que se ejecuta en bucle con los pasos del robot siguelíneas.
+ * Aquí se puede observar el funcionamiento del programa "paso a paso".
+ * 
  */
-void avanzaBlanco() {
-  int inCNY1 = analogRead(CNY1);  //5
-  int inCNY4 = analogRead(CNY4);  //8
+void loop() {
+  long distancia = ultraSound(); // Leemos la distancia a obstáculos mediante el sensor de ultrasonido.
 
-  while (!(inCNY1 < 350 && inCNY4 >= 350)) {
-    avanza();
-  }
-}
+  // Comprobamos si hay un obstáculo o no en el camino.
+  // NOTA: A veces la lectura devuelve ceros, se ha determinado que la causa podría ser la conexión de pines concretos.
+  // Hasta entonces se ha solventado el problema mediante lógica en el código.
+  if (distancia <= 130 && distancia > 0) { // PASOS 1 y 2: CARGAR CUBO Y RECIBIR COLOR.
+    // Si se ha detectado la barrera, nos encontramos en la zona de carga. Esperamos a que se cumplan los pasos 1 y 2 del Braccio.
+    Serial.println("closed");
+    digitalWrite(SLP_M, LOW); // Detenemos el motor.
+    while (!hayCarga()) {} // Esperamos a que se cargue el cubo.
+    while (c == VACIO) { c = detectarColor(); } // Detectamos el color del cubo.
+  } 
+  else if (distancia != 0) { 
+    // Si no hay obstáculo, avanzamos.
+    Serial.println("go");
+    // Uso de sensores CNY
+    int inCNY1 = analogRead(CNY1);  //5
+    int inCNY2 = analogRead(CNY2);  //6
+    int inCNY3 = analogRead(CNY3);  //7
+    int inCNY4 = analogRead(CNY4);  //8
 
-/**
- * @brief Función para avanzar el coche hasta detectar la parada del color negro.
- *
- * @param None
- * @return None
- */
-void avanzaNegro() {
-  int inCNY1 = analogRead(CNY1);  //5
-  int inCNY4 = analogRead(CNY4);  //8
+    // Comprobamos los valores de los sensores CNY para determinar el patrón del suelo.
+    if ((inCNY1 >= 350 && inCNY4 < 350 && inCNY2 > 350 && inCNY3 > 350) && c <= ROJO) { // ROJO
+      // Si el patrón del suelo es la parada del cubo ROJO y el color del cubo es ROJO, se hace el paso 4.
+      digitalWrite(SLP_M, LOW); // Detenemos el motor.
+      while(hayCarga()){} // Esperamos a que se descargue el cubo.
+      delay(4000); // Esperamos 4 segundos para evitar colisiones.
+      c = VACIO;  // Reiniciamos el color del cubo.
+      digitalWrite(SLP_M, HIGH); // Despertamos el motor.
+    } 
+    else if ((inCNY1 < 350 && inCNY4 >= 350 && inCNY2 > 350 && inCNY3 > 350) && c >= BLANCO) { // BLANCO
+      // Si el patrón del suelo es la parada del cubo BLANCO y el color del cubo es BLANCO, se hace el paso 4.
+      digitalWrite(SLP_M, LOW); // Detenemos el motor.
+      while(hayCarga()){} // Esperamos a que se descargue el cubo.
+      delay(4000); // Esperamos 4 segundos para evitar colisiones.
+      c = VACIO; // Reiniciamos el color del cubo.
+      digitalWrite(SLP_M, HIGH); // Despertamos el motor.
+    }
+    else if ((inCNY1 >= 350 && inCNY4 >= 350 && inCNY2 > 350 && inCNY3 > 350) && c >= NEGRO) { // NEGRO
+      // Si el patrón del suelo es la parada del cubo NEGRO y el color del cubo es NEGRO, se hace el paso 4.
+      digitalWrite(SLP_M, LOW); // Detenemos el motor.
+      while(hayCarga()){} // Esperamos a que se descargue el cubo.
+      delay(4000); // Esperamos 4 segundos para evitar colisiones.
+      c = VACIO; // Reiniciamos el color del cubo.
+      digitalWrite(SLP_M, HIGH); // Despertamos el motor.
+    }
+    else if (inCNY2 < 350 && inCNY3 < 350) {
+      // Si el robot se encuentra en el PASO 3 (seguir el circuito) y no detecta la línea, se moverá hacia atrás con un leve giro hasta recuperarla.
+      
+      // digitalWrite(SLP_M, LOW);
+      digitalWrite(SLP_M, HIGH);  // Despertamos el motor.
+      analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255).
+      analogWrite(M2, 20);        // Establecemos la velocidad de giro (valor entre 0-255).
 
-  while (!(inCNY1 >= 350 && inCNY4 >= 350)) {
-    avanza();
-  }
-}
+      // Establecemos sentido de giro
+      digitalWrite(IN_M1, HIGH);  // El pin de direccion IN_M1 estara en HIGH. El otro pin de direccion estara en LOW internamente.
+      digitalWrite(IN_M2, HIGH);  // El pin de direccion IN_M2 estara en HIGH. El otro pin de direccion estara en LOW internamente.
+    }
+    else if (inCNY2 < 350 && inCNY3 >= 350) {
+      // Si el robot se encuentra en el PASO 3 (seguir el circuito) y se desvía a la dcha, reducimos velocidad del motor dcho.
 
-/**
- * @brief Función para avanzar el coche hasta la zona de carga.
- *
- * Avanza el coche y verifica la distancia medida por el sensor de ultrasonido.
- * Si la distancia es menor o igual a 200 cm, el motor se pone en modo standby.
- *
- * @param None
- * @return None
- */
-void avanzarCargar() {
-  while (ultraSound() > 130) {
-    avanza();
+      digitalWrite(SLP_M, HIGH);  // Despertamos el motor.
+      analogWrite(M1, 20);        // Establecemos la velocidad de giro (valor entre 0-255).
+      analogWrite(M2, 30);        // Establecemos la velocidad de giro (valor entre 0-255).
+
+      // Establecemos sentido de giro
+      digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en LOW. El otro pin de direccion estara en HIGH internamente.
+      digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en LOW. El otro pin de direccion estara en HIGH internamente.
+    }
+    else if (inCNY2 >= 350 && inCNY3 < 350) {
+      // Si el robot se encuentra en el PASO 3 (seguir el circuito) y se desvía a la izqda, reducimos velocidad del motor izqdo.
+
+      digitalWrite(SLP_M, HIGH);  // Despertamos el motor.
+      analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255).
+      analogWrite(M2, 15);        // Establecemos la velocidad de giro (valor entre 0-255).
+
+      // Establecemos sentido de giro
+      digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en LOW. El otro pin de direccion estara en HIGH internamente.
+      digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en LOW. El otro pin de direccion estara en HIGH internamente.
+    }
+    else {
+      // Si el robot se encuentra en el PASO 3 (seguir el circuito) y se mantiene en la línea, avanzamos.
+      // Movemos el motor en un sentido de giro
+      digitalWrite(SLP_M, HIGH);  // Despertamos el motor
+      analogWrite(M1, 30);        // Establecemos la velocidad de giro (valor entre 0-255).
+      analogWrite(M2, 30);        // Establecemos la velocidad de giro (valor entre 0-255).
+
+      // Establecemos sentido de giro
+      digitalWrite(IN_M1, LOW);  // El pin de direccion IN_M1 estara en LOW. El otro pin de direccion estara en HIGH internamente.
+      digitalWrite(IN_M2, LOW);  // El pin de direccion IN_M2 estara en LOW. El otro pin de direccion estara en HIGH internamente.
+    }
   }
 }
