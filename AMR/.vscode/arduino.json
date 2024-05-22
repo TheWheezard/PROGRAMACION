@@ -2,5 +2,5 @@
     "board": "arduino:avr:uno",
     "programmer": "usbtinyisp",
     "port": "COM1",
-    "sketch": "Sesion-7\\E7_1\\E7_1.ino"
+    "sketch": "Sesion-11\\Coche\\Coche.ino"
 }
