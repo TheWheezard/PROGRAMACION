@@ -36,7 +36,8 @@ public class AlgPETERSON {
 
         @Override
         public void run() {
-            while (true) {
+            int i = 5000;
+            while (i > 0) {
                 // Sección no crítica
                 // ...
 
@@ -73,7 +74,9 @@ public class AlgPETERSON {
                 }
 
                 // Sección no crítica
-                System.out.println("Hebra " + id + " está en la sección no crítica");
+                // System.out.println("Hebra " + id + " está en la sección no crítica");
+
+                i--;
             }
         }
     }
