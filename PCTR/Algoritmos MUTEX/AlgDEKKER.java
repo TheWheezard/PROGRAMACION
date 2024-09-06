@@ -32,7 +32,8 @@ public class AlgDEKKER {
 
         @Override
         public void run() {
-            while (true) {
+            int i = 5000;
+            while (i > 0) {
                 // Sección no crítica
                 // ...
 
@@ -47,6 +48,7 @@ public class AlgDEKKER {
                                     // Esperar el turno
                                 }
                                 C0 = Estado.quiereentrar;
+                                Turno = 0;
                             }
                             C0 = Estado.restoproceso;
                         }
@@ -61,6 +63,7 @@ public class AlgDEKKER {
                                     // Esperar el turno
                                 }
                                 C1 = Estado.quiereentrar;
+                                Turno = 1;
                             }
                             C1 = Estado.restoproceso;
                         }
@@ -74,15 +77,19 @@ public class AlgDEKKER {
                 switch (id) {
                     case 0:
                         C0 = Estado.restoproceso;
+                        Turno = 1;
                         break;
                     case 1:
                         C1 = Estado.restoproceso;
+                        Turno = 0;
                         break;
                 }
 
                 // Sección no crítica
-                System.out.println("Hebra " + id + " está en la sección no crítica");
+                // System.out.println("Hebra " + id + " está en la sección no crítica");
+                i--;
             }
+
         }
     }
 
