@@ -16,7 +16,7 @@ class Dekker2 {
 
     class P extends Thread {
         public void run() {
-            for (long i = 0; i < 1000000000000L; i++) {
+            for (long i = 0; i < 1000000000; i++) {
                 /* Non-critical section */
                 wantp = true;
                 while (wantq) {
@@ -40,7 +40,7 @@ class Dekker2 {
     
     class Q extends Thread {
         public void run() {
-            while (true) {
+            for (long i = 0; i < 1000000000; i++) {
                 /* Non-critical section */
                 wantq = true;
                 while (wantp) {
